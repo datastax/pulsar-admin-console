@@ -1,0 +1,566 @@
+{
+  "auth": {
+    "agree": "I agree to",
+    "alreadyJoined": "Already joined?",
+    "createAccount": "Create account",
+    "createNewAccount": "Create account",
+    "email": "Email",
+    "login": "Login",
+    "password": "Password",
+    "signUp": "Sign Up",
+    "termsOfUse": "Terms of Use.",
+    "welcome": "Welcome!",
+    "addPlan": "Add Plan",
+    "upgradePlan": "Upgrade Plan"
+  },
+  "breadcrumbs": {
+    "home": "Home"
+  },
+  "buttons": {
+    "advanced": "Icons, Groups, Dropdowns",
+    "button": "BUTTON",
+    "colors": "Colors",
+    "disabled": "DISABLED",
+    "dropdown": "DROPDOWN",
+    "hover": "HOVER",
+    "main": "Primary & Secondary Buttons",
+    "micro": "MICRO",
+    "pressed": "PRESSED",
+    "small": "SMALL"
+  },
+  "charts": {
+    "horizontalBarChart": "Horizontal Bar Chart",
+    "verticalBarChart": "Vertical Bar Chart",
+    "lineChart": "Line Chart",
+    "pieChart": "Pie Chart",
+    "donutChart": "Donut Chart",
+    "bubbleChart": "Bubble Chart"
+  },
+  "collapse": {
+    "accordion": "Accordion",
+    "buttons": "Buttons"
+  },
+  "dashboard": {
+    "dataVisualization": "Data Visualization",
+    "success": "SUCCESS",
+    "successMessage": "You successfully read this important alert message.",
+    "elements": "Elements",
+    "features": "Features",
+    "setupProfile": "Setup Profile",
+    "teamMembers": "Team Members",
+    "usersAndMembers": "Users & Members",
+    "versions": "Versions"
+  },
+  "summary": {
+    "dataVisualization": "Data Visualization",
+    "success": "SUCCESS",
+    "successMessage": "You successfully read this important alert message.",
+    "elements": "Elements",
+    "clusters": "Clusters",
+    "topics": "Topics",
+    "namespaces": "Namespaces",
+    "features": "Features",
+    "setupProfile": "Setup Profile",
+    "teamMembers": "Team Members",
+    "usersAndMembers": "Users & Members",
+    "versions": "Versions"
+  },
+  "notificationsPage": {
+    "alerts": {
+      "title": "Alerts",
+      "success": "SUCCESS",
+      "successMessage": "You successfully read this important alert message.",
+      "info": "INFO",
+      "infoMessage": "This alert needs your attention, but it's not super important.",
+      "warning": "WARNING",
+      "warningMessage": "Better check yourself, you're not looking too good.",
+      "danger": "DANGER",
+      "error": "ERROR",
+      "dangerMessage": "Change a few things up and try submitting again."
+    },
+    "popovers": {
+      "title": "Tooltips & Popovers",
+      "popoverTitleLabel": "Popover Title",
+      "popoverTextLabel": "Popover Text",
+      "popoverIconLabel": "Popover Icon (fontawesome)",
+      "showPopover": "Show Popover",
+      "topTooltip": "top tooltip",
+      "rightTooltip": "rightside tooltip",
+      "leftTooltip": "left",
+      "bottomTooltip": "below"
+    },
+    "toasts": {
+      "title": "Toasts",
+      "textLabel": "Text",
+      "durationLabel": "Duration (milliseconds)",
+      "iconLabel": "Icon (fontawesome)",
+      "fullWidthLabel": "Fullwidth",
+      "launchToast": "Launch toast"
+    }
+  },
+  "extra": {
+    "tabs": {
+      "title": "Tabs",
+      "maps": "Maps",
+      "pages": "Pages",
+      "overview": "Overview",
+      "producers": "Producers",
+      "setupProfile": "Setup Profile"
+    },
+    "chat": "Chat",
+    "profileCard": "Profile Card",
+    "producer": "Producer",
+    "consumer": "Consumer",
+    "reader": "Reader"
+  },
+  "topicDetail": {
+    "tabs": {
+      "title": "Topic Detail",
+      "subscriptions": "Subscriptions",
+      "replication": "Replication",
+      "replClusters": "Replication",
+      "overview": "Overview",
+      "producers": "Producers",
+      "consumers": "Consumers",
+      "partitions": "Partitions",
+      "setupProfile": "Setup Profile",
+      "advanced": "Advanced",
+      "schema": "Schema"
+    },
+    "consumers": "Consumers",
+    "subscriptions": "Subscriptions",
+    "producers": "Producers",
+    "replClusters": "Clusters",
+    "chat": "Chat",
+    "profileCard": "Profile Card"
+  },
+  "functionDetail": {
+    "tabs": {
+      "title": "Function Detail",
+      "overview": "Overview",
+      "topics": "Topics",
+      "instances": "Instances",
+      "logs": "Logs"
+    },
+    "consumers": "Consumers",
+    "subscriptions": "Subscriptions",
+    "producers": "Producers",
+    "replClusters": "Clusters",
+    "chat": "Chat",
+    "profileCard": "Profile Card"
+  },
+  "sinkDetail": {
+    "tabs": {
+      "title": "Sink Detail",
+      "overview": "Overview",
+      "topics": "Topics",
+      "test": "Test",
+      "instances": "Instances",
+      "logs": "Logs"
+    },
+    "consumers": "Consumers",
+    "subscriptions": "Subscriptions",
+    "producers": "Producers",
+    "replClusters": "Clusters",
+    "chat": "Chat",
+    "profileCard": "Profile Card"
+  },
+  "sourceDetail": {
+    "tabs": {
+      "title": "Source Detail",
+      "overview": "Overview",
+      "topics": "Topics",
+      "test": "Test",
+      "instances": "Instances",
+      "logs": "Logs"
+    },
+    "consumers": "Consumers",
+    "subscriptions": "Subscriptions",
+    "producers": "Producers",
+    "replClusters": "Clusters",
+    "chat": "Chat",
+    "profileCard": "Profile Card"
+  },
+  "namespaceDetail": {
+    "tabs": {
+      "title": "Topic Detail",
+      "subscriptions": "Subscriptions",
+      "replication": "Replication",
+      "replClusters": "Replication",
+      "overview": "Overview",
+      "producers": "Producers",
+      "consumers": "Consumers",
+      "setupProfile": "Setup Profile"
+    },
+    "consumers": "Consumers",
+    "subscriptions": "Subscriptions",
+    "producers": "Producers",
+    "replClusters": "Clusters",
+    "chat": "Chat",
+    "profileCard": "Profile Card"
+  },
+  "forms": {
+    "controls": {
+      "female": "Female",
+      "male": "Male",
+      "title": "Checkboxes, Radios, Switches",
+      "radioDisabled": "Disabled Radio",
+      "radio": "Radio",
+      "subscribe": "Subscribe to newsletter",
+      "unselected": "Unselected checkbox",
+      "selected": "Selected checkbox",
+      "readonly": "Readonly checkbox",
+      "disabled": "Disabled checkbox",
+      "error": "Checkbox with error",
+      "forceDelete": "Force",
+      "errorMessage": "Checkbox with error messages"
+    },
+    "dateTimePicker": {
+      "title": "Date time pickers",
+      "basic": "Basic",
+      "time": "Time",
+      "range": "Range",
+      "multiple": "Multiple",
+      "disabled": "Disabled",
+      "customFirstDay": "Custom first day",
+      "customDateFormat": "Custom date format"
+    },
+    "inputs": {
+      "emailValidatedSuccess": "Email (validated with success)",
+      "emailValidated": "Email (validated)",
+      "inputWithIcon": "Input With Icon",
+      "inputWithButton": "Input With Button",
+      "inputWithClearButton": "Input With Clear Button",
+      "inputWithRoundButton": "Input With Round Button",
+      "textInput": "Text Input",
+      "textInputWithDescription": "Text Input (with description)",
+      "textArea": "Text Area",
+      "title": "Inputs",
+      "name": "Name",
+      "namespace": "Namespace",
+      "cluster": "Cluster",
+      "type": "Type",
+      "maxProducers": "Max Producers",
+      "maxConsumersTopic": "Max Consumers on Topic",
+      "maxConsumersSub": "Max Consumers on Subscription",
+      "ttl": "Message TTL",
+      "retentionTime": "Message Retention",
+      "deduplicationEnabled": "Deduplication",
+      "storageLimit": "Storage Limit",
+      "storagePolicy": "Storage Exceed Policy",
+      "url": "URL",
+      "topicPath": "Full Name",
+      "upload": "UPLOAD",
+      "tenantName": "Tenant Name",
+      "selectedPlan": "Plan",
+      "dataCenter": "Data Center"
+    },
+    "mediumEditor": {
+      "title": "Medium Editor"
+    },
+    "selects": {
+      "country": "Country Select",
+      "countryMulti": "Country Multi Select",
+      "multi": "Multi Select",
+      "simple": "Simple Select",
+      "title": "Selects",
+      "namespaceFilter": "Namespace Filter"
+    },
+    "wizard": {
+      "name": "Name",
+      "completed": "Done!",
+      "confirmSelection": "Confirm selection",
+      "rich": "Rich Wizard",
+      "simple": "Simple Wizard",
+      "stepOne": "Step 1. Tenant Name",
+      "stepTwo": "Step 2. Data Center",
+      "stepThree": "Step 3. Confirm",
+      "verticalRich": "Vertical Rich Wizard",
+      "verticalSimple": "Vertical Simple Wizard"
+    }
+  },
+  "grid": {
+    "desktop": "Desktop Grid",
+    "fixed": "Fixed Grid",
+    "offsets": "Offsets",
+    "responsive": "Responsive Grid"
+  },
+  "icons": {
+    "back": "Back to icons",
+    "none": "No icons found",
+    "search": "Icon search",
+    "title": "Icons"
+  },
+  "spinners": {
+    "title": "Spinners",
+    "poweredBy": "Powered by"
+  },
+  "language": {
+    "brazilian_portuguese": "Português",
+    "english": "English",
+    "spanish": "Spanish"
+  },
+  "menu": {
+    "auth": "Auth",
+    "buttons": "Buttons",
+    "charts": "Charts",
+    "colorPickers": "Color Pickers",
+    "filters": "Filters",
+    "collapse": "Collapse",
+    "timelines": "Timelines",
+    "dashboard": "Dashboard",
+    "summary": "Summary",
+    "extra": "Extra",
+    "formElements": "Form Elements",
+    "forms": "Forms",
+    "formWizards": "Form Wizards",
+    "mediumEditor": "Medium Editor",
+    "grid": "Grid",
+    "icons": "Icons",
+    "cards": "Cards",
+    "spinners": "Spinners",
+    "login": "Login",
+    "functions": "Functions",
+    "functionView": "Manage",
+    "functionAdd": "Add",
+    "sinks": "Sinks",
+    "sinkView": "Manage",
+    "sinkAdd": "Add",
+    "sources": "Sources",
+    "sourceView": "Manage",
+    "sourceAdd": "Add",
+    "clients": "Test Clients",
+    "maps": "Maps",
+    "pages": "Pages",
+    "modals": "Modals",
+    "notifications": "Notifications",
+    "progressBars": "Progress Bars",
+    "signUp": "Sign up",
+    "statistics": "Statistics",
+    "tables": "Tables",
+    "topics": "Topics",
+    "topicDetails": "Details",
+    "functionDetails": "Details",
+    "sinkDetails": "Details",
+    "sourceDetails": "Details",
+    "namespaceDetails": "Details",
+    "namespaces": "Namespaces",
+    "clusters": "Clusters",
+    "clusterDetail": "Details",
+    "clusterMonitor": "Monitoring",
+    "credentials": "Credentials",
+    "code": "Code Samples",
+    "tags": "Tags",
+    "typography": "Typography",
+    "uiElements": "UI Elements",
+    "treeView": "Tree view",
+    "dateTimePickers": "Date time pickers",
+    "fileUpload": "File Upload",
+    "dropdowns": "Dropdowns",
+    "managePlans": "Manage",
+    "org": "Org",
+    "brokers": "Brokers"
+  },
+  "messages": {
+    "all": "See all messages",
+    "new": "New messages from {name}"
+  },
+  "modal": {
+    "cancel": "CANCEL",
+    "close": "CLOSE",
+    "confirm": "CONFIRM",
+    "ok": "OK",
+    "large": "Large",
+    "largeTitle": "Large Modal",
+    "medium": "Medium",
+    "mediumTitle": "Medium Modal",
+    "small": "Small",
+    "smallTitle": "Small Modal",
+    "static": "Static",
+    "staticMessage": "This is a static modal, backdrop click will not close it.",
+    "staticTitle": "Static Modal",
+    "title": "Modals"
+  },
+  "dropdown": {
+    "default": "Default",
+    "withArrow": "With arrow",
+    "note": "Note",
+    "noteText": "Dropdown will open in the specified direction if there is enough space on the screen, otherwise the direction will automatically change"
+  },
+  "fileUpload": {
+    "advancedMediaGallery": "Advanced, Media Gallery",
+    "advancedUploadList": "Advanced, Upload List",
+    "mediaGallery": "Media Gallery",
+    "uploadList": "Upload List",
+    "single": "Single",
+    "dragNdropFiles": "Drag’n’drop files or",
+    "uploadedOn": "Uploaded on",
+    "fileDeleted": "File was successfully deleted",
+    "undo": "Undo",
+    "preview": "Preview",
+    "delete": "Delete",
+    "deleteFile": "Delete file",
+    "uploadFile": "Upload file",
+    "uploadMedia": "Upload media",
+    "addAttachment": "Add attachment",
+    "modalTitle": "File validation",
+    "modalText": "File type is incorrect!"
+  },
+  "tags": {
+    "default": "Default",
+    "removable": "Removable",
+    "colored": "Colored"
+  },
+  "navbar": {
+    "messageUs": "Web development help needed? Contact us at"
+  },
+  "notifications": {
+    "all": "See all notifications",
+    "sentMessage": "{name} sent you a message",
+    "uploadedZip": "{name} uploaded a new Zip file with {type}",
+    "startedTopic": "{name} started a new topic"
+  },
+  "timelines": {
+    "horizontalSimple": "Horizontal Simple",
+    "horizontalCards": "Horizontal Cards",
+    "verticalSimple": "Vertical Simple",
+    "verticalLabel": "Vertical With Label",
+    "verticalCentered": "Vertical Centered",
+    "firstDate": "February 2018",
+    "secondDate": "March 2018",
+    "thirdDate": "April 2018",
+    "cardsSecondInfo": "They occur in a variety of habitats, such as grasslands.",
+    "cardsThirdInfo": "However, various anthropogenic factors have had a severe impact on zebra populations",
+    "verticalSimpleCardsFirstInfo": "The unique stripes of zebras make them one of the animals most familiar to people. They occur in a variety of habitats, such as grasslands, savannas, woodlands, thorny scrublands.",
+    "verticalSimpleCardsSecondInfo": "However, various anthropogenic factors have had a severe impact on zebra populations"
+  },
+  "progressBars": {
+    "basic": "Basic",
+    "basicVertical": "Basic Vertical",
+    "circle": "Circle",
+    "colorFulTitle": "Colorful Bars",
+    "thin": "Thin",
+    "thinVertical": "Thin Vertical",
+    "thick": "Thick",
+    "title": "Progress Bars"
+  },
+  "tables": {
+    "basic": "Basic Table",
+    "topics": {
+      "rates": "Topic Rates",
+      "info": "Topics",
+      "storage": "Topic Storage",
+      "subscriptions": "Subscriptions",
+      "replication": "Replication",
+      "replClusters": "Replication",
+      "consumers": "Consumers",
+      "producers": "Producers"
+    },
+    "namespaces": {
+      "rates": "Namespace Rates",
+      "info": "Namespace Info"
+    },
+    "clusters": {
+      "rates": "Cluster Rates",
+      "info": "Cluster Info"
+    },
+    "styled": "Colors, Icons, Labels",
+    "advanced": "Search & Pagination",
+    "headings": {
+      "city": "City",
+      "email": "Email",
+      "name": "Name",
+      "score": "Score",
+      "topicname": "Name",
+      "actions": "Actions",
+      "namespace": "Namespace",
+      "namespaces": "Namespaces",
+      "ratein": "In (msg/s)",
+      "rateout": "Out (msg/s)",
+      "cluster": "Cluster",
+      "clusters": "Clusters",
+      "rate": "Rate",
+      "topics": "Topics",
+      "message_ttl_in_seconds": "Max TTL (s)",
+      "replication_clusters": "Replication Cluster",
+      "max_producers_per_topic": "Max Producers per Topic",
+      "max_consumers_per_topic": "Max Consumers per Topic",
+      "max_consumers_per_subscription": "Max Consumers per Subscription",
+      "storageSize": "Storage Size",
+      "averageMsgSize": "Avg Msg Size",
+      "producers": "Producers",
+      "subscriptions": "Subscriptions",
+      "consumers": "Consumers",
+      "msgRateOut": "Rate Out (msg/s)",
+      "msgThroughputOut": "Out (/s)",
+      "msgRateIn": "Rate In (msg/s)",
+      "msgThroughputIn": "In (/s)",
+      "msgRateRedeliver": "Msg Redeliver Rate",
+      "msgBacklog": "Msg Backlog",
+      "msgDropRate": "Msg Drop Rate",
+      "blockedSubscriptionOnUnackedMsgs": "Blocked on Unacked Msgs",
+      "blockedConsumerOnUnackedMsgs": "Blocked on Unacked Msgs",
+      "unackedMessages": "Unacked Messages",
+      "msgRateExpired": "Msg Rate Expired",
+      "connected": "Connected",
+      "replicationDelayInSeconds": "Replication Delay (s)",
+      "connectedSince": "Connected Since",
+      "clientVersion": "Client Version",
+      "producerId": "Producer ID",
+      "subscriptionName": "Subscription Name",
+      "availablePermits": "Available Permits",
+      "type": "Type",
+      "clusterDispatchRate": "Dispatch Rate",
+      "clusterDispatchBytes": "Dispatch Bytes",
+      "clusterDispatchInterval": "Interval"
+
+    },
+    "dataTable": {
+      "noDataAvailable": "No Data Available"
+    }
+  },
+  "user": {
+    "language": "Change Language",
+    "logout": "Logout",
+    "profile": "My Profile"
+  },
+  "treeView": {
+    "basic": "Basic",
+    "icons": "Icons",
+    "selectable": "Selectable",
+    "editable": "Editable",
+    "advanced": "Advanced"
+  },
+  "cards": {
+    "cards": "Cards",
+    "fixed": "Fixed",
+    "floating": "Floating",
+    "contentText": "The unique stripes of zebras make them one of the animals most familiar to people.",
+    "rowHeight": "Row height",
+    "title": {
+      "dark": "Dark background",
+      "bright": "Very bright card",
+      "titleOnImageNoOverlay": "Title on image, but no overlay",
+      "normal": "Perfectly normal card",
+      "overlayAndTextOnImage": "Card with overlay and text on top of image",
+      "stripeNoImage": "Striped card without image"
+    },
+    "button": {
+      "main": "Main",
+      "cancel": "Cancel"
+    },
+    "link": {
+      "edit": "Edit",
+      "setAsDefault": "Set as default",
+      "delete": "Delete",
+      "traveling": "Traveling",
+      "france": "France",
+      "review": "Review",
+      "feedback": "Leave feedback",
+      "readFull": "Read full article",
+      "secondaryAction": "Secondary action",
+      "action1": "Action 1",
+      "action2": "Action 2"
+    }
+  }
+}

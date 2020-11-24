@@ -1,0 +1,194 @@
+<template>
+    <div class="python-producer">
+        <h5>Simple Producer</h5>
+        <p>This sample creates a producer on a topic, sends 10 messages, then closes the producer.</p>
+
+        <div class="va-row">
+            <div class="flex md9">
+                <div class="va-row">
+                    <div class="flex md4">
+                        <vuestic-simple-select
+                        label="Cluster"
+                        v-model="currentCluster"
+                        option-key="id"
+                        :options="clusterSelect"
+                        :clearable="clearable"
+                        v-on:input="updateNsSelect()"
+                        />
+                    </div>
+                    <div class="flex md4">
+                        <vuestic-simple-select
+                        label="Namespace"
+                        v-model="currentNamespace"
+                        option-key="id"
+                        :options="namespaceSelect"
+                        ref="nsSelect"
+                        :clearable="clearable"
+                        />
+                    </div>
+                
+                    <div class="flex md4">
+                        <div class="form-group with-icon-right"
+                            :class="{'has-error': errors.has('currentTopic'), 'valid': isFormFieldValid('currentTopic')}">
+                            <div class="input-group">
+                                    <input id="topic-input" 
+                                    v-model="currentTopic" 
+                                    class="has-value" 
+                                    v-validate="'required|alpha_dash'"
+                                    name="currentTopic"
+                                    data-vv-as="Produce Topic"
+                                    />
+                                    <i
+                                    class="fa fa-exclamation-triangle error-icon icon-right input-icon icon-medium"></i>
+                                    <label class="control-label" for="simple-input">Topic</label><i class="bar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group with-icon-right">
+            <pre v-highlightjs="simpleProducer"><code class="python"></code></pre>
+            <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="simpleProducer"
+                    v-clipboard:success="onCopy" v-clipboard:error="onError">
+                    </i>
+        </div>
+
+        
+    </div>
+</template>
+
+<script>
+    import { mapGetters } from 'vuex'
+    import mixins from '@/services/mixins'
+
+
+    export default {
+        name: "PythonProducer",
+        data() {
+            return {
+                currentCluster: { id: this.cluster, description: this.cluster },
+                currentNamespace: { id: this.namespace, description: this.namespace },
+                currentTopic: "test-topic",
+                clearable: false
+            }
+        },
+        mixins: [mixins],
+        methods: {
+            updateNsSelect(){
+                this.currentNamespace=''
+
+                Object.keys(this.namespacesConfig.data).forEach(key => {
+                    if (this.namespacesConfig.data[key].name === 'local-'+this.currentCluster.id) {
+                        this.$refs.nsSelect.selectOption({ id: 'local-'+this.currentCluster.id, description: 'local-'+this.currentCluster.id })
+                    }
+                })
+            
+            },
+            isFormFieldValid (field) {
+            let isValid = false
+                if (this.formFields[field]) {
+                    isValid = this.formFields[field].validated && this.formFields[field].valid
+                }
+                return isValid
+            },
+        },
+        props: {
+            cluster: {
+                type: String,
+                default: 'useast1-gcp',
+            },
+            namespace: {
+                type: String,
+                default: 'worldwide',
+            },
+        },
+        computed: {
+            ...mapGetters([
+                'apiVersion',
+                'activeCluster',
+                'allowedClusters',
+                'tenant',
+                'clientToken',
+                'namespacesConfig',
+                'clusterInfo'
+            ]),
+            clusterSelect() {
+
+                const options = []
+
+                this.allowedClusters.forEach(cluster => {
+                    options.push({
+                        id: cluster,
+                        description: cluster
+                    })
+                });
+
+                return options
+
+
+            },
+            namespaceSelect() {
+
+                const options = []
+                // Get the namespace data if we have it
+                Object.keys(this.namespacesConfig.data).forEach(key => {
+                    if (this.namespacesConfig.data[key].cluster === this.currentCluster.id) {
+                        options.push({
+                            id: this.namespacesConfig.data[key].name,
+                            description: this.namespacesConfig.data[key].name
+                        })
+                    }
+
+                })
+                
+                return options
+
+
+            },
+            serviceUrl() {
+                if (this.clusterInfo.info[this.currentCluster.id] && this.clusterInfo.info[this.currentCluster.id].host_override_pulsar) {
+                    return this.clusterInfo.info[this.currentCluster.id].host_override_pulsar
+                }
+                return "pulsar+ssl://"+this.currentCluster.id.replace(/-/g,".")+".kafkaesque.io:6651"
+            },
+            simpleProducer(){
+                return `import pulsar
+
+service_url = '${this.serviceUrl}'
+
+# Use default CA certs for your environment
+# RHEL/CentOS:
+trust_certs='/etc/ssl/certs/ca-bundle.crt'
+# Debian/Ubuntu:
+# trust_certs='/etc/ssl/certs/ca-certificates.crt'
+# OSX:
+# Export the default certificates to a file, then use that file:
+#    security find-certificate -a -p /System/Library/Keychains/SystemCACertificates.keychain > ./ca-certificates.crt
+# trust_certs='./ca-certificates.crt'
+
+token='${this.clientToken}'
+
+client = pulsar.Client(service_url,
+                        authentication=pulsar.AuthenticationToken(token),
+                        tls_trust_certs_file_path=trust_certs)
+
+
+producer = client.create_producer('persistent://${this.tenant}/${this.currentNamespace.id}/${this.currentTopic}')
+
+for i in range(10):
+    producer.send(('Hello World! %d' % i).encode('utf-8'))
+
+client.close()
+`
+            },
+        },
+
+    }
+</script>
+
+
+<style lang="scss" scoped>
+
+</style>
