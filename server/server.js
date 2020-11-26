@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express');
 const path = require('path');
 const randomId = require('random-id');
@@ -43,6 +44,7 @@ process.env['VUE_APP_YANDEX_METRICS_KEY']=''
 const users = [];
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'mysession',
   keys: ['vueauthrandomkey'],
@@ -65,7 +67,27 @@ app.post('/api/user', (req, res) => {
   res.json("user addedd");
 });
 
-app.post('/login', passport.authenticate('local', { successRedirect: '/',
+app.post('/auth', async (req, res) => {
+  console.log('called ', req.body)
+  const username = req.body.username;
+  const password = req.body.password;
+  if (username && password) {
+    let result = await k8s.authenticate(username, password);
+    cfg.L.info('user ' + username + ' auth result ' + result);
+
+    if (result) {
+      req.session.loggedin = true;
+      req.session.username = username;
+      res.redirect('/');
+    } else {
+      res.status(401).send("incorrect credentials");
+      // redirect back to /login ?
+    }
+  } else {
+    res.redirect('/login');
+  }
+});
+app.post('/auth-page', passport.authenticate('local', { successRedirect: '/',
                                                     failureRedirect: '/login' }));
 
 app.post('/api/login', (req, res, next) => {
@@ -91,8 +113,9 @@ app.get('/api/logout', (req, res) => {
   return res.send();
 });
 
-app.get('/', (req,res) => {
-  res.sendFile(path.join(__dirname, '../dashboard/dist/index.html'));
+app.get('/login', (req,res) => {
+  // res.sendFile(path.join(__dirname, '../dashboard/dist/index.html'));
+  res.sendFile(path.join(__dirname + '/login.html'));
 });
 
 app.listen(cfg.serverConfig.PORT, () => {
