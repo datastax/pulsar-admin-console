@@ -40,15 +40,28 @@ const getSecrets = async (namespace, key) => {
 const authenticate = async (username, password) => {
     const namespace = cfg.serverConfig.K8S_NAMESPACE;
     const secret = await getSecrets(namespace, username)
-    cfg.L.info('passwordd is ' + secret)
+    cfg.L.debug('kubernetes secrete based auth ' + namespace + ' ' + username + ' ' + secret)
     if (secret && secret === password) {
         return true
     }
     return false
 }
-
+/**
+ * 
+ * @param {*} username 
+ */
+const matchUser = async (username) => {
+    const namespace = cfg.serverConfig.K8S_NAMESPACE;
+    const secret = await getSecrets(namespace, username)
+    cfg.L.debug('kubernetes secrete based auth ' + namespace + ' ' + username)
+    if (secret) {
+        return true
+    }
+    return false
+}
 module.exports = {
     getSecrets,
+    matchUser,
     authenticate
 };
 
