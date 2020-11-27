@@ -20,19 +20,14 @@ jobs:
         with:
           fetch-depth: 1
           path: go/src/github.com/kafkaesque-io/pulsar-dashboard
-      - name: Build vue components
+      - name: Set up node
         uses: actions/setup-node@master
+      - name: Build vue components
         run: |
           cd dashboard
           npm install
           npm install -g @vue/cli 
           npm run build
-
-      - name: Build Node server
-        uses: actions/setup-node@master
-        run: |
-          cd server
-          npm install 
 
   docker:
     name: docker
