@@ -30,7 +30,9 @@ jobs:
 
       - name: Build Node server
         uses: actions/setup-node@master
-        run: pwd 
+        run: |
+          cd server
+          npm install 
 
   docker:
     name: docker
