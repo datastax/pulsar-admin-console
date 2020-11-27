@@ -12,7 +12,7 @@ on:
 
 jobs:
   analysis:
-    name: Build
+    name: static analysis
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
