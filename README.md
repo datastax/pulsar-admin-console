@@ -33,14 +33,8 @@ npm install
 npm server.js
 ```
 
-cd ./wp-content/themes/kafkaesque/dashboard
+cd ./dashboard
 
-RUN npm install 
-RUN npm install -g @vue/cli 
-RUN npm run build
-cp ./backend/* ./wp-content/themes/kafkaesque/dashboard/dist/ 
-
-### wordpress
-
-Current bootstrap wp script
-wp-content/themes/kafkaesque/includes/enqueue-scripts.php
+npm install 
+npm install -g @vue/cli 
+npm run build

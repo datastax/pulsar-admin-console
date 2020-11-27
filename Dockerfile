@@ -12,7 +12,7 @@ RUN npm run build
 #
 # build node app in the next stage
 # 
-FROM node:11  
+FROM node:11.15-alpine  
 
 LABEL maintainer="ming.luo@kafkaesque.io"
 
@@ -26,10 +26,12 @@ WORKDIR /root/
 #    && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p dashboard/dist
 RUN mkdir server
-COPY --from=UI-BUILD /build/dashboard/dist ./dashboard/dist
-COPY server/package*.json ./server/
-COPY server/*.js ./server/
-COPY server/*.html ./server/
+RUN ls
+COPY --from=UI-BUILD /build/dist /root/dashboard/dist
+RUN pwd
+COPY server/package*.json /root/server/
+COPY server/*.js /root/server/
+COPY server/*.html /root/server/
 RUN cd server && npm install
 
 EXPOSE 8080 8081 6454 6455
