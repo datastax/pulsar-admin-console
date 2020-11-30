@@ -27,7 +27,6 @@ jobs:
           cd dashboard
           npm install
           npm install -g @vue/cli 
-          npm run build
 
   docker:
     name: docker

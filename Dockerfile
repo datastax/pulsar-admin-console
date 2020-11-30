@@ -28,6 +28,7 @@ RUN mkdir -p dashboard/dist
 RUN mkdir server
 RUN ls
 COPY --from=UI-BUILD /build/dist /root/dashboard/dist
+COPY /root/dashboard/dist/index.html /root/dashboard/dist/index.html.template
 RUN pwd
 COPY server/package*.json /root/server/
 COPY server/*.js /root/server/
