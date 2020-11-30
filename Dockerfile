@@ -4,7 +4,8 @@ WORKDIR /build
 
 COPY ./dashboard/ .
 
-# npm update caniuse-lite browserslist
+# make sure node_modules is not copye although it should be skipped by .dockerignore
+RUN rm -rf node_modules
 RUN npm install
 RUN npm install -g @vue/cli
 RUN npm run build
@@ -28,7 +29,7 @@ RUN mkdir -p dashboard/dist
 RUN mkdir server
 RUN ls
 COPY --from=UI-BUILD /build/dist /root/dashboard/dist
-COPY /root/dashboard/dist/index.html /root/dashboard/dist/index.html.template
+COPY --from=UI-BUILD /build/dist/index.html /root/dashboard/dist/index.html.template
 RUN pwd
 COPY server/package*.json /root/server/
 COPY server/*.js /root/server/

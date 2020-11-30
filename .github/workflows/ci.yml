@@ -22,11 +22,15 @@ jobs:
           path: go/src/github.com/kafkaesque-io/pulsar-dashboard
       - name: Set up node
         uses: actions/setup-node@master
+        with:
+          node-version: '11'
+          check-latest: true
       - name: Build vue components
         run: |
           cd dashboard
           npm install
           npm install -g @vue/cli 
+          npm run build
 
   docker:
     name: docker
