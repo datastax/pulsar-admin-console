@@ -1,0 +1,48 @@
+name: ci 
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  # Also trigger on page_build, as well as release created events
+  page_build:
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created 
+
+jobs:
+  analysis:
+    name: static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+          path: go/src/github.com/kafkaesque-io/pulsar-dashboard
+      - name: Set up node
+        uses: actions/setup-node@master
+        with:
+          node-version: '11'
+          check-latest: true
+      - name: Build vue components
+        run: |
+          cd dashboard
+          npm install
+          npm install -g @vue/cli 
+          npm run build
+
+  docker:
+    name: docker
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+          path: go/src/github.com/kafkaesque-io/pulsar-dashboard
+
+      - name: Build dashboard Docker Image
+        run: |
+          pwd
+          sudo docker build -t pulsar-dashboard .
