@@ -3,14 +3,29 @@
  * kubernetes client that retieves admin and user credentials
  */
 
+const fs = require('fs');
 const K8sClient = require('kubernetes-client').Client;
+const Request = require('kubernetes-client/backends/request');
 const config = require('kubernetes-client/backends/request').config;
+const kubeConfigFile = process.env.HOME + '/.kube/config';
+const log = require('./config');
 
 const secretPrefix = 'dashboard-user-'
-const client = new K8sClient({
+// kubernetes clientset configuration
+let k8sClientConfig = null;
+if (fs.existsSync(kubeConfigFile)) {
+  log.L.info('set up kubernetes cluster dev local access');
+  k8sClientConfig = {
     config: config.fromKubeconfig(),
     version: '1.13'
-});
+  }
+} else if (process.env.KUBERNETES_SERVICE_HOST != '' && process.env.KUBERNETES_SERVICE_PORT != '') {
+  k8sClientConfig = new Request(Request.config.getInCluster()); 
+  log.L.info('set up kubernetes in-cluster access');
+} else {
+  log.L.error("no kubernetes cluster access ")
+}
+const client = new K8sClient({ k8sClientConfig });
 
 const cfg = require('./config.js')
 /**
