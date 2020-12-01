@@ -2,8 +2,9 @@ const { response } = require('express');
 const express = require('express');
 const path = require('path');
 const randomId = require('random-id');
-const cfg = require('./config.js')
-cfg.config('../dashboard/dist/index.html')
+const cfg = require('./config.js');
+const jwt = require('jsonwebtoken');
+cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
 const app = express(),
       k8s = require('./k8s.js');
@@ -43,6 +44,7 @@ process.env['VUE_APP_YANDEX_METRICS_KEY']=''
 // place holder for the data
 const users = [];
 
+// app.use(require('cors'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
@@ -65,6 +67,25 @@ app.post('/api/user', (req, res) => {
   cfg.L.info('Adding user:::::', user);
   users.push(user);
   res.json("user addedd");
+});
+
+app.post('/api/v1/auth/token', async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  try {
+    if (username && password) {
+      let result = await k8s.authenticate(username, password);
+      if (result) {
+        const secret = process.env.TOKEN_SECRET || "default-secret"
+        res.send({token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
+        return;
+      }
+    }
+    res.status(401).send("incorrect credentials");
+  } catch (e) {
+    console.log(e);
+    res.status(401);
+  }
 });
 
 app.post('/auth', async (req, res) => {

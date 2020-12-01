@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import AppLayout from '../components/admin/AppLayout'
+import Login from '../auth/Login.vue'
+import { isLoggedIn } from '../auth/auth'
 // import WelcomeLayout from '../components/welcome/WelcomeLayout'
 import lazyLoading from './lazyLoading'
 
@@ -28,7 +30,8 @@ const EmptyParentComponent = {
   template: '<router-view></router-view>',
 }
 
-export default new Router({
+const router = new Router({
+  // console.log('api login called ...', req.body)
   routes: [
     ...demoRoutes,
     {
@@ -46,6 +49,14 @@ export default new Router({
       component: lazyLoading('plans/PlanLayout'),
       default: true,
       props: true
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: {
+        allowAnonymous: true
+      }
     },
     {
       name: 'Admin',
@@ -281,3 +292,17 @@ export default new Router({
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta.allowAnonymous && !isLoggedIn()) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  }
+  else {
+    next()
+  }  
+})
+
+export default router;
