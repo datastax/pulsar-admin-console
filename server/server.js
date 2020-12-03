@@ -1,5 +1,9 @@
-const { response } = require('express');
 const express = require('express');
+'use strict';
+
+const https = require('https');
+const watch = require('./file-watch.js');
+const fs = require('fs');
 const path = require('path');
 const randomId = require('random-id');
 const cfg = require('./config.js');
@@ -9,35 +13,7 @@ cfg.L.info('server config ', cfg.dashboardConfig)
 const app = express(),
       k8s = require('./k8s.js');
       bodyParser = require('body-parser'),
-      cookieSession = require('cookie-session'),
-      passport = require('passport');
-
-// the local authentication type
-const LocalStrategy = require('passport-local').Strategy
-passport.use(new LocalStrategy(
-  {
-    usernameField: 'username',
-    passwordField: 'password'
-  },
-  async (username, password, done) => {
-    let result = await k8s.authenticate(username, password);
-    cfg.L.info('user ' + username + ' auth result ' + result);
-
-    if (result) {
-      done(null, {username: username});
-    } else {
-      done(null, false, { message: 'Incorrect username or password'});
-    }
-  }
-));
-
-passport.serializeUser((user, done) => {
-  done(null, user.username);
-});
-
-passport.deserializeUser((id, done) => {
-  done(null, {username: id})
-});
+      cookieSession = require('cookie-session');
 
 process.env['NODE_ENV']='production'
 process.env['VUE_APP_YANDEX_METRICS_KEY']=''
@@ -50,10 +26,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'mysession',
   keys: ['vueauthrandomkey'],
-  maxAge: 365 * 24 * 60 * 60 * 1000 // 365 days
+  maxAge: 24 * 60 * 60 * 1000 // 1 day
 }));
-app.use(passport.initialize())
-app.use(passport.session())
 app.use(express.static(path.join(__dirname, '../dashboard/dist')));
 
 app.get('/api/users', (req, res) => {
@@ -83,13 +57,12 @@ app.post('/api/v1/auth/token', async (req, res) => {
     }
     res.status(401).send("incorrect credentials");
   } catch (e) {
-    console.log(e);
-    res.status(401);
+    cfg.L.error(e);
+    res.status(401).send("login exception");
   }
 });
 
 app.post('/auth', async (req, res) => {
-  console.log('called ', req.body)
   const username = req.body.username;
   const password = req.body.password;
   if (username && password) {
@@ -108,25 +81,6 @@ app.post('/auth', async (req, res) => {
     res.redirect('/login');
   }
 });
-app.post('/auth-page', passport.authenticate('local', { successRedirect: '/',
-                                                    failureRedirect: '/login' }));
-
-app.post('/api/login', (req, res, next) => {
-  cfg.L.debug(JSON.stringify(req.body, null, 2))
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-
-    if (!user) {
-      return res.status(400).send(info);
-    }
-
-    req.login(user, err => {
-      res.send("Logged in");
-    });
-  })(req, res, next);
-});
 
 app.get('/api/logout', (req, res) => {
   req.logout();
@@ -139,6 +93,24 @@ app.get('/login', (req,res) => {
   res.sendFile(path.join(__dirname + '/login.html'));
 });
 
-app.listen(cfg.serverConfig.PORT, () => {
+const caPath = process.env.CA_PATH || '';
+const certPath = process.env.CERT_PATH || '';
+const keyPath = process.env.KEY_PATH || '';
+if (caPath != '' && certPath != '' && keyPath != '') {
+  const options = {
+    ca: [fs.readFileSync(caPath)],
+    cert: fs.readFileSync(certPath),
+    key: fs.readFileSync(keyPath),
+  };
+  
+  watch.exitOnFileChange(caPath);
+  watch.exitOnFileChange(certPath);
+  watch.exitOnFileChange(keyPath);
+
+  const server = https.createServer(options, app);
+  server.listen(cfg.serverConfig.PORT);
+} else {
+  app.listen(cfg.serverConfig.PORT, () => {
     cfg.L.info(`Server listening on the port:${cfg.serverConfig.PORT}`);
-});
+  });
+}

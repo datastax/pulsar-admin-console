@@ -33,6 +33,7 @@ const state = {
   caCertificate: '',
   adminToken: '',
   apiBaseUrl: '',
+  backendUrl: '',
   noticeText: '',
   pollingInterval: 5000,
   wssUrlOverride: '',
@@ -168,6 +169,9 @@ const mutations = {
   },
   setApiBaseUrl (state, value) {
     state.apiBaseUrl = value
+  },
+  setBackendUrl (state, value) {
+    state.backendUrl = value
   },
   setClientToken (state, value) {
     state.clientToken = value
@@ -453,6 +457,7 @@ const getters = {
   brokerLoadData: state => state.brokerLoadData,
   activeCluster: state => state.activeCluster,
   apiBaseUrl: state => state.apiBaseUrl,
+  backendUrl: state => state.backendUrl,
   noticeText: state => state.noticeText,
   pollingInterval: state => state.pollingInterval,
   wssUrlOverride: state => state.wssUrlOverride,

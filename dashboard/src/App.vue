@@ -59,6 +59,7 @@ export default {
       this.$store.commit('setPlan', wpData.plan)
       this.$store.commit('setAdminToken', wpData.admin_token)
       this.$store.commit('setApiBaseUrl', wpData.api_base_url)
+      this.$store.commit('setBackendUrl', wpData.backend_url)
       this.$store.commit('setCaCertficate', wpData.ca_certificate)
       this.$store.commit('setNoticeText', wpData.notice_text)
       this.$store.commit('setChargebeeSite', wpData.chargebee_site)

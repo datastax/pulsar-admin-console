@@ -37,3 +37,5 @@ COPY server/*.html /root/server/
 RUN cd server && npm install
 
 EXPOSE 8080 8081 6454 6455
+
+CMD [ "npm", "start" ]

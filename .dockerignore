@@ -8,3 +8,8 @@ docker-compose*
 README.md
 LICENSE
 .vscode
+*.crt
+*.key
+env.list
+docker-run.sh
+docker-compose.yml

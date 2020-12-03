@@ -35,6 +35,7 @@ let dashboardConfig = {
     'admin_role': '',
     'cluster_list': '',
     'api_base_url': '',
+    'backend_url': 'http://localhost',
     'ca_certificate': '',
     'api_version': '',
     'default_plan': '',
@@ -67,8 +68,9 @@ const reconcileConfig = (obj) => {
 }
 
 const config = (indexHtml) => {
-    reconcileConfig(dashboardConfig)
     reconcileConfig(serverConfig)
+    dashboardConfig.backend_url = dashboardConfig.backend_url + ":" + serverConfig.PORT;
+    reconcileConfig(dashboardConfig)
     generateIndexHtml(indexHtml)
 }
 const fs = require('fs');
