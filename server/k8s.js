@@ -54,7 +54,7 @@ const getSecrets = async (namespace, key) => {
 const authenticate = async (username, password) => {
     const namespace = cfg.serverConfig.K8S_NAMESPACE;
     const secret = await getSecrets(namespace, username)
-    cfg.L.debug('kubernetes secrete based auth ' + namespace + ' ' + username + ' ' + secret)
+    cfg.L.debug('kubernetes secret based auth namespace ' + namespace + ' ' + username + ' ' + secret)
     if (secret && secret === password) {
         return true
     }

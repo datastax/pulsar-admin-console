@@ -49,7 +49,7 @@ let dashboardConfig = {
     'private_org': '',
     'functions_disabled': '',
     'clients_disabled': '',
-    'running_env': '',
+    'running_env': 'k8s',
     'use_token_list': '',
 }
 

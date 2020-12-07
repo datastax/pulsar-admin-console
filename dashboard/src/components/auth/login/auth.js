@@ -7,7 +7,7 @@ const AUTH_TOKEN_KEY = 'authToken'
 
 export function loginUser(username, password) {
     return new Promise((resolve, reject) => {
-        let url = store.getters.apiBaseUrl + '/api/v1/auth/token';
+        let url = store.getters.backendUrl + '/api/v1/auth/token';
         return axios.post(url, {
                 username: username,
                 password: password,
@@ -45,6 +45,10 @@ export function isLoggedIn() {
     let authToken = getAuthToken()
     console.log("this is token from local storage", authToken)
     return !!authToken && !isTokenExpired(authToken)
+}
+
+export function isK8sAuthRequired() {
+    return store.getters.runningEnv !== "web";
 }
 
 export function getUserInfo() {
