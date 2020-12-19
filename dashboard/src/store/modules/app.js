@@ -23,6 +23,8 @@ const state = {
   },
   isLoading: true,
   activeTopicDetailTab: 'Overview',
+  activeNamespaceDetailTab: 'Overview',
+  activeBrokerDetailTab: 'Overview',
   activeFunctionDetailTab: 'Overview',
   activeSinkDetailTab: 'Overview',
   activeSourceDetailTab: 'Overview',
@@ -39,6 +41,12 @@ const mutations = {
   },
   activeTopicDetailTab (state, tabName) {
     state.activeTopicDetailTab = tabName
+  },
+  activeNamespaceDetailTab (state, tabName) {
+    state.activeNamespaceDetailTab = tabName
+  },
+  activeBrokerDetailTab (state, tabName) {
+    state.activeBrokerDetailTab = tabName
   },
   activeFunctionDetailTab (state, tabName) {
     state.activeFunctionDetailTab = tabName
@@ -60,6 +68,12 @@ const actions = {
   },
   setActiveTopicDetailTab ({ commit }, value) {
     commit('activeTopicDetailTab', value)
+  },
+  setActiveNamespaceDetailTab ({ commit }, value) {
+    commit('activeNamespaceDetailTab', value)
+  },
+  setActiveBrokerDetailTab ({ commit }, value) {
+    commit('activeBrokerDetailTab', value)
   },
   setActiveClusterDetailTab ({ commit }, value) {
     commit('activeClusterDetailTab', value)

@@ -1,9 +1,6 @@
 <template>
   <div class="auth-layout">
     <div class="nav d-lg-none">
-      <router-link :to="{path: '/'}">
-        <vuestic-icon-vuestic/>
-      </router-link>
     </div>
     <div class="main va-row">
       <div class="auth-content flex lg6 xs12 fill-height">
@@ -15,7 +12,7 @@
         <div class="flex-center">
           <div class="auth-layout__auth-wallpaper__cross-line"/>
           <router-link class="auth-layout__auth-wallpaper__logo" :to="{path: '/'}">
-            <vuestic-icon-vuestic/>
+            <pulsar-icon/>
           </router-link>
         </div>
       </div>
@@ -24,13 +21,11 @@
 </template>
 
 <script>
-// d-none and d-lg-flex were deleted, bug will be fixed in the nearest update
-import VuesticIconVuestic
-  from '../../vuestic-theme/vuestic-components/vuestic-icon/VuesticIconVuestic'
+import PulsarIcon from '../icon/PulsarIcon'
 
 export default {
   name: 'AuthLayout',
-  components: { VuesticIconVuestic },
+  components: { PulsarIcon },
 }
 </script>
 

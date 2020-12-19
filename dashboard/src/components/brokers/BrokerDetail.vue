@@ -1,84 +1,101 @@
 <template>
-    <div class="broker-details" id="broker-details">
-        <div class="va-row">
-            <div class="flex xs12 md12">
-            <div class="flex md12">
-                <button class="btn btn-micro btn-right">
-                <span
-                    class="fa fa-refresh"
-                    style="`font-size: 30px`"
-                    aria-hidden="true"
-                    @click="getData()"
-                />
-                </button>
-            </div>
+  <div class="brokerDetail" v-if="brokerLoadData[$route.params.id]">
+    <vuestic-widget :headerText="pageTitle()">
+      <broker-tabs class="tabs"
+                    :names="tabNames">
 
-                <vuestic-widget headerText="Runtime Configuration">
-                    <div class="flex md12">
-                        <div class="va-row" v-if="brokerLoadReport.dispatchThrottlingRatePerTopicInMsg">
-                                <alert ref="alert" :errorText="errorText"></alert>
-                                <div class="va-row">
-                                    <div v-for="statKey in brokerLoadReportKeys" :key="statKey" class="flex md3">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <input :value="getHumanReadable(statKey, brokerLoadReport[statKey])" id="clear-input" name="clear-input"
-                                                class="has-value" placeholder="" readonly />
-                                            <label class="control-label" for="clear-input" role="button">{{ convertCamelCaseToTitleCase(statKey) }}</label><i class="bar"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-
-                </vuestic-widget>
+        <div :slot="'brokerDetail.tabs.overview' | translate"
+             class="flex justify--center">
+          <broker-overview-tab></broker-overview-tab>
+        </div>
+        <div :slot="'brokerDetail.tabs.bundles' | translate"
+             class="flex justify--center">
+          <broker-bundles-tab></broker-bundles-tab>
+        </div>
+      </broker-tabs>
+    </vuestic-widget>
+    <div class="row bottom-widgets">
     </div>
-</div>
-    </div>
+  </div>
 </template>
-
 <script>
+import BrokerTabs from './BrokerTabs.vue'
+import BrokerBundlesTab from './BrokerBundlesTab'
+import BrokerOverviewTab from './BrokerOverviewTab'
 import { mapGetters } from 'vuex'
-import mixins from '@/services/mixins'
-import Alert from '../utils/Alert'
-import AjaxService from '@/services/AjaxService'
-
 export default {
-  name: 'BrokerDetails',
-  mixins: [mixins],
+  name: 'brokerDetail',
+  components: {
+    BrokerBundlesTab,
+    BrokerOverviewTab,
+    BrokerTabs
+  },
   data () {
     return {
-      errorText: 'Something went wrong',
-      brokerLoadReport: {},
-      // brokerLoadReportKeys: [
-      //     'dispatchThrottlingRatePerTopicInMsg',
-      // ],
+      posts: {},
+      news: {},
     }
-  },
-  computed: {
-    ...mapGetters([
-      'isAdminUser'
-    ]),
-    brokerLoadReportKeys () {
-      return Object.keys(this.brokerLoadReport)
-    }
-  },
-  components: {
-    Alert,
   },
   mounted () {
-    // console.log('Mounted broker detail')
-    // this.getData()
+    this.$store.dispatch('setActiveBrokerDetailTab', this.$t('brokerDetail.tabs.overview'))
   },
   beforeDestroy () {
     // Trigger an update so we don't have to wait for the next interval
     this.$store.dispatch('updateAll')
   },
+  computed: {
+    ...mapGetters([
+      'brokerLoadData',
+      'activeCluster',
+      'userRole',
+      'activeBrokerDetailTab',
+      'featureFlags'
+    ]),
+    tabNames () {
+      let tabNames = [this.$t('brokerDetail.tabs.overview')]
+      tabNames.push(this.$t('brokerDetail.tabs.bundles'))
+      return tabNames
+    },
+  },
   methods: {
+    pageTitle () {
+      // return this.brokerLoadData.data[this.$route.params.id].name
+      return this.$route.params.id
+
+    },
   }
 }
 </script>
-
-<style>
-
+<style lang="scss" scoped>
+.tabs {
+  .overview-tab {
+    .explore-row {
+      display: none !important;
+    }
+  }
+  .maps-tab {
+    height: 500px;
+  }
+}
+.btn-right {
+  float: right ;
+}
+.profile-card-widget, .chat-widget {
+  width: 100%;
+  .widget-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > div {
+      width: 100%;
+    }
+  }
+}
+.bottom-widgets {
+  > div[class^='col'] {
+    & > div {
+      width: 100%;
+    }
+  }
+}
 </style>

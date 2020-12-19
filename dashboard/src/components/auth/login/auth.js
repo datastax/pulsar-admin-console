@@ -48,7 +48,7 @@ export function isLoggedIn() {
 }
 
 export function isK8sAuthRequired() {
-    return store.getters.runningEnv !== "web";
+    return store.getters.authMode === "k8s";
 }
 
 export function getUserInfo() {

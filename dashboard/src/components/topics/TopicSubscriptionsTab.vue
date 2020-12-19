@@ -185,7 +185,7 @@
                                 <button :disabled="isDeleted == topicStat.subscriptionName" class="btn btn-primary btn-micro btn-bottom-margin" @click="confirmDeleteSub(topicStat.subscriptionName)">Delete</button>
                                 <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="confirmClearSub(topicStat.subscriptionName)">Skip</button>
                                 <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openRewindSub(topicStat.subscriptionName)">Rewind</button>
-                                <button v-if="topicStats.data[$route.params.id].info.type === 'persistent' && isBug5579Fixed" class="btn btn-primary btn-micro btn-bottom-margin" @click="openExpireSub(topicStat.subscriptionName)">Expire</button>
+                                <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openExpireSub(topicStat.subscriptionName)">Expire</button>
                                 <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openPeekSub(topicStat.subscriptionName)">Peek</button>
                             </td>
                             <td>{{ topicStat.subscriptionName }}
@@ -439,6 +439,7 @@
                                         <tr>
                                             <td>Position</td>
                                             <td>Publish Time</td>
+                                            <td>Batch Size</td>
                                             <td>View</td>
                                             <td>Content</td>
                                         </tr>
@@ -450,6 +451,9 @@
                                                 </td>
                                                 <td>
                                                     {{ messageInfo.publishTime}}
+                                                </td>
+                                                <td>
+                                                    {{ messageInfo.batchSize}}
                                                 </td>
                                                 <td>
                                                   <i class="fa fa-eye pointer icon-medium" @click="showMessage(index)"></i>
@@ -572,8 +576,6 @@ export default {
       currentPeekedMessage: '',
       partitionIndex: -1,
       expireDateTime: '',
-      isBug5579Fixed: false,
-      isBug5360Fixed: true,
       subToPeek: '',
       currentPeekIdx: 1,
       maxLength: 70,
@@ -868,6 +870,11 @@ export default {
       let topicPath = infoObject.path
       let type = infoObject.type
 
+      const now = new Date()
+      const targetTime = new Date(this.expireDateTime)
+      let expireSeconds = Math.round((now - targetTime) / 1000)
+
+
       // Wait for the API call to return, then update the topic so the user gets feedback
       try {
         const response = await ApiService.expireSubTime(cluster, type, topicPath, subName, expireSeconds)
@@ -902,6 +909,7 @@ export default {
         const targetIdx = this.currentPeekIdx + 5
         for (this.currentPeekIdx; this.currentPeekIdx < targetIdx; this.currentPeekIdx++) {
           const response = await ApiService.peekSubIndex(cluster, type, topicPath, subName, this.currentPeekIdx)
+          // console.log(response)
           const rawContent = response.data
 
           var message = ''
@@ -930,6 +938,7 @@ export default {
             position: response.headers['x-pulsar-message-id'],
             content: message,
             publishTime: response.headers['x-pulsar-publish-time'],
+            batchSize: response.headers['x-pulsar-num-batch-message'],
             // properties: properties
           })
         }

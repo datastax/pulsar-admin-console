@@ -18,7 +18,7 @@ $ npm install
 
 ##### Run dev 
 ```
-$ npm run serve
+$ npm run dev
 ```
 
 ##### Build vue components

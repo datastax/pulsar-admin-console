@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  nginx:
+    image: 'nginx'
+    ports:
+      - '8001:443'
+      - '8002:80'
+    volumes:
+      - './nginx-kesque.conf:/etc/nginx/nginx.conf'
+      - './localhost.crt:/certs/localhost.crt'
+      - './localhost.key:/certs/localhost.key'
+  dashboard:
+    container_name: dashboard 
+    image: kesque/pulsar-dashboard 
+    expose:
+      - '80'
+    depends_on:
+      - nginx
+    environment:
+      PORT: "80"
+    env_file:
+     - ./.env

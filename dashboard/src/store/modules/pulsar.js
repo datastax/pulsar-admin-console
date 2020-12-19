@@ -33,12 +33,13 @@ const state = {
   caCertificate: '',
   adminToken: '',
   apiBaseUrl: '',
-  backendUrl: '',
   noticeText: '',
   pollingInterval: 5000,
   wssUrlOverride: '',
+  grafanaUrlOverride: '',
   disableBilling: 'false',
   runningEnv: 'web',
+  authMode: 'wp',
   planInfo: {},
   gcpMarketplaceLink: 'https://console.cloud.google.com/marketplace/details/kafkaesque-public/kafkaesque',
   subscriptionInfo: [],
@@ -118,11 +119,17 @@ const mutations = {
   setWssUrlOverride (state, port) {
     state.wssUrlOverride = port
   },
+  setGrafanaUrlOverride (state, port) {
+    state.grafanaUrlOverride = port
+  },
   setDisableBilling (state, flag) {
     state.disableBilling = flag
   },
   setRunningEnv (state, value) {
     state.runningEnv = value
+  },
+  setAuthMode (state, value) {
+    state.authMode = value
   },
   setChargebeeSite (state, site) {
     state.chargebeeSite = site
@@ -169,9 +176,6 @@ const mutations = {
   },
   setApiBaseUrl (state, value) {
     state.apiBaseUrl = value
-  },
-  setBackendUrl (state, value) {
-    state.backendUrl = value
   },
   setClientToken (state, value) {
     state.clientToken = value
@@ -457,12 +461,13 @@ const getters = {
   brokerLoadData: state => state.brokerLoadData,
   activeCluster: state => state.activeCluster,
   apiBaseUrl: state => state.apiBaseUrl,
-  backendUrl: state => state.backendUrl,
   noticeText: state => state.noticeText,
   pollingInterval: state => state.pollingInterval,
   wssUrlOverride: state => state.wssUrlOverride,
+  grafanaUrlOverride: state => state.grafanaUrlOverride,
   disableBilling: state => state.disableBilling,
   runningEnv: state => state.runningEnv,
+  authMode: state => state.authMode,
   chargebeeSite: state => state.chargebeeSite,
   billingProvider: state => state.billingProvider,
   userRole: state => state.userRole,
@@ -1204,6 +1209,7 @@ const actions = {
         }
         // Handle the case where the namespace is not configured for limits
         let retentionTime = 0
+        let retentionSize = 0
         let maxProducers = 0
         let maxConsumersTopic = 0
         let maxConsumersSub = 0
@@ -1227,6 +1233,7 @@ const actions = {
         if (state.namespacesConfig.data[nsIdx]) {
           // console.log(state.namespacesConfig.data[nsIdx])
           retentionTime = state.namespacesConfig.data[nsIdx].retention_policies ? state.namespacesConfig.data[nsIdx].retention_policies.retentionTimeInMinutes : 0
+          retentionSize = state.namespacesConfig.data[nsIdx].retention_policies ? state.namespacesConfig.data[nsIdx].retention_policies.retentionSizeInMB : 0
           maxProducers = state.namespacesConfig.data[nsIdx].max_producers_per_topic
           maxConsumersTopic = state.namespacesConfig.data[nsIdx].max_consumers_per_topic
           maxConsumersSub = state.namespacesConfig.data[nsIdx].max_consumers_per_subscription
@@ -1290,6 +1297,7 @@ const actions = {
           maxConsumersSub,
           ttl,
           retentionTime,
+          retentionSize,
           'partitioned': partitionedTopic,
           bookkeeperAckQuorum,
           bookkeeperEnsemble,

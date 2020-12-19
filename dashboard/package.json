@@ -6,7 +6,8 @@
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve --port 9080",
-    "build": "vue-cli-service build; cp dist/index.html dist/index.html.template",
+    "build": "vue-cli-service build",
+    "build-standalone": "vue-cli-service build; cp dist/index.html dist/index.html.template",
     "stage": "vue-cli-service build --mode staging",
     "build-bundle": "vue-cli-service build --target lib --name dashboard ./src/main.js",
     "lint": "vue-cli-service lint",

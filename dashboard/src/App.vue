@@ -43,7 +43,7 @@ export default {
 
       let public_path = i[1]
 
-      // Get data injected from Wordpress
+      // Get data injected 
       // console.log(wpData);
 
       this.$store.commit('setTest', wpData.test)
@@ -59,7 +59,6 @@ export default {
       this.$store.commit('setPlan', wpData.plan)
       this.$store.commit('setAdminToken', wpData.admin_token)
       this.$store.commit('setApiBaseUrl', wpData.api_base_url)
-      this.$store.commit('setBackendUrl', wpData.backend_url)
       this.$store.commit('setCaCertficate', wpData.ca_certificate)
       this.$store.commit('setNoticeText', wpData.notice_text)
       this.$store.commit('setChargebeeSite', wpData.chargebee_site)
@@ -70,8 +69,10 @@ export default {
       this.$store.commit('setFeatureFlags', wpData.feature_flags)
       this.$store.commit('setPollingInterval', wpData.polling_interval)
       this.$store.commit('setWssUrlOverride', wpData.wss_url)
+      this.$store.commit('setGrafanaUrlOverride', wpData.grafana_url)
       this.$store.commit('setDisableBilling', wpData.disable_billing)
       this.$store.commit('setRunningEnv', wpData.running_env)
+      this.$store.commit('setAuthMode', wpData.auth_mode)
       this.$store.commit('setLogin', wpData.login)
       this.$store.commit('setEmail', wpData.email)
 
@@ -106,11 +107,12 @@ export default {
         this.$store.commit('setClientsDisabled', wpData.clients_disabled)
       }
 
-      // Identify the user in heap
-      try {
-        heap.identify(wpData.email)
-      } catch (error) {
-        console.log('Error calling heap', error)
+      if (this.runningEnv === 'web') {
+        try {
+          heap.identify(wpData.email)
+        } catch (error) {
+          console.log('Error calling heap', error)
+        }
       }
       // If user doesn't nave a tenant name, redirect to welcome
       if ((this.tenant === '') || (this.tenant === '::needs_to_be_created::')) {
@@ -152,9 +154,11 @@ export default {
   },
   mounted () {
     // Initialize Chargebee
-    let chargebeeInstance = Chargebee.init({
-      site: this.chargebeeSite
-    })
+    if (this.runningEnv === "web") {
+      let chargebeeInstance = Chargebee.init({
+        site: this.chargebeeSite
+      })
+    }
 
     console.log(`Build URL: ${process.env.BASE_URL}`)
   },
@@ -181,10 +185,12 @@ export default {
       'pollingInterval',
       'disableBilling',
       'wssUrlOverride',
+      'grafanaUrlOverrride',
       'login',
       'email',
       'orgInfo',
-      'functionsDisabled'
+      'functionsDisabled',
+      'runningEnv'
     ]),
   },
   methods: {

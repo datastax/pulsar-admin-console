@@ -34,7 +34,7 @@
 
         <div class="va-row">
             <div class="flex md6">
-                <fieldset>
+                <fieldset v-if="showCluster">
                     <vuestic-simple-select
                     label="Cluster"
                     name="client-cluster-select"
@@ -43,6 +43,16 @@
                     :options="clusterSelect"
                     :clearable="clearable"
                     v-on:input="updateNsSelect()"
+                    />
+                </fieldset>
+                <fieldset v-if="showTenant">
+                    <vuestic-simple-select
+                    label="Tenant"
+                    name="client-tenant-select"
+                    :value="{ id: tenant, description: tenant }"
+                    option-key="description"
+                    :options="tenantSelect"
+                    :clearable="false"
                     />
                 </fieldset>
                 <div class="form-group with-icon-right"
@@ -248,6 +258,14 @@ export default {
     enableKey: {
       type: Boolean,
       default: false
+    },
+    showCluster: {
+      type: Boolean,
+      default: true
+    },
+    showTenant: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -278,6 +296,18 @@ export default {
 
       return options
     },
+     tenantSelect () {
+      const options = []
+
+      options.push({
+        id: this.tenant,
+        description: this.tenant
+      })
+
+      console.log(options)
+
+      return options
+    },
     namespaceSelect () {
       const options = []
       // Get the namespace data if we have it
@@ -290,8 +320,8 @@ export default {
         }
       })
 
-      console.log(options)
-      console.log(this.currentNamespace)
+      // console.log(options)
+      // console.log(this.currentNamespace)
 
       if (_.isEmpty(this.currentNamespace) && options[0]) {
 
@@ -325,9 +355,9 @@ export default {
     },
     getClusterUrl (clusterName, protocol, override) {
       if (override) {
-        console.log('override: ' + override)
+        // console.log('override: ' + override)
         const splitInfo = this.splitClusterName(clusterName)
-        console.log(splitInfo)
+        // console.log(splitInfo)
         let url = override.replace('<cluster>', splitInfo.name)
         return url.replace('<cloud>', splitInfo.cloud)
       }

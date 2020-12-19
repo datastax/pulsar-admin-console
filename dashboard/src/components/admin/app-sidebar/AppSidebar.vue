@@ -138,15 +138,7 @@
           <span>{{ $t('menu.namespaces') }}</span>
         </span>
       </sidebar-link>
-       <sidebar-link v-if="this.privateOrg === 'true'"
-        :to="{ name: 'brokers' }">
-        <span slot="title">
-          <span
-            class="sidebar-menu-item-icon fa fa-handshake-o"></span>
-          <span>{{ $t('menu.brokers') }}</span>
-        </span>
-      </sidebar-link>
-      <sidebar-link
+      <sidebar-link v-if="this.privateOrg !== 'true'"
         :to="{ name: 'clusters' }">
         <span slot="title">
           <span
@@ -154,6 +146,38 @@
           <span>{{ $t('menu.clusters') }}</span>
         </span>
       </sidebar-link>
+      <sidebar-link v-if="this.privateOrg === 'true'"
+        :to="{ name: 'clusters' }">
+        <span slot="title">
+          <span
+            class="sidebar-menu-item-icon fa fa-building"></span>
+          <span>Tenant</span>
+        </span>
+      </sidebar-link>
+      <sidebar-link-group v-if="this.privateOrg === 'true'">
+        <span slot="title">
+          <span class="sidebar-menu-item-icon fa fa-cloud"></span>
+          <span>Cluster</span>
+        </span>
+        <sidebar-link
+          :to="{ name: 'brokers' }">
+          <span slot="title">
+            <span>Brokers</span>
+          </span>
+        </sidebar-link>
+        <sidebar-link
+          :to="{ name: 'clusterMonitor' }">
+          <span slot="title">
+            <span>Monitoring</span>
+          </span>
+        </sidebar-link>
+        <sidebar-link
+          :to="{ name: 'clusterDetail' }">
+          <span slot="title">
+            <span>Runtime Config</span>
+          </span>
+        </sidebar-link>
+      </sidebar-link-group>
       <sidebar-link-group v-if="this.disableBilling === 'false' && this.privateOrg === 'false'">
         <span slot="title">
           <span class="sidebar-menu-item-icon fa fa-credit-card-alt"></span>
@@ -178,7 +202,7 @@
           </span>
         </sidebar-link>
       </sidebar-link-group>
-      <sidebar-link
+      <sidebar-link v-if="this.runningEnv !== 'k8s'"
         :to="{ name: 'org' }">
         <span slot="title">
           <span
@@ -207,7 +231,8 @@ export default {
       'privateOrg',
       'functionsDisabled',
       'clientsDisabled',
-      'isAdminUser'
+      'isAdminUser',
+      'runningEnv'
     ]),
   },
   components: {

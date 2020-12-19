@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss">
 .broker-tabs {
-  background-color: black;
+  background-color: white;
   .simple-select {
     padding-top: 0.2rem;
   }

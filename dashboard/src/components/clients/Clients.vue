@@ -43,6 +43,8 @@
                         :subscription="client.subscription"
                         :spinnerType="client.spinner"
                         :enableKey=true
+                        :showCluster="runningEnv !== 'false'"
+                        :showTenant="privateOrg === 'true'"
                     ></pulsar-client>
                 </div>
             </div>
@@ -83,7 +85,9 @@ export default {
       'activeCluster',
       'allowedClusters',
       'tenant',
-      'clusterInfo'
+      'clusterInfo',
+      'runningEnv',
+      'privateOrg'
     ]),
   },
   mounted () {

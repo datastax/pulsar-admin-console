@@ -28,7 +28,7 @@
       </div>
     </vuestic-modal>
     <header-selector slot="selector" :isOpen.sync="valueProxy"/>
-    <span slot="center">
+    <span slot="center" v-if="runningEnv !== 'k8s'">
         <vuestic-tooltip v-if="privateOrg === 'false' || !tenantList" :options="{content: userInfo, placement: 'top'}">
           <div class="btn btn-dark">
             {{ tenant }}
@@ -60,7 +60,7 @@
       </template>
 
     </span>
-    <div >
+    <div v-if="runningEnv !== 'k8s'">
       <vuestic-tooltip :options="{content: thisClusterInfo, placement: 'left'}">
         <button
           class="btn btn-primary dropdown-toggle theme-toggle nav-bar-btn-right"
@@ -83,6 +83,36 @@
         </button>
       </vuestic-tooltip>
 
+    </div>
+    <div v-else>
+      
+        <vuestic-tooltip v-if="privateOrg === 'false' || !tenantList" :options="{content: userInfo, placement: 'top'}">
+          <div class="btn btn-primary">
+            {{ tenant }}
+          </div>
+        </vuestic-tooltip>
+        <template v-else>
+        <button
+          class="btn btn-primary dropdown-toggle"
+          type="button"
+          ref="activeTenantButton"
+        >
+          {{ tenant }}
+          <i class="ion-ios-arrow-down arrow-down"></i>
+          <vuestic-dropdown position="bottom">
+            <template>
+              <template v-for="allowedTenant in tenantList">
+
+                <a class="dropdown-item" @click="setActiveTenant(allowedTenant)" :key="allowedTenant">
+                  {{ allowedTenant }}
+                </a>
+
+              </template>
+            </template>
+          </vuestic-dropdown>
+        </button>
+          
+      </template>
     </div>
   </vuestic-navbar>
 
@@ -137,7 +167,8 @@ export default {
       'login',
       'clusterInfo',
       'privateOrg',
-      'tenantList'
+      'tenantList',
+      'runningEnv'
     ]),
     availableClusters () {
       const availableClusters = []

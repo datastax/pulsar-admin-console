@@ -113,6 +113,12 @@
     "consumer": "Consumer",
     "reader": "Reader"
   },
+  "brokerDetail": {
+    "tabs": {
+      "bundles": "Bundles",
+      "overview": "Overview"
+    }
+  },
   "topicDetail": {
     "tabs": {
       "title": "Topic Detail",
@@ -188,8 +194,11 @@
       "replication": "Replication",
       "replClusters": "Replication",
       "overview": "Overview",
-      "producers": "Producers",
-      "consumers": "Consumers",
+      "bundles": "Bundles",
+      "permissions": "Permissions",
+      "authorization": "Permissions",
+      "limits": "Limits",
+      "offload": "Offload",
       "setupProfile": "Setup Profile"
     },
     "consumers": "Consumers",
@@ -244,7 +253,9 @@
       "maxConsumersTopic": "Max Consumers on Topic",
       "maxConsumersSub": "Max Consumers on Subscription",
       "ttl": "Message TTL",
-      "retentionTime": "Message Retention",
+      "retentionTime": "Retention Time",
+      "retentionSize": "Retention Size",
+      "retention": "Retention",
       "deduplicationEnabled": "Deduplication",
       "storageLimit": "Storage Limit",
       "storagePolicy": "Storage Exceed Policy",
@@ -347,6 +358,7 @@
     "namespaces": "Namespaces",
     "clusters": "Clusters",
     "clusterDetail": "Details",
+    "brokerDetail": "Details",
     "clusterMonitor": "Monitoring",
     "credentials": "Credentials",
     "code": "Code Samples",

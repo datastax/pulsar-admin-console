@@ -8,9 +8,10 @@
                           v-on:ok="createNamespace()"
                           :okDisabled="!isFormValid"
                           :cancelText="'modal.cancel' | translate">
-            <div slot="title">Create Namespace ({{maxNamespaces - availableNamespaces}} of {{maxNamespaces}} used)</div>
+            <div v-if="runningEnv ==='k8s'" slot="title">Create Namespace</div>              
+            <div v-else slot="title">Create Namespace ({{maxNamespaces - availableNamespaces}} of {{maxNamespaces}} used)</div>
             <div>
-                <fieldset v-if="availableNamespaces > 0">
+                <fieldset v-if="runningEnv === 'k8s' || availableNamespaces > 0">
                   <div class="form-group">
                       <div class="input-group">
                         <input id="namespaceName"
@@ -177,6 +178,8 @@
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
 import AjaxService from '@/services/AjaxService'
+import ApiService from '@/services/ApiService'
+
 import Alert from '../utils/Alert'
 
 export default {
@@ -202,7 +205,8 @@ export default {
       'activeCluster',
       'tenant',
       'planInfo',
-      'privateOrg'
+      'privateOrg',
+      'runningEnv'
     ]),
     isFormValid () {
       return Object.keys(this.formFields).every(key => this.formFields[key].valid)
@@ -267,22 +271,29 @@ export default {
       }
     },
     async openNamespaceModal () {
-      await this.getMaxNamespaces()
+      if (this.runningEnv === "web") {
+        await this.getMaxNamespaces()
+      }
       this.$refs.namespaceModal.open()
     },
     async createNamespace () {
-      if (this.availableNamespaces < 1) {
+      if (this.runningEnv ==="web" && this.availableNamespaces < 1) {
         this.errorText = `Creating namespace: not available namespaces left (${this.availableNamespaces})`
         this.$refs.alert.showAlert()
         return
       }
       try {
-        await AjaxService.ajaxAction('add_namespace',
-          {
-            dataCenter: this.activeCluster,
-            tenant: this.tenant,
-            namespace: this.namespaceName
-          })
+         if (this.runningEnv === 'k8s') {
+          await ApiService.createNamespace(this.activeCluster, this.tenant + "/" + this.namespaceName)
+
+        } else {
+          await AjaxService.ajaxAction('add_namespace',
+            {
+              dataCenter: this.activeCluster,
+              tenant: this.tenant,
+              namespace: this.namespaceName
+            })
+        }
 
         this.onSuccess('Namespace created')
 

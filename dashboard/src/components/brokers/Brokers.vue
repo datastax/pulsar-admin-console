@@ -106,7 +106,7 @@
               </div>
 
         </div>
-        <div v-if="false" class="va-row">
+        <div class="va-row">
           <div class="flex md12">
             <button class="btn btn-primary btn-right" @click="updateNav(index)">Details</button>
           </div>
@@ -148,9 +148,7 @@ export default {
     updateNav (broker) {
       this.$router.push('/admin/broker/' + broker)
     },
-    goToMonitorIframe (broker) {
-      this.$router.push('/admin/brokerMonitor/' + broker)
-    },
+  
 
     getBrokerName (index) {
     }

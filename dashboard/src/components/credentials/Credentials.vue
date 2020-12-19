@@ -1,6 +1,7 @@
 <template>
     <div class="credentials">
         <vuestic-widget headerText="Credentials">
+            <alert ref="alert" :errorText="errorText"></alert>
             <div>
                 <h5>Connect token</h5>
                 <p>When connecting clients to Kesque, you need provide your connect token to identify your account. In all the Pulsar APIs,
@@ -55,6 +56,9 @@
                                     </i>
                             </div>
                         </div>
+                        <div v-if="isAdminUser" class="flex md6">
+                            <button class="btn btn-micor" @click="openTokenModal()">Create New Token</button>
+                        </div>
 
                 <h5>CA Certificate</h5>
 
@@ -108,6 +112,67 @@
                         </div>
                         <p>Most Pulsar APIs can be configured to skip certificate validation, but this is not recommended. </p>
             </div>
+            <vuestic-modal ref="tokenModal"
+                      :okText="'modal.ok' | translate"
+                      v-on:ok="resetToken()"
+                      v-on:cancel="resetToken()"
+                      :cancelText="'modal.cancel' | translate">
+                    <div slot="title">Create Token</div>
+                    <div>
+                        <div class="form-group with-icon-right">
+                            <div class="input-group">
+                            <input v-model="newSubject" 
+                                id="subject"
+                                v-validate="'required|alpha_dash|min:1'"
+                                name="subject"/>
+                            <label class="control-label" for="subject" role="button">Subject</label><i class="bar"></i>
+                            <small v-show="errors.has('subject')"
+                                    class="help text-danger">
+                                {{ errors.first('subject') }}
+                            </small>
+                            <i class="fa fa-times icon-right input-icon pointer"
+                                            @click="clear('subject')"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex md12">
+                            <button :disabled="this.newSubject === '' || errors.has('subject')" class="btn btn-micro" @click="createToken()">Create Token</button>
+                        </div>
+
+                     
+                        <div v-if="generatedSubject" class="form-group with-icon-right" style="padding-top: 50px;">
+                
+                            <div  class="input-group">
+                            <input :value="generatedSubject" id="generatedSubject" name="generatedSubject" readonly class="has-value" />
+                            <label class="control-label" for="generatedSubject" role="button">Token Subject</label><i class="bar"></i>
+                            </div>
+                        </div>
+
+                    
+                        <div v-if="generatedToken" class="form-group with-icon-right display-block">
+                                
+                                <vuestic-collapse>
+                                    <span slot="header">Click to show token</span>
+                                    <div slot="body">
+                                        
+                                    <div class="va-row">
+                                        <div class="flex md12">
+                                        <div class="collapse-page__content">
+                                            <div class="token">
+                                            {{ generatedToken }}
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </vuestic-collapse>
+                                <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="generatedToken"
+                                    v-clipboard:success="onCopy" v-clipboard:error="onError">
+                                    </i>
+                        </div>
+
+                    </div>
+                </vuestic-modal>
 
         </vuestic-widget>
     </div>
@@ -116,6 +181,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
+import Alert from '../utils/Alert'
+import ApiService from '@/services/ApiService'
 
 export default {
   name: 'Credentials',
@@ -126,14 +193,22 @@ export default {
       'activeCluster',
       'caCertificate',
       'useTokenList',
-      'tokenList'
+      'tokenList',
+      'isAdminUser'
     ]),
+  },
+  components: {
+      Alert
   },
   data () {
     return {
       rhelCaBundle: '/etc/ssl/certs/ca-bundle.crt',
       ubuntuCaBundle: '/etc/ssl/certs/ca-certificates.crt',
-      osxCommand: 'security find-certificate -a -p /System/Library/Keychains/SystemCACertificates.keychain > ca-certificates.crt'
+      osxCommand: 'security find-certificate -a -p /System/Library/Keychains/SystemCACertificates.keychain > ca-certificates.crt',
+      newSubject: '',
+      generatedSubject: '',
+      generatedToken: '',
+      errorText: ''
     }
   },
   mounted () {
@@ -152,6 +227,35 @@ export default {
 
     // Trigger an update so we don't have to wait for the next interval
     this.$store.dispatch('updateAll')
+  },
+  methods: {
+    openTokenModal () {
+      this.$refs.tokenModal.open()
+    },
+    resetToken () {
+        this.generatedSubject = ''
+        this.generatedToken = ''
+        this.newSubject = ''
+    },
+    async createToken () {
+
+      try {
+        const response = await ApiService.generateToken(this.activeCluster, this.newSubject)
+
+        console.log(response)
+        this.generatedSubject = response.data.subject
+        this.generatedToken = response.data.token
+
+      } catch (error) {
+        let [reason, statusCode] = this.decodeErrorObject(error)
+        this.errorText = `Generating token. Reason: ${reason} (${statusCode})`
+
+        // If something goes wrong, close the modal so the user can see the alert
+        this.$refs.tokenModal.close()
+        this.resetToken
+        this.$refs.alert.showAlert()
+      }
+    }
   }
 
 }

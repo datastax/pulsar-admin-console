@@ -1,7 +1,45 @@
 <template>
   <div class="clusters">
-    <div v-for="index in allowedClusters" :key="index">
-      <vuestic-widget v-if="clusterInfo.info[index]" :headerText="index + ' - ' +  clusterInfo.info[index].name" >
+    <vuestic-modal ref="tenantModal"
+                    :okText="'modal.ok' | translate"
+                    v-on:ok="createTenant()"
+                    :okDisabled="!isFormValid"
+                    :cancelText="'modal.cancel' | translate">
+      <div slot="title">Create Tenant</div>
+      <div>
+          <fieldset>
+            <div class="form-group">
+                <div class="input-group">
+                  <input id="tenantName"
+                    name="Tenant Name"
+                    ref="tenantName"
+                    v-model="tenantName"
+                    v-validate="'required|alpha_dash|min:1'"
+                    required
+                  />
+                  <label class="control-label" for="tenantName">Tenant Name</label><i class="bar"></i>
+                  <small v-show="errors.has('Tenant Name')"
+                        class="help text-danger">
+                  {{ errors.first('Tenant Name') }}
+                </small>
+                </div>
+            </div>
+          </fieldset>
+      </div>
+    </vuestic-modal>
+    <vuestic-widget>
+      <div
+              class="flex sm6 lg6 xl3 justify--center">
+              <button class="btn btn-primary btn-with-icon" @click="openTenantModal()">
+                <div class="btn-with-icon-content">
+                  <i class="ion-md-add ion"></i>
+                  Tenant
+                </div>
+              </button>
+      </div>
+    </vuestic-widget>
+    <div v-for="index in clusterList" :key="index">
+      <vuestic-widget v-if="clusterInfo.info[index]" :headerText="tenant + ' (' + index + ' - ' +  clusterInfo.info[index].name + ')'" >
         <div class="va-row" v-if="index === activeCluster">
           <div class="flex md6">
             <div class="va-row">
@@ -31,14 +69,14 @@
                   </div>
                 </vuestic-widget>
               </div>
-              <div class="flex md6">
+              <div v-if="runningEnv ==='web'" class="flex md6">
                 <vuestic-widget class="info-widget">
                   <div class="info-widget-inner">
                     <div class="stats">
                       <div class="stats-number">
                         {{ numAdditionalNS }}
                       </div>
-                      <div class="stats-title">Additional {{'tables.headings.namespaces' | translate}}</div>
+                      <div class="stats-title">{{'tables.headings.namespaces' | translate}}</div>
                     </div>
                   </div>
                 </vuestic-widget>
@@ -150,18 +188,6 @@
             </div>
             </div>
 
-             <div v-if="isAdminUser" class="va-row">
-                <div class="flex md12">
-                  <button class="btn btn-primary btn-right" @click="updateNav(index)">Details</button>
-                </div>
-                <div class="flex md12" v-if="runningEnv === 'web'">
-                  <button class="btn btn-primary btn-right" @click="goToMonitorIframe(index)">Monitoring</button>
-                </div>
-            </div>
-
-        </div>
-        <div class="va-row" v-else>
-          Data only available for selected cluster
         </div>
       </vuestic-widget>
     </div>
@@ -171,6 +197,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
+import ApiService from '@/services/ApiService'
 
 export default {
   name: 'clusters',
@@ -178,7 +205,8 @@ export default {
   },
   data () {
     return {
-      animated: true
+      animated: true,
+      tenantName: ''
     }
   },
   mixins: [mixins],
@@ -190,8 +218,12 @@ export default {
       'clusterInfo',
       'namespacesConfig',
       'isAdminUser',
-      'runningEnv'
+      'runningEnv',
+      'tenant'
     ]),
+    clusterList () {
+      return [this.activeCluster]
+    },
     numAdditionalNS () {
       let count = 0
       this.namespacesConfig.list.forEach(nsObj => {
@@ -205,18 +237,42 @@ export default {
       })
 
       return count
-    }
+    },
   },
   methods: {
     updateNav (cluster) {
       this.$router.push('/admin/cluster/' + cluster)
     },
+    openTenantModal () {
+      this.$refs.tenantModal.open()
+    },
     goToMonitorIframe (cluster) {
       this.$router.push('/admin/clusterMonitor/' + cluster)
     },
-
     getClusterName (index) {
-    }
+    },
+    isFormValid () {
+      return Object.keys(this.formFields).every(key => this.formFields[key].valid)
+    },
+    async createTenant () {
+      try {
+        await ApiService.createTenant(this.activeCluster, this.tenantName, this.activeCluster)
+
+        this.onSuccess('Tenant created')
+
+        // Need to update master list of tenants
+        // and grab the new stats
+        this.$store.dispatch('updateAll')
+        this.$store.commit('setTenant', this.tenantName)
+
+        // Clear the tenant name
+        this.tenantName = ''
+      } catch (error) {
+        let [reason, statusCode] = this.decodeErrorObject(error)
+        this.errorText = `Creating tenant: ${this.tenantName}. Reason: ${reason} (${statusCode})`
+        this.onError(this.errorText)
+      }
+    },
   },
   beforeDestroy () {
     // Trigger an update so we don't have to wait for the next interval

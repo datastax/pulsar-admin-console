@@ -86,12 +86,12 @@
                           </div>
                         </div>
                       </div>
-                        <div class="flex md6">
+                        <div class="flex md12">
                           <div class="form-group">
                             <div class="input-group">
                               <input :value="retentionHuman" id="retention" name="retention"
                                 class="has-value" placeholder="" readonly />
-                              <label class="control-label" for="retention" role="button">{{'forms.inputs.retentionTime'
+                              <label class="control-label" for="retention" role="button">{{'forms.inputs.retention'
                                 | translate}}</label><i class="bar"></i>
                             </div>
                           </div>
@@ -111,7 +111,7 @@
                           <div class="input-group">
                             <input :value="storageLimitHuman" id="storageLimit" name="storageLimit"
                               class="has-value" placeholder="" readonly />
-                            <label class="control-label" for="storageLimit" role="button">Storage Limit</label><i class="bar"></i>
+                            <label class="control-label" for="storageLimit" role="button">Backlog Limit</label><i class="bar"></i>
                           </div>
                         </div>
                       </div>
@@ -162,35 +162,14 @@
                               </div>
                               <div class="stats-title">Storage</div>
                             </div>
-                            <div class="chart-container">
+                            <!-- <div class="chart-container">
                                   <vuestic-progress-bar type="vertical" :value="calcStorePercent" theme="Primary"
                                                       backgroundTheme="White"/>
-                              </div>
+                              </div> -->
                           </div>
                         </div>
                       </vuestic-widget>
                     </div>
-
-                    <!-- <div class="flex md12">
-
-                                                <vuestic-widget class="info-widget">
-                                                    <div class="info-widget-inner">
-                                                        <div class="info-widget-inner has-chart">
-                                                        <div class="stats">
-                                                            <div class="stats-number">
-                                                            {{ namespacesConfig.stats[$route.params.id] ? namespacesConfig.stats[$route.params.id].storage : 0 | humanBytes}}
-                                                            </div>
-                                                            <div class="stats-title">{{'tables.headings.storageSize' | translate}}</div>
-                                                        </div>
-                                                        <div class="chart-container">
-                                                            <vuestic-progress-bar type="vertical" :value="calcStorePercent($route.params.id)" theme="Primary"
-                                                                                backgroundTheme="White"/>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                                </vuestic-widget>
-
-                                        </div> -->
 
                   <div @click="onWidgetClick('topicDetail.tabs.producers')" style="cursor: pointer" class="flex md12">
 
@@ -516,6 +495,31 @@ export default {
 
       return 'Until acknowledged'
     },
+    
+    retentionHuman () {
+
+      let retentionSize = 0
+      let retentionTime = 0
+      if (this.topicsConfig.data[this.$route.params.id]) {
+        retentionSize = this.topicsConfig.data[this.$route.params.id].retentionSize
+        retentionTime = this.topicsConfig.data[this.$route.params.id].retentionTime
+      }
+
+      // If either time or size is 0, then retention is disabled
+      if (retentionTime === 0 || retentionSize === 0) {return "Until Acknowledged"}
+
+      // If both are -1, infinite
+       if (retentionTime === -1 && retentionSize === -1 ) {return "Forever"}
+
+      // If time is -1, return size
+      if (retentionTime === -1) {return this.$options.filters.humanBytes(retentionSize*1000*1000)}
+
+      // If size is -1, return time
+      if (retentionSize === -1 ) {return this.$options.filters.humanSeconds(retentionTime*60)}
+
+      return this.$options.filters.humanBytes(retentionSize*1000*1000) + " or " + this.$options.filters.humanSeconds(retentionTime*60)
+
+    },
     numProducers () {
       return this.topicStats.data[this.$route.params.id].info.producers
     },
@@ -784,6 +788,7 @@ export default {
             tenant: tenant,
             namespace: namespace,
             topic: topic,
+            type: infoObject.type
           })
         this.onSuccess('Topic unloaded')
       } catch (error) {

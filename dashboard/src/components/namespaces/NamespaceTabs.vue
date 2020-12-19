@@ -1,11 +1,11 @@
 <template>
-  <div class="cluster-tabs">
+  <div class="vuestic-tabs">
     <div>
       <nav class="nav nav-pills va-row">
         <div
           class="nav-item col"
           @click="setActive(name)"
-          :class="{active: name === activeClusterDetailTab}"
+          :class="{active: name === activeNamespaceDetailTab}"
           v-for="name in names"
           :key="name"
         >
@@ -19,12 +19,11 @@
     <vuestic-simple-select
       class="simple-select"
       v-show="false"
-      name="cluster-tab-select"
-      v-bind:options="names" :value="activeClusterDetailTab"></vuestic-simple-select>
+      v-bind:options="names" v-model="activeNamespaceDetailTab"></vuestic-simple-select>
     <div class="tab-content">
       <div
         class="tab-pane"
-        :class="{active: name === activeClusterDetailTab}"
+        :class="{active: name === activeNamespaceDetailTab}"
         v-for="name in names"
         :key="name"
       >
@@ -40,35 +39,35 @@ import { mapGetters } from 'vuex'
 
 // d-none and d-lg-flex were deleted, bug will be fixed in the nearest update
 export default {
-  name: 'ClusterTabs',
+  name: 'NamespaceTabs',
   props: {
     'names': Array
   },
   computed: {
     ...mapGetters([
-      'activeClusterDetailTab'
+      'activeNamespaceDetailTab'
     ]),
     underscoreClass () {
-      return 'underscore-' + this.names.length + '-' + this.names.indexOf(this.activeClusterDetailTab)
+      return 'underscore-' + this.names.length + '-' + this.names.indexOf(this.activeNamespaceDetailTab)
     },
   },
   methods: {
     setActive (name) {
-      this.$store.dispatch('setActiveClusterDetailTab', name)
+      this.$store.dispatch('setActiveNamespaceDetailTab', name)
     },
   }
 }
 </script>
 
 <style lang="scss">
-.cluster-tabs {
-  background-color: black;
+.vuestic-tabs {
+  background-color: white;
   .simple-select {
-    padding-top: 0.2rem;
+    padding-top: 1.5rem;
   }
   .nav {
     margin: 0;
-    padding-top: 0.25rem;
+    padding-top: 2.25rem;
     .nav-item {
       flex-grow: 1;
       text-align: center;
@@ -116,8 +115,8 @@ export default {
     }
   }
   .tab-content {
-    padding-bottom: 0.5rem;
-    padding-top: 0.5rem;
+    padding-bottom: $tab-content-pb;
+    padding-top: $tab-content-pt;
     > .tab-pane {
       width: 100%
     }

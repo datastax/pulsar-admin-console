@@ -8,7 +8,7 @@ COPY ./dashboard/ .
 RUN rm -rf node_modules
 RUN npm install
 RUN npm install -g @vue/cli
-RUN npm run build
+RUN npm run build-standalone
 
 #
 # build node app in the next stage
@@ -35,6 +35,8 @@ COPY server/package*.json /root/server/
 COPY server/*.js /root/server/
 COPY server/*.html /root/server/
 RUN cd server && npm install
+
+WORKDIR /root/server
 
 EXPOSE 8080 8081 6454 6455
 

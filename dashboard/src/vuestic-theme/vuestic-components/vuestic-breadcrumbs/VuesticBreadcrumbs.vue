@@ -17,14 +17,14 @@
         {{ $t(item.displayName) }}
       </router-link>
     </div>
-    <button class="btn btn-micro">
+    <!-- <button class="btn btn-micro">
       <span
         class="fa fa-refresh"
         style="`font-size: 30px`"
         aria-hidden="true"
         @click="refreshData"
       />
-    </button>
+    </button> -->
     
   </div>
 </template>

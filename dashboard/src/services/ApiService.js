@@ -78,6 +78,10 @@ export default {
       return response
     }
   },
+  generateToken (cluster, subject) {
+    const response = ApiBaseV2().get(`${cluster}/br/subject/${subject}`)
+    return response
+  },
   getClusterConfig (cluster) {
     const response = ApiBase().get(`${cluster}/brokers/configuration/runtime`)
     return response
@@ -490,6 +494,116 @@ export default {
     }
     const response = ApiBase().put(`${cluster}/tenants/${tenant}`, body)
     return response
+  },
+  updateNamespaceBacklog (cluster, namespacePath, limit, policy) {
+    const body = {
+      limit: limit,
+      policy: policy
+    }
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/backlogQuota`, body)
+    return response
+  },
+  updateRetention (cluster, namespacePath, size, time) {
+    const body = {
+      retentionSizeInMB: size,
+      retentionTimeInMinutes: time
+    }
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/retention`, body)
+    return response
+  },
+  updateNamespaceTopicDispatchRate (cluster, namespacePath, message, byte, interval) {
+    const body = {
+      dispatchThrottlingRateInMsg: message,
+      dispatchThrottlingRateInByte: byte,
+      ratePeriodInSecond: interval
+    }
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/dispatchRate`, body)
+    return response
+  },
+  updateNamespaceSubscriptionDispatchRate (cluster, namespacePath, message, byte, interval) {
+    const body = {
+      dispatchThrottlingRateInMsg: message,
+      dispatchThrottlingRateInByte: byte,
+      ratePeriodInSecond: interval
+    }
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/subscriptionDispatchRate`, body)
+    return response
+  },
+  updateNamespaceProducerRate (cluster, namespacePath, message, byte) {
+    const body = {
+      publishThrottlingRateInMsg: message,
+      publishThrottlingRateInByte: byte,
+    }
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/publishRate`, body)
+    return response
+  },
+  updateNamespaceOffloadThreshold (cluster, namespacePath, threshold) {
+    const response = ApiBase().put(`${cluster}/namespaces/${namespacePath}/offloadThreshold`, threshold, { headers: {
+      'Content-Type': 'application/json'
+    }} )
+    return response
+  },
+  updateMaxProducers (cluster, namespacePath, producers) {
+    
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxProducersPerTopic`, producers, { headers: {
+      'Content-Type': 'application/json'
+    }} )
+    return response
+  },
+  updateTtl (cluster, namespacePath, ttl) {
+    
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/messageTTL`, ttl, { headers: {
+      'Content-Type': 'application/json'
+    }} )
+    return response
+  },
+  updateDedupe (cluster, namespacePath, dedupe) {
+    
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/deduplication`, dedupe, { headers: {
+      'Content-Type': 'application/json'
+    }} )
+    return response
+  },
+  updateMaxConsTopic (cluster, namespacePath, consumers) {
+    
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxConsumersPerTopic`, consumers, { headers: {
+      'Content-Type': 'application/json'
+    }} )
+    return response
+  },
+  updateMaxConsSub (cluster, namespacePath, consumers) {
+    
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxConsumersPerSubscription`, consumers, { headers: {
+      'Content-Type': 'application/json'
+    }} )
+    return response
+  },
+  deleteNamespaceBacklog (cluster, namespacePath) {
+    return ApiBase().delete(`${cluster}/namespaces/${namespacePath}/backlogQuota`)
+  },
+  deleteNamespace (cluster, namespacePath) {
+    return ApiBase().delete(`${cluster}/namespaces/${namespacePath}`)
+  },
+  createNamespace (cluster, namespacePath) {
+    return ApiBase().put(`${cluster}/namespaces/${namespacePath}`)
+  },
+  unloadNamespace (cluster, namespacePath) {
+    return ApiBase().put(`${cluster}/namespaces/${namespacePath}/unload`)
+  },
+  unloadBundle (cluster, namespacePath, bundle) {
+    return ApiBase().put(`${cluster}/namespaces/${namespacePath}/${bundle}/unload`)
+  },
+  deleteBundle (cluster, namespacePath, bundle) {
+    return ApiBase().delete(`${cluster}/namespaces/${namespacePath}/${bundle}`)
+  },
+  deleteNamespaceRole (cluster, namespacePath, role) {
+    return ApiBase().delete(`${cluster}/namespaces/${namespacePath}/permissions/${role}`)
+  },
+  addNamespaceRole (cluster, namespacePath, role, actions) {
+    return ApiBase().post(`${cluster}/namespaces/${namespacePath}/permissions/${role}`,actions)
+  },
+  splitBundle (cluster, namespacePath, bundle, splitStrategy = 'range_equally_divide', unload = false) {
+    return ApiBase().put(`${cluster}/namespaces/${namespacePath}/${bundle}/split?splitAlgorithmName=${splitStrategy}&unload=${unload}`)
   },
   compactTopic (cluster, topicPath) {
     const response = ApiBase().put(`${cluster}/persistent/${topicPath}/compaction`)

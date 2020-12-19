@@ -27,8 +27,6 @@
 
 <script>
 // d-none and d-lg-flex were deleted, bug will be fixed in the nearest update
-import VuesticIconVuestic
-  from '../../vuestic-theme/vuestic-components/vuestic-icon/VuesticIconVuestic'
 import KesqueIcon from '../icon/KesqueIcon'
 import WelcomeFree from './WelcomeFree'
 import WelcomePaid from './WelcomePaid'
@@ -42,7 +40,6 @@ export default {
     }
   },
   components: {
-    VuesticIconVuestic,
     WelcomeFree,
     KesqueIcon,
     WelcomePaid,

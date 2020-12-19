@@ -60,7 +60,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isAdminUser'
+      'isAdminUser',
+      'activeCluster'
     ]),
     clusterConfigKeys () {
       return Object.keys(this.clusterConfig)
@@ -86,7 +87,7 @@ export default {
       }
     },
     async getClusterConfig () {
-      let cluster = this.$route.params.id
+      let cluster = this.activeCluster
 
       // Wait for the API call to return, then update the topic so the user gets feedback
       try {

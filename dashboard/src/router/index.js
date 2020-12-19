@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AppLayout from '../components/admin/AppLayout'
 import Login from '../components/auth/login/Login'
+import AuthLayout from '../components/auth/AuthLayout'
 import { isK8sAuthRequired, isLoggedIn } from '../components/auth/login/auth.js'
 // import { isLoggedIn } from '../auth/auth'
 // import WelcomeLayout from '../components/welcome/WelcomeLayout'
@@ -40,6 +41,24 @@ const router = new Router({
       redirect: { name: 'dashboard' },
     },
     {
+      path: '/auth',
+      component: AuthLayout,
+      children: [
+        {
+          name: 'login',
+          path: 'login',
+          component: lazyLoading('auth/login/Login'),
+          meta: {
+            allowAnonymous: true
+          }
+        },
+        {
+          path: '',
+          redirect: { name: 'login' },
+        },
+      ],
+    },
+    {
       path: '/welcome',
       component: lazyLoading('welcome/WelcomeLayout'),
       default: true,
@@ -51,14 +70,14 @@ const router = new Router({
       default: true,
       props: true
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login,
-      meta: {
-        allowAnonymous: true
-      }
-    },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   component: Login,
+    //   meta: {
+    //     allowAnonymous: true
+    //   }
+    // },
     {
       name: 'Admin',
       path: '/admin',
@@ -82,12 +101,7 @@ const router = new Router({
           component: lazyLoading('org/Org'),
           default: true,
         },
-        {
-          name: 'brokers',
-          path: 'brokers',
-          component: lazyLoading('brokers/Brokers'),
-          default: false,
-        },
+        
         {
           name: 'brokerDetail',
           path: 'broker/:id',
@@ -236,20 +250,33 @@ const router = new Router({
           default: false,
         },
         {
-          name: 'clusterDetail',
-          path: 'cluster/:id',
-          component: lazyLoading('clusters/ClusterDetail'),
-        },
-        {
-          name: 'clusterMonitor',
-          path: 'clusterMonitor/:id',
-          component: lazyLoading('clusters/ClusterMonitor'),
-        },
-        {
           name: 'credentials',
           path: 'credentials',
           component: lazyLoading('credentials/Credentials'),
           default: false,
+        },
+        {
+          name: 'cluster',
+          path: 'cluster',
+          component: EmptyParentComponent,
+          default: false,
+          children: [
+            {
+              name: 'clusterMonitor',
+              path: 'clusterMonitor',
+              component: lazyLoading('clusters/ClusterMonitor'),
+            },
+            {
+              name: 'brokers',
+              path: 'brokers',
+              component: lazyLoading('brokers/Brokers'),
+            },
+            {
+              name: 'clusterDetail',
+              path: 'cluster',
+              component: lazyLoading('clusters/ClusterDetail'),
+            },
+          ]
         },
         {
           name: 'code',
@@ -297,7 +324,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (isK8sAuthRequired() && !to.meta.allowAnonymous && !isLoggedIn()) {
     next({
-      path: '/login',
+      path: '/auth/login',
       query: { redirect: to.fullPath }
     })
   }

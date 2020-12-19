@@ -64,6 +64,7 @@
 
       <div class="flex md6 xs12">
         <vuestic-widget
+          v-if="runningEnv !== 'k8s'"
           class="dashboard-map__widget"
           headerText="Cluster Locations"
         >

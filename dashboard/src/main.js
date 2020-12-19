@@ -63,9 +63,18 @@ Vue.filter('humanSeconds', (value, units = 'seconds') => {
   return moment.duration(value, units).humanize()
 })
 
+Vue.filter('zeroIsUnlimited', (value) => {
+  if (value === 0) {
+    return "Unlimited"
+  }
+  return value
+})
+
 Vue.filter('numberSeparate', (value, digits = 1, separator = ' ') => {
   return value.toFixed(digits).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + separator)
 })
+
+
 
 /* eslint-disable no-new */
 

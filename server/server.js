@@ -10,8 +10,12 @@ const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
+
+if (cfg.dashboardConfig.auth_mode === "k8s") {
+  const k8s = require('./k8s.js')
+} 
+
 const app = express(),
-      k8s = require('./k8s.js');
       bodyParser = require('body-parser'),
       cookieSession = require('cookie-session');
 

@@ -39,7 +39,7 @@
                   <h5>
                     Schema:
                   </h5>
-                    <v-jsoneditor v-model="newSchema" :plus="false" height="400px" @error="onError"></v-jsoneditor>
+                    <v-jsoneditor v-model="newSchema" :options="updateOptions" :plus="false" height="400px" @error="onError"></v-jsoneditor>
                 </template>
                 <p>Do you want to apply this schema to the topic?</p>
               </div>

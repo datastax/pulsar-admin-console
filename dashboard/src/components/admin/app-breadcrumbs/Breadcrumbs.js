@@ -91,12 +91,16 @@ export const breadcrumbs = {
       ],
     },
     {
-      name: 'clusters',
-      displayName: 'menu.clusters',
+      name: 'cluster',
+      displayName: 'Cluster',
       children: [
         {
           name: 'clusterDetail',
-          displayName: 'menu.clusterDetail',
+          displayName: 'Runtime Config',
+        },
+        {
+          name: 'brokers',
+          displayName: 'Brokers'
         },
         {
           name: 'clusterMonitor',
@@ -107,6 +111,10 @@ export const breadcrumbs = {
     {
       name: 'credentials',
       displayName: 'menu.credentials',
+    },
+    {
+      name: 'clusters',
+      displayName: 'Tenant',
     },
     {
       name: 'org',
