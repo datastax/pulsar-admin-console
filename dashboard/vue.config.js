@@ -45,7 +45,11 @@ module.exports = {
       },
       hot: true,
       proxy: {
-        '/admin': { target: 'http://useast1.gcp.kafkaesque.io:8080' }
+        '/api/*': { 
+	   target: 'http://localhost:8002',
+	   secure: false,
+           changeOrigin: true
+	}
       },
       headers: {
         'X-Custom-Foo': 'bar',

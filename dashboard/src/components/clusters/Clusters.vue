@@ -39,7 +39,7 @@
       </div>
     </vuestic-widget>
     <div v-for="index in clusterList" :key="index">
-      <vuestic-widget v-if="clusterInfo.info[index]" :headerText="tenant + ' (' + index + ' - ' +  clusterInfo.info[index].name + ')'" >
+      <vuestic-widget :headerText="tenant" >
         <div class="va-row" v-if="index === activeCluster">
           <div class="flex md6">
             <div class="va-row">

@@ -75,6 +75,7 @@ export default {
       this.$store.commit('setAuthMode', wpData.auth_mode)
       this.$store.commit('setLogin', wpData.login)
       this.$store.commit('setEmail', wpData.email)
+      this.$store.commit('setHostOverrides', wpData.host_overrides)
 
       console.log('plan to create: ' + wpData.plan_to_create)
       console.log('need to create plan: ' + wpData.need_to_create_plan)

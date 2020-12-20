@@ -41,6 +41,7 @@ const state = {
   runningEnv: 'web',
   authMode: 'wp',
   planInfo: {},
+  hostOverrides: {},
   gcpMarketplaceLink: 'https://console.cloud.google.com/marketplace/details/kafkaesque-public/kafkaesque',
   subscriptionInfo: [],
   tokenList: [],
@@ -303,6 +304,9 @@ const mutations = {
   updatePlanInfo (state, data) {
     Vue.set(state, 'planInfo', data.data)
   },
+  setHostOverrides (state, overrides) {
+    Vue.set(state, 'hostOverrides', overrides)
+  },
   updateSubscriptionInfo (state, data) {
     Vue.set(state, 'subscriptionInfo', data.data)
   },
@@ -474,6 +478,7 @@ const getters = {
   featureFlags: state => state.featureFlags,
   clusterInfo: state => state.clusterInfo,
   planInfo: state => state.planInfo,
+  hostOverrides: state => state.hostOverrides,
   gcpMarketplaceLink: state => state.gcpMarketplaceLink,
   subscriptionInfo: state => state.subscriptionInfo,
   tokenList: state => state.tokenList,
@@ -1712,6 +1717,9 @@ const actions = {
     })
   },
   async getPlanInfo (context) {
+    if (state.runningEnv !== "web") {
+      return
+    }
     try {
       const resp = await AjaxService.ajaxAction('get_available_plans', {})
       context.commit('updatePlanInfo', resp.data)
@@ -1789,7 +1797,29 @@ const actions = {
     }
   },
   async getClusterInfo (context) {
+
+    if (state.runningEnv !== "web") {
+      let clusterDataObj = {
+        data: [],
+        info: {},
+        latlong: {}
+      }
+
+      // Default the cluster name
+      clusterDataObj.info[state.activeCluster] = {
+        'name': state.activeCluster,
+        'host_override_pulsar': state.hostOverrides.pulsar,
+        'host_override_ws': state.hostOverrides.ws,
+        'host_override_http': state.hostOverrides.http,
+      }
+      context.commit('updateClusterInfo', clusterDataObj)
+
+      return
+
+    }
+
     // Ajax call to get cluster info
+
     try {
       const resp = await AjaxService.ajaxAction('get_cluster_info', {})
 
