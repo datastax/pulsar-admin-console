@@ -6,34 +6,19 @@
         <vuestic-widget
           headerText="Getting Started"
         >
-        <p>Kesque is powered by Apache Pulsar. You use Pulsar clients to send and receive messages. All connections are encrypted.</p>
-        <p>When connecting you need to provide the connect token for your account. You can get the token by going to <router-link to="credentials">Credentials</router-link>.</p>
+        <p>You use Pulsar clients to send and receive messages.</p>
+        <p>When connecting you may need to provide the connect token for your account. You can get the token by going to <router-link to="credentials">Credentials</router-link>.</p>
 
         <p v-if="this.clientsDisabled === 'false'">To try out your service right now, use our built-in <router-link to="clients">WebSocket test clients</router-link>.</p>
 
-        <p>To see our interactive code samples, go to <router-link to="code/java">Code Samples</router-link>. </p>
+        <p>To see interactive code samples, go to <router-link to="code/java">Code Samples</router-link>. </p>
 
           <p>To see the available namespaces, go to <router-link to="namespaces">Namespaces</router-link>. Messages published to namespaces, such as worldwide are automatically replicated to all cluster.</p>
 
-          <p>Topics are <span class="vue-highlighted-text">automatically created</span> when you first try to publish or subscribe. To manually create a topic or to create a partitioned topic, go to <router-link to="topics">Topics</router-link>.</p>
+          <p>Topics are <span class="vue-highlighted-text">automatically created</span> (by default) when you first try to publish or subscribe. To manually create a topic or to create a partitioned topic, go to <router-link to="topics">Topics</router-link>.</p>
 
-          <p>  The first part of a full topic name is your tenant name, followed by the namespace, and then the topic name.</p>
+          <p> The first part of a full topic name is your tenant name, followed by the namespace, and then the topic name.</p>
 
-          <p>Your tenant name is:
-          <ul class="vue-unordered">
-            <li class="no-padding">
-              <div class="form-group with-icon-right list-item">
-                <div class="copy-text">
-                  {{ tenant }}
-                </div>
-                <i class="fa fa-clipboard icon-table pointer icon-right input-icon" v-clipboard:copy="tenant"
-                        v-clipboard:success="onCopy" v-clipboard:error="onError">
-                        </i>
-              </div>
-
-            </li>
-          </ul>
-          </p>
 
         <p>Here is an example of a topic using its full name:
           <ul  class="vue-unordered">
@@ -49,31 +34,21 @@
 
         </p>
 
+        <p>You can select your current tenant using the drop-down at the top right. To create a new tenant, go to <router-link to="clusters">Tenants</router-link>.</p>
+
         <p>
             To see detailed information about your topics,
             got to <router-link to="topics">Topics</router-link>.
 
         </p>
 
-        <p v-if="runningEnv ==='web'">
-          Kesque operates in multiple locations around the world. To see details on your available clusters, use <router-link to="clusters">Clusters</router-link> in the menu.
-          </p>
+
 
         </vuestic-widget>
       </div>
 
       <div class="flex md6 xs12">
-        <vuestic-widget
-          v-if="runningEnv !== 'k8s'"
-          class="dashboard-map__widget"
-          headerText="Cluster Locations"
-        >
-        <div style="display:none;">
-          {{ clusterInfo }}
-        </div>
-          <bubble-map v-if="clusterInfo.data.length > 0" v-bind:map-data="clusterInfo"/>
-        </vuestic-widget>
-
+ 
         <vuestic-widget
           headerText="Connecting"
         >
@@ -130,8 +105,6 @@
 
 <script>
 import SummaryInfoWidgets from './SummaryInfoWidgets'
-import BubbleMap from './BubbleMap'
-import BubbleMapData from 'data/maps/ClusterData'
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
 
@@ -139,13 +112,11 @@ export default {
   name: 'dashboard',
   data () {
     return {
-      bubbleMapData: BubbleMapData,
     }
   },
   mixins: [mixins],
   components: {
     SummaryInfoWidgets,
-    BubbleMap,
   },
   computed: {
     ...mapGetters([
@@ -180,19 +151,19 @@ export default {
         if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_pulsar) {
             return this.clusterInfo.info[cluster].host_override_pulsar
         }
-        return "pulsar+ssl://"+cluster.replace(/-/g,".")+".kafkaesque.io:6651"
+        return "pulsar://localhost:6650"
         
       } else if (type === 'ws'){
         if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_ws) {
             return this.clusterInfo.info[cluster].host_override_ws
         }
-        return "wss://"+cluster.replace(/-/g,".")+".kafkaesque.io:8001"
+        return "ws://localshost:8080"
 
       } else if (type === 'http') {
         if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_http) {
             return this.clusterInfo.info[cluster].host_override_http
         }
-        return "https://"+cluster.replace(/-/g,".")+".kafkaesque.io:8085"
+        return "http://localhost:8085"
       }
 
     },

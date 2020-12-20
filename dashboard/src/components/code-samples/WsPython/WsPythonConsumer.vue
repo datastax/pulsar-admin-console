@@ -171,7 +171,7 @@
                 if (this.clusterInfo.info[this.currentCluster.id] && this.clusterInfo.info[this.currentCluster.id].host_override_ws) {
                     return this.clusterInfo.info[this.currentCluster.id].host_override_ws
                 }
-                return "wss://"+this.currentCluster.id.replace(/-/g,".")+".kafkaesque.io:8001"
+                return "ws://localhost:8080"
             },
             simpleConsumer(){
                 return `import websocket, base64, json

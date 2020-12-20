@@ -3,11 +3,9 @@
 
     <vuestic-widget headerText="Python Code Samples"
                     >
-    <p>Kesque is powered by <a href="http://pulsar.apache.org" target="_blank" rel="noopener noreferrer">Apache Pulsar</a>. To connect to your service, use the open-source client APIs
+    <p>To connect to your service, use the open-source client APIs
             provided by the Apache Pulsar project. </p>
-    <p>The Python client APIs are distributed through <a target="_blank" :href="pypiUrl" rel="noopener noreferrer">Python Package Index (PyPi)</a>. On Linux, the Python version 2.7 and versions 3.4 to 3.7 are supported. On MacOS versions 2.7 and 3.7 are supported. You can find the documentation for the Python client <a href="https://pulsar.apache.org/docs/en/client-libraries-python/" target="_blank" rel="noopener noreferrer">here</a>.</p>
-
-    <p>Kesque is running Pulsar version {{ apiVersion }}. You should use this API version or higher. </p>    
+    <p>The Python client APIs are distributed through <a target="_blank" :href="pypiUrl" rel="noopener noreferrer">Python Package Index (PyPi)</a>.</p>
 
       <vuestic-tabs class="tabs"
                     :names="tabNames">

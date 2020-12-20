@@ -3,11 +3,11 @@
 
     <vuestic-widget headerText="Nodejs Code Samples"
                     >
-    <p>Kesque is powered by <a href="http://pulsar.apache.org" target="_blank" rel="noopener noreferrer">Apache Pulsar</a>. To connect to your service, use the open-source client APIs
+    <p>To connect to your service, use the open-source client APIs
             provided by the Apache Pulsar project. </p>
     <p>The Nodejs client APIs are distributed through <a target="_blank" :href="nodedepUrl" rel="noopener noreferrer">NPM</a>. On Linux, we recommend Node version 10+ and npm 6+. You can find document and source code for the Nodejs client library <a href="https://github.com/apache/pulsar-client-node" target="_blank" rel="noopener noreferrer">here</a>.</p>
 
-    <p>Kesque is running Pulsar version {{ apiVersion }}. You should use this API version or higher. Since the current Nodejs client library depends on the C++ client library. Please install <a href="https://archive.apache.org/dist/pulsar/" target="_blank" rel="noopener noreferrer"> the C++ library version {{ apiVersion }}</a>.</p>
+    <p>Since the current Nodejs client library depends on the C++ client library. Please install <a href="https://archive.apache.org/dist/pulsar/" target="_blank" rel="noopener noreferrer"> the C++ library version {{ apiVersion }}</a>.</p>
 
       <vuestic-tabs class="tabs"
                     :names="tabNames">

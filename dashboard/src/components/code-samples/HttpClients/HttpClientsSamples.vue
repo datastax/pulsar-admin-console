@@ -2,7 +2,7 @@
   <div class="httpclient-samples">
 
     <vuestic-widget headerText="HTTP Client Code Samples">
-    <p>Kesque is powered by <a href="http://pulsar.apache.org" target="_blank" rel="noopener noreferrer">Apache Pulsar.</a> HTTP interface is supported by <a href="https://github.com/kafkaesque-io/pulsar-beam" target="_blank" rel="noopener noreferrer"> Pulsar Beam</a>. </p>
+     HTTP interface is supported by <a href="https://github.com/kafkaesque-io/pulsar-beam" target="_blank" rel="noopener noreferrer"> Pulsar Beam</a>. </p>
     <p>These examples use HTTP Post method to publish messages and HTTP SSE to receive messages.</p>
     <p>HTTP client has no dependencies on any Pulsar client.</p>
 

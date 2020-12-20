@@ -100,9 +100,10 @@ export default {
     onLoad () {
     },
     url (dashboard) {
-      let broker = this.$route.params.id
-      let parts = broker.split('-')
-      let url = 'https://grafana.' + parts[0] + '.' + parts[1] + '.kafkaesque.io'
+      let url = "http://localhost:3000"
+      if (this.grafanaUrlOverride) {
+        url = this.grafanaUrlOverride
+      }
       url = url + '/d/' + this.pathMap[dashboard] + '?orgId=1&refresh=1m&from=now-1h'
       return url
     }

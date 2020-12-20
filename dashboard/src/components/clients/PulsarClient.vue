@@ -361,7 +361,7 @@ export default {
         let url = override.replace('<cluster>', splitInfo.name)
         return url.replace('<cloud>', splitInfo.cloud)
       }
-      return protocol + '://' + clusterName.replace(/-/g, '.') + '.kafkaesque.io:' + 8500
+      return "ws://localhost:8500"
     },
     updateNsSelect () {
       this.currentNamespace = ''

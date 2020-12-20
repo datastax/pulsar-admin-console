@@ -3,7 +3,7 @@
 
     <vuestic-widget headerText="WebSocket (Python) Code Samples"
                     >
-    <p>Kesque is powered by <a href="http://pulsar.apache.org" target="_blank" rel="noopener noreferrer">Apache Pulsar</a>. To connect to your service, you can use a standard WebSocket client library. These examples use the Python WebSocket client library (Python 3). You can find the documentation for the Pulsar WebSocket interface <a href="http://pulsar.apache.org/docs/en/client-libraries-websocket/" target="_blank" rel="noopener noreferrer">here</a>.</p> 
+    <p>To connect to your service, you can use a standard WebSocket client library. These examples use the Python WebSocket client library (Python 3). You can find the documentation for the Pulsar WebSocket interface <a href="http://pulsar.apache.org/docs/en/client-libraries-websocket/" target="_blank" rel="noopener noreferrer">here</a>.</p> 
     
         
 

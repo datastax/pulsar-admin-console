@@ -3,11 +3,11 @@
 
     <vuestic-widget headerText="Java Code Samples"
                     >
-    <p>Kesque is powered by <a href="http://pulsar.apache.org" target="_blank" rel="noopener noreferrer">Apache Pulsar</a>. To connect to your service, use the open-source client APIs
+    <p>To connect to your service, use the open-source client APIs
             provided by the Apache Pulsar project. </p>
     <p>The Java client APIs are distributed through <a target="_blank" :href="mavenUrl" rel="noopener noreferrer">Maven Central</a>. They require Java version 8. You can find the Javadocs <a href="https://pulsar.apache.org/api/client/" target="_blank" rel="noopener noreferrer">here</a>.</p>
 
-            <p>Kesque is running Pulsar version {{ apiVersion }}. You should use this API version or higher. </p>    
+           
 
 
       <vuestic-tabs class="tabs"

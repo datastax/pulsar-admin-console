@@ -19,8 +19,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "amcharts3": "^3.21.13",
-    "ammap3": "^3.21.13",
     "awesome-bootstrap-checkbox": "1.0.0-alpha.5",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.0.0",

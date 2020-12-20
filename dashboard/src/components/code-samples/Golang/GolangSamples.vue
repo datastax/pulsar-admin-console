@@ -3,7 +3,7 @@
 
     <vuestic-widget headerText="Golang Code Samples"
                     >
-    <p>Kesque is powered by <a href="http://pulsar.apache.org" target="_blank" rel="noopener noreferrer">Apache Pulsar</a>. To connect to your service, use the open-source client APIs
+    <p>To connect to your service, use the open-source client APIs
             provided by the Apache Pulsar project. </p>
     <p>The Golang client APIs are distributed through <a target="_blank" :href="godepUrl" rel="noopener noreferrer">Golang Package Dependency</a>. On Linux and MacOS, the Golang version 1.10 and above are supported. You can find the documentation for the Golang client <a href="https://godoc.org/github.com/apache/incubator-pulsar/pulsar-client-go/pulsar" target="_blank" rel="noopener noreferrer">here</a>.</p>
 

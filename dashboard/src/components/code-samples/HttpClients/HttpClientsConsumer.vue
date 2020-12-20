@@ -64,12 +64,6 @@
                 </div>
 
             </div>
-            <div class="flex md3">
-                <a href="https://github.com/kafkaesque-io/sample-pulsar-node-client/blob/master/src/sse/sse.js" style="float: right;" target="_blank" rel="noopener noreferrer">
-                    Full project on GitHub
-                    <span class="fa fa-github icon-github" ></span>
-                </a>
-            </div>
         </div>
         <div class="form-group with-icon-right">
             <pre v-highlightjs="simpleConsumer"><code class="golang"></code></pre>
@@ -165,7 +159,7 @@ export default {
         if (this.clusterInfo.info[this.currentCluster.id] && this.clusterInfo.info[this.currentCluster.id].host_override_http) {
             return this.clusterInfo.info[this.currentCluster.id].host_override_http
         }
-        return "https://"+this.currentCluster.id.replace(/-/g,".")+".kafkaesque.io:8085"
+        return "pulsar://localhost:6650"
     },
     serviceFqdn () {
       const urlObject = new URL(this.serviceUrl)

@@ -118,7 +118,7 @@ export default {
       if (!protocol) {
         protocol = 'https'
       }
-      return protocol + '://' + this.activeCluster.replace(/-/g, '.') + '.kafkaesque.io:' + 8964
+      return "http://localhost:8964"
     },
     clearLogs () {
       this.logData = ''

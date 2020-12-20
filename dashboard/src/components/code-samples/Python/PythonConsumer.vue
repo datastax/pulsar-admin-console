@@ -171,7 +171,7 @@
                 if (this.clusterInfo.info[this.currentCluster.id] && this.clusterInfo.info[this.currentCluster.id].host_override_pulsar) {
                     return this.clusterInfo.info[this.currentCluster.id].host_override_pulsar
                 }
-                return "pulsar+ssl://"+this.currentCluster.id.replace(/-/g,".")+".kafkaesque.io:6651"
+                return "pulsar://localhost:6650"
             },
             simpleConsumer(){
                 return `import pulsar,time

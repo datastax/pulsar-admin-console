@@ -118,10 +118,7 @@ export default {
         let url = override.replace('<cluster>', splitInfo.name)
         return url.replace('<cloud>', splitInfo.cloud)
       }
-      if (!protocol) {
-        protocol = 'https'
-      }
-      return protocol + '://' + this.activeCluster.replace(/-/g, '.') + '.kafkaesque.io:' + 8964
+      return "http://localhost:8964"
     },
     clearLogs () {
       this.logData = ''

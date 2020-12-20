@@ -64,12 +64,6 @@
                 </div>
 
             </div>
-            <div class="flex md3">
-                <a href="https://github.com/kafkaesque-io/sample-pulsar-go-client/blob/master/src/consumer.go" style="float: right;" target="_blank" rel="noopener noreferrer">
-                    Full project on GitHub
-                    <span class="fa fa-github icon-github" ></span>
-                </a>
-            </div>
         </div>
         <div class="form-group with-icon-right">
             <pre v-highlightjs="simpleConsumer"><code class="golang"></code></pre>
@@ -175,7 +169,7 @@
                 if (this.clusterInfo.info[this.currentCluster.id] && this.clusterInfo.info[this.currentCluster.id].host_override_pulsar) {
                     return this.clusterInfo.info[this.currentCluster.id].host_override_pulsar
                 }
-                return "pulsar+ssl://"+this.currentCluster.id.replace(/-/g,".")+".kafkaesque.io:6651"
+                return "pulsar://localhost:6650"
             },
             simpleConsumer(){
                 return `package main

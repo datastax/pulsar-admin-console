@@ -68,9 +68,7 @@ export default {
     onLoad () {
     },
     url (dashboard) {
-      let cluster = this.activeCluster
-      let parts = cluster.split('-')
-      let url = 'https://grafana.' + parts[0] + '.' + parts[1] + '.kafkaesque.io'
+      let url = "http://localhost:3000"
       if (this.grafanaUrlOverride) {
         url = this.grafanaUrlOverride
       }

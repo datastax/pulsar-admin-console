@@ -211,9 +211,6 @@ export default {
         this.$emit('toggle-menu', opened)
       },
     },
-    clusterUrl () {
-      return this.activeCluster.replace(/-/g, '.') + '.kafkaesque.io'
-    },
   },
   methods: {
     openTenantModal () {

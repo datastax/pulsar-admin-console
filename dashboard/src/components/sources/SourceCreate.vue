@@ -777,10 +777,7 @@ export default {
         let url = override.replace('<cluster>', splitInfo.name)
         return url.replace('<cloud>', splitInfo.cloud)
       }
-      if (!protocol) {
-        protocol = 'pulsar+ssl'
-      }
-      return protocol + '://' + clusterName.replace(/-/g, '.') + '.kafkaesque.io:' + 6651
+      return "pulsar://localhost:6650"
     },
     getSourceConfig () {
       let outputTopics = []

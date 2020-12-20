@@ -4,7 +4,7 @@
             <alert ref="alert" :errorText="errorText"></alert>
             <div>
                 <h5>Connect token</h5>
-                <p>When connecting clients to Kesque, you need provide your connect token to identify your account. In all the Pulsar APIs,
+                <p>When connecting clients, you need provide your connect token to identify your account. In all the Pulsar APIs,
                     you specify the token when creating the client object. The token is your password to your account, so keep it safe.</p>
 
                         <div v-if="useTokenList !== 'true'">
@@ -62,7 +62,7 @@
 
                 <h5>CA Certificate</h5>
 
-                        <p>Kesque use certificates signed by trusted certicate authorities. That means that you
+                        <p>The clsuter may be using certificates signed by trusted certicate authorities, for example, Let's Encrypt. That means that you
                             can use the default set of certificate authorities in your environment. The path to the default CA bundle
                             varies by environment. For example:
                         </p>
@@ -90,8 +90,7 @@
                                     </i>
                         </div>
                         <p>
-                            If you don't want to use the
-                            default CA bundle, here is the root CA certificate (DST Root CA X3) for the Kafakesque service:
+                            If the cluster is not using a public certificate authority, here is the private CA certificate:
                         </p>
                         <div class="form-group with-icon-right display-block">
                             <vuestic-collapse>

@@ -57,7 +57,7 @@ export default {
       return foundBreadcrumbs
     },
     currentRoute () {
-      return this.$route.meta.wikiLink || 'https://kafkaesque.io/docs'
+      return this.$route.meta.wikiLink
     },
   },
   methods: {
