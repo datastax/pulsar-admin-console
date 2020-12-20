@@ -17,7 +17,7 @@ var wpData = {
     "need_to_create_plan": "",
     "plan_to_create": "",
     "admin_role": "",
-    "cluster_list": ["toronto-do"],
+    "cluster_list": ["standalone"],
     "api_base_url": "https://localhost:9080/api/v1",
     "backend_url": "http://localhost:6454",
     "ca_certificate": "",

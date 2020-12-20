@@ -1,7 +1,7 @@
 .idea
 *.swp
 registry-creds.yaml
-nginx-kesque.conf
+nginx-test.conf
 .env
 
 # Logs
