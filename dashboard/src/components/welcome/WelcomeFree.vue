@@ -165,7 +165,7 @@
                 v-if="waiting"
                 :animation-duration="1200"
                 :size="55"
-                color="#C5A54E"
+                color="#188FFF"
               />
               <h4 v-else>{{'forms.wizard.completed' | translate}}</h4>
               <div class="form-wizard-tab-content-text">

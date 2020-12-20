@@ -32,7 +32,7 @@
                               <hollow-dots-spinner
                                 :animation-duration="1500"
                                 :dot-size="10"
-                                color="#C5A54Eb"
+                                color="#188FFF"
                                 />
 
                               </td>

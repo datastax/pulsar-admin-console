@@ -18,12 +18,12 @@ let data = [{
   'code': 'asiaeast2-gcp',
   'name': 'Google Asia East (Hong Kong)',
   'value': 'asiaeast2-gcp',
-  'color': '#C5A54E',
+  'color': '#188FFF',
 }, {
   'code': 'useast1-gcp',
   'name': 'Google US East (South Carolina)',
   'value': 'useast1-gcp',
-  'color': '#C5A54E',
+  'color': '#188FFF',
 } ]
 
 export default {

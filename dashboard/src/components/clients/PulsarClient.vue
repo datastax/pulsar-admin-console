@@ -9,7 +9,7 @@
                             v-if="allConnected"
                             :animation-duration="2400"
                             :size="40"
-                            color="#C5A54E"
+                            color="#188FFF"
                     />
                 </div>
                 <div class="spinner" v-if="spinnerType === 'trinity-rings-spinner'">
@@ -17,7 +17,7 @@
                             v-if="allConnected"
                             :animation-duration="2400"
                             :size="40"
-                            color="#C5A54E"
+                            color="#188FFF"
                     />
                 </div>
         </div>

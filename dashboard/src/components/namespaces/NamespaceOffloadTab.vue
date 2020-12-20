@@ -221,7 +221,7 @@ export default {
 
 .label-style {
   font-size: 0.6rem;
-  color: #C5A54E;
+  color: #188FFF;
   font-weight: 600;
   text-transform: uppercase;
 }

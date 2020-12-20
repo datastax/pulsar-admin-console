@@ -12,7 +12,7 @@
       <loading :active.sync="isLoading" 
         :can-cancel="false" 
         loader="dots"
-        color="#C5A54E"
+        color="#188FFF"
         :is-full-page="fullPage"></loading>
       <router-view/>
       <div class="trademarks">
