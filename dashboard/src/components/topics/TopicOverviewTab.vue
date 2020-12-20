@@ -440,7 +440,6 @@ import { mapGetters } from 'vuex'
 import ApiService from '@/services/ApiService'
 import mixins from '@/services/mixins'
 import Alert from '../utils/Alert'
-import AjaxService from '@/services/AjaxService'
 
 export default {
   name: 'TopicOverviewTab',
@@ -776,20 +775,9 @@ export default {
     },
     async unloadTopic () {
       this.unloading = true
-      let infoObject = this.topicsConfig.data[this.$route.params.id]
-      let topic = infoObject.name
-      let tenant = infoObject.tenant
-      let namespace = infoObject.namespace
-
+      const infoObject = this.topicsConfig.data[this.$route.params.id]
       try {
-        await AjaxService.ajaxAction('unload_topic',
-          {
-            dataCenter: this.activeCluster,
-            tenant: tenant,
-            namespace: namespace,
-            topic: topic,
-            type: infoObject.type
-          })
+        await ApiService.unloadTopic(infoObject.cluster, infoObject.path)
         this.onSuccess('Topic unloaded')
       } catch (error) {
         let [reason, statusCode] = this.decodeErrorObject(error)

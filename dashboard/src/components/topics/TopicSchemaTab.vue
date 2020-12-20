@@ -235,15 +235,6 @@ export default {
       }
       this.$refs.updateSchemaModal.open()
     },
-    sendEmailTest(){
-        const emailInfo = {
-          subject: `Send email test`,
-          body: `This is a test of sending an email`
-        }
-        this.$store.dispatch('sendEmail', emailInfo)
-        this.onSuccess('Email sent')
-
-    },
     pollForSchema () {
       if (this.schemaPolling && this.activeTopicDetailTab === this.$t('topicDetail.tabs.schema')) {
         this.getSchema()

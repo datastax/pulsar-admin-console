@@ -323,7 +323,6 @@ import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
 import Alert from '../utils/Alert'
 import ApiService from '@/services/ApiService'
-import AjaxService from '@/services/AjaxService'
 import ConfigData from './configs'
 
 export default {
@@ -605,21 +604,6 @@ export default {
       this.parallelism = 1
       this.guarantee = { id: 'ATLEAST_ONCE', name: 'At Least Once' }
     },
-    async getMaxSources () {
-      try {
-        const resp = await AjaxService.ajaxAction('get_max_sources_cluster',
-          {
-            dataCenter: this.activeCluster,
-          })
-
-        const maxSources = resp.data.data
-
-        return Number(maxSources)
-      } catch (error) {
-        console.log('Error', error)
-        console.log('Error', error.response)
-      }
-    },
     goToSourceDetail (sourceId) {
       this.$router.push('/admin/sources/view/' + sourceId)
       this.$store.dispatch('setActiveSourceDetailTab', this.$t('sourceDetail.tabs.overview'))
@@ -651,75 +635,6 @@ export default {
       this.outputTopicList.splice(this.outputTopicList.findIndex(item => item.key === key), 1)
       // delete this.topicSchemaMap[key]
     },
-    async getMaxFunctions () {
-      try {
-        const resp = await AjaxService.ajaxAction('get_max_functions_cluster',
-          {
-            dataCenter: this.activeCluster,
-          })
-
-        const maxFunctions = resp.data.data
-
-        return Number(maxFunctions)
-      } catch (error) {
-        console.log('Error', error)
-        console.log('Error', error.response)
-      }
-    },
-    async checkMaxSources () {
-      const maxSources = await this.getMaxFunctions()
-
-      console.log('Maximum number of functions/sources/sources:', maxSources)
-
-      // Sources are limited by the maximum functions for the plan
-      var totalInstances = 0
-
-      // Make sure we have an up-to-date count of functions
-      await this.$store.dispatch('getFunctions')
-
-      // Calculate the total number of source instances
-      Object.keys(this.sourcesData.data).forEach(key => {
-        if (this.sourcesData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.sourcesData.data[key].parallelism
-        }
-      })
-      // Calculate the total number of function instances
-      Object.keys(this.functionsData.data).forEach(key => {
-        if (this.functionsData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.functionsData.data[key].parallelism
-        }
-      })
-
-      // Calculate the total number of sink instances
-      Object.keys(this.sinksData.data).forEach(key => {
-        if (this.sinksData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.sinksData.data[key].parallelism
-        }
-      })
-
-      console.log('Total instances', totalInstances)
-
-      var instancesAfterAction = totalInstances + Number(this.parallelism)
-      // If this is an update, we substract the current of instances
-      if (this.currentSourceId) {
-        console.log(this.sourcesData.data[this.currentSourceId].parallelism)
-
-        instancesAfterAction = instancesAfterAction - Number(this.sourcesData.data[this.currentSourceId].parallelism)
-      }
-
-      console.log('Instances After Action', instancesAfterAction)
-
-      if (instancesAfterAction > maxSources) {
-        return {
-          result: 'fail',
-          maxInstances: maxSources,
-          currentInstances: totalInstances,
-          instancesAfterAction: instancesAfterAction
-        }
-      }
-
-      return { result: 'pass' }
-    },
     async createSource () {
       const isValid = await (this.$validator.validateAll())
       if (!isValid) {
@@ -730,15 +645,6 @@ export default {
 
       // If alert is shown, hide it
       this.$refs.alert.hideAlert()
-
-      // Check if max sources is exceeded
-      const checkResult = await this.checkMaxSources()
-      console.log(checkResult)
-      if (checkResult.result === 'fail') {
-        this.errorText = `Exceeds maximum function/source/sources instances for ${this.activeCluster}. Max: ${checkResult.maxInstances} After: ${checkResult.instancesAfterAction}`
-        this.$refs.alert.showAlert()
-        return
-      }
 
       this.disableCreate = true
 
@@ -841,15 +747,6 @@ export default {
 
       // If alert is shown, hide it
       this.$refs.alert.hideAlert()
-
-      // Check if max sources is exceeded
-      const checkResult = await this.checkMaxSources()
-      console.log(checkResult)
-      if (checkResult.result === 'fail') {
-        this.errorText = `Exceeds maximum function/source/sources instances for ${this.activeCluster}. Max: ${checkResult.maxInstances} After: ${checkResult.instancesAfterAction}`
-        this.$refs.alert.showAlert()
-        return
-      }
 
       this.disableUpdate = true
 

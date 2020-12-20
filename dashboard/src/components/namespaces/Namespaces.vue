@@ -177,7 +177,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
-import AjaxService from '@/services/AjaxService'
 import ApiService from '@/services/ApiService'
 
 import Alert from '../utils/Alert'
@@ -271,9 +270,6 @@ export default {
       }
     },
     async openNamespaceModal () {
-      if (this.runningEnv === "web") {
-        await this.getMaxNamespaces()
-      }
       this.$refs.namespaceModal.open()
     },
     async createNamespace () {
@@ -283,17 +279,7 @@ export default {
         return
       }
       try {
-         if (this.runningEnv === 'k8s') {
-          await ApiService.createNamespace(this.activeCluster, this.tenant + "/" + this.namespaceName)
-
-        } else {
-          await AjaxService.ajaxAction('add_namespace',
-            {
-              dataCenter: this.activeCluster,
-              tenant: this.tenant,
-              namespace: this.namespaceName
-            })
-        }
+        await ApiService.createNamespace(this.activeCluster, this.tenant + "/" + this.namespaceName)
 
         this.onSuccess('Namespace created')
 
@@ -306,21 +292,6 @@ export default {
         let [reason, statusCode] = this.decodeErrorObject(error)
         this.errorText = `Creating namespace: ${this.namespaceName}. Reason: ${reason} (${statusCode})`
         this.$refs.alert.showAlert()
-      }
-    },
-    async getMaxNamespaces () {
-      try {
-        const resp = await AjaxService.ajaxAction('get_max_namespaces_cluster',
-          {
-            dataCenter: this.activeCluster,
-          })
-
-        this.maxNamespaces = resp.data.data
-
-        console.log(this.maxNamespaces)
-      } catch (error) {
-        console.log('Error', error)
-        console.log('Error', error.response)
       }
     },
   }

@@ -12,11 +12,11 @@
                 />
                 </button>
             </div>
+                <alert ref="alert" :errorText="errorText"></alert>
 
                 <vuestic-widget headerText="Runtime Configuration">
                     <div class="flex md12">
                         <div class="va-row" v-if="clusterConfig.dispatchThrottlingRatePerTopicInMsg">
-                                <alert ref="alert" :errorText="errorText"></alert>
                                 <div class="va-row">
                                     <div v-for="statKey in clusterConfigKeys" :key="statKey" class="flex md3">
                                         <div class="form-group">
@@ -44,7 +44,7 @@
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
 import Alert from '../utils/Alert'
-import AjaxService from '@/services/AjaxService'
+import ApiService from '@/services/ApiService'
 
 export default {
   name: 'ClusterDetails',
@@ -91,17 +91,14 @@ export default {
 
       // Wait for the API call to return, then update the topic so the user gets feedback
       try {
-        const response = await AjaxService.ajaxAction('get_cluster_running_config',
-          {
-            cluster: cluster,
-          })
+        const response = await ApiService.getClusterConfig(cluster)
 
         if (response) {
-          this.clusterConfig = response.data.data
+          this.clusterConfig = response.data
         }
       } catch (error) {
         let [reason, statusCode] = this.decodeErrorObject(error)
-        this.errorText = `Retrieving cluster config: ${cluster}. Reason: ${reason} (${statusCode})`
+        this.errorText = `Retrieving running cluster config: ${cluster}. Reason: ${reason} (${statusCode})`
         this.$refs.alert.showAlert()
       }
     }

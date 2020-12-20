@@ -503,6 +503,41 @@ export default {
     const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/backlogQuota`, body)
     return response
   },
+  updateNamespacePersistence (cluster, namespacePath, ensemble, write, ack) {
+    const body = {
+      bookkeeperEnsemble: ensemble,
+      bookkeeperWriteQuorum: write,
+      bookkeeperAckQuorum: ack,
+      managedLedgerMaxMarkDeleteRate: 0
+    }
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/persistence`, body)
+    return response
+  },
+  updateNamespaceCompactionThreshold (cluster, namespacePath, threshold) {
+    const response = ApiBase().put(`${cluster}/namespaces/${namespacePath}/compactionThreshold`, JSON.stringify(threshold), { headers: {
+      'Content-Type': 'application/json'
+    }})
+    return response
+  },
+  updateNamespaceSchemaAutoUpdate (cluster, namespacePath, flag) {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/isAllowAutoUpdateSchema`, JSON.stringify(flag), { headers: {
+      'Content-Type': 'application/json'
+    }})
+    return response
+  },
+  updateNamespaceSchemaValidationEnforced (cluster, namespacePath, flag) {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/schemaValidationEnforced`, JSON.stringify(flag), { headers: {
+      'Content-Type': 'application/json'
+    }})
+    return response
+  },
+  updateNamespaceSchemaCompatabilityStrategy (cluster, namespacePath, strategy) {
+    const response = ApiBase().put(`${cluster}/namespaces/${namespacePath}/schemaCompatibilityStrategy`, JSON.stringify(strategy), { headers: {
+      'Content-Type': 'application/json'
+    }})
+    return response
+  },
+  
   updateRetention (cluster, namespacePath, size, time) {
     const body = {
       retentionSizeInMB: size,

@@ -337,7 +337,6 @@ import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
 import Alert from '../utils/Alert'
 import ApiService from '@/services/ApiService'
-import AjaxService from '@/services/AjaxService'
 import ConfigData from './configs'
 
 export default {
@@ -620,21 +619,6 @@ export default {
       this.autoAckCheck = true
       this.guarantee = { id: 'ATLEAST_ONCE', name: 'At Least Once' }
     },
-    async getMaxSinks () {
-      try {
-        const resp = await AjaxService.ajaxAction('get_max_sinks_cluster',
-          {
-            dataCenter: this.activeCluster,
-          })
-
-        const maxSinks = resp.data.data
-
-        return Number(maxSinks)
-      } catch (error) {
-        console.log('Error', error)
-        console.log('Error', error.response)
-      }
-    },
     goToSinkDetail (sinkId) {
       this.$router.push('/admin/sinks/view/' + sinkId)
       this.$store.dispatch('setActiveSinkDetailTab', this.$t('sinkDetail.tabs.overview'))
@@ -666,75 +650,6 @@ export default {
       this.inputTopicList.splice(this.inputTopicList.findIndex(item => item.key === key), 1)
       // delete this.topicSchemaMap[key]
     },
-    async getMaxFunctions () {
-      try {
-        const resp = await AjaxService.ajaxAction('get_max_functions_cluster',
-          {
-            dataCenter: this.activeCluster,
-          })
-
-        const maxFunctions = resp.data.data
-
-        return Number(maxFunctions)
-      } catch (error) {
-        console.log('Error', error)
-        console.log('Error', error.response)
-      }
-    },
-    async checkMaxSinks () {
-      const maxSinks = await this.getMaxFunctions()
-
-      console.log('Maximum number of functions/sinks/sources:', maxSinks)
-
-      // Sinks are limited by the maximum functions for the plan
-      var totalInstances = 0
-
-      // Make sure we have an up-to-date count of functions
-      await this.$store.dispatch('getFunctions')
-
-      // Calculate the total number of sink instances
-      Object.keys(this.sinksData.data).forEach(key => {
-        if (this.sinksData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.sinksData.data[key].parallelism
-        }
-      })
-      // Calculate the total number of function instances
-      Object.keys(this.functionsData.data).forEach(key => {
-        if (this.functionsData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.functionsData.data[key].parallelism
-        }
-      })
-
-      // Calculate the total number of source instances
-      Object.keys(this.sourcesData.data).forEach(key => {
-        if (this.sourcesData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.sourcesData.data[key].parallelism
-        }
-      })
-
-      console.log('Total instances', totalInstances)
-
-      var instancesAfterAction = totalInstances + Number(this.parallelism)
-      // If this is an update, we substract the current of instances
-      if (this.currentSinkId) {
-        console.log(this.sinksData.data[this.currentSinkId].parallelism)
-
-        instancesAfterAction = instancesAfterAction - Number(this.sinksData.data[this.currentSinkId].parallelism)
-      }
-
-      console.log('Instances After Action', instancesAfterAction)
-
-      if (instancesAfterAction > maxSinks) {
-        return {
-          result: 'fail',
-          maxInstances: maxSinks,
-          currentInstances: totalInstances,
-          instancesAfterAction: instancesAfterAction
-        }
-      }
-
-      return { result: 'pass' }
-    },
     async createSink () {
       const isValid = await (this.$validator.validateAll())
       if (!isValid) {
@@ -745,15 +660,6 @@ export default {
 
       // If alert is shown, hide it
       this.$refs.alert.hideAlert()
-
-      // Check if max sinks is exceeded
-      const checkResult = await this.checkMaxSinks()
-      console.log(checkResult)
-      if (checkResult.result === 'fail') {
-        this.errorText = `Exceeds maximum function/sink/sources instances for ${this.activeCluster}. Max: ${checkResult.maxInstances} After: ${checkResult.instancesAfterAction}`
-        this.$refs.alert.showAlert()
-        return
-      }
 
       this.disableCreate = true
 
@@ -839,15 +745,6 @@ export default {
 
       // If alert is shown, hide it
       this.$refs.alert.hideAlert()
-
-      // Check if max sinks is exceeded
-      const checkResult = await this.checkMaxSinks()
-      console.log(checkResult)
-      if (checkResult.result === 'fail') {
-        this.errorText = `Exceeds maximum function/sink/sources instances for ${this.activeCluster}. Max: ${checkResult.maxInstances} After: ${checkResult.instancesAfterAction}`
-        this.$refs.alert.showAlert()
-        return
-      }
 
       this.disableUpdate = true
 

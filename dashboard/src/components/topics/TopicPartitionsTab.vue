@@ -1,6 +1,8 @@
 <template>
     <div>
         <div class="va-row" v-if="topicStats.data[$route.params.id]">
+            <alert ref="alert" :errorText="errorText"></alert>
+
             <div class="flex xs12 md12" v-if="topicStats.data[$route.params.id].info.partitioned">
                 <vuestic-widget >
 
@@ -54,7 +56,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
-import AjaxService from '@/services/AjaxService'
+import ApiService from '@/services/ApiService'
+import Alert from '../utils/Alert'
+
 
 export default {
   name: 'TopicPartitionsTab',
@@ -68,6 +72,14 @@ export default {
     ]),
 
   },
+  data () {
+    return {
+      errorText: 'Something went wrong',
+    }
+  },
+  components: {
+    Alert
+  },
   methods: {
     gotoPartionedTopic (url) {
       const topicParts = url.match(/(^.+):\/\/(.+?)\/(.+?)\/(.+?$)/)
@@ -76,26 +88,26 @@ export default {
       this.$router.push('/admin/topic/' + topicId)
       this.$store.dispatch('setActiveTopicDetailTab', this.$t('topicDetail.tabs.overview'))
     },
+
     async unloadTopic (url) {
+      this.unloading = true
+      const infoObject = this.topicsConfig.data[this.$route.params.id]
       const topicParts = url.match(/(^.+):\/\/(.+?)\/(.+?)\/(.+?$)/)
 
       let topic = topicParts[4]
       let tenant = topicParts[2]
       let namespace = topicParts[3]
 
+      const topicPath = `${tenant}/${namespace}/${topic}`
       try {
-        await AjaxService.ajaxAction('unload_topic',
-          {
-            dataCenter: this.activeCluster,
-            tenant: tenant,
-            namespace: namespace,
-            topic: topic,
-          })
+        await ApiService.unloadTopic(this.activeCluster, topicPath)
         this.onSuccess('Topic unloaded')
       } catch (error) {
         let [reason, statusCode] = this.decodeErrorObject(error)
         this.errorText = `Unloading topic: ${name}. Reason: ${reason} (${statusCode})`
         this.$refs.alert.showAlert()
+      } finally {
+        this.unloading = false
       }
     },
   }

@@ -399,7 +399,6 @@ import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
 import Alert from '../utils/Alert'
 import ApiService from '@/services/ApiService'
-import AjaxService from '@/services/AjaxService'
 import JSZip from 'jszip'
 
 export default {
@@ -581,21 +580,6 @@ export default {
       this.$validator.validateAll()
       this.inputTopicList = []
 
-    },
-    async getMaxFunctions () {
-      try {
-        const resp = await AjaxService.ajaxAction('get_max_functions_cluster',
-          {
-            dataCenter: this.activeCluster,
-          })
-
-        const maxFunctions = resp.data.data
-
-        return Number(maxFunctions)
-      } catch (error) {
-        console.log('Error', error)
-        console.log('Error', error.response)
-      }
     },
     loadFunction (id) {
       console.log(id)
@@ -836,60 +820,6 @@ export default {
     removeKeyValue (key) {
       this.userConfig.splice(this.userConfig.findIndex(item => item.key === key), 1)
     },
-    async checkMaxFunctions () {
-      const maxFunctions = await this.getMaxFunctions()
-
-      console.log('Maximum number of functions:', maxFunctions)
-
-      // Make sure we have an up-to-date count of sinks
-      await this.$store.dispatch('getSinks')
-      // await this.$store.dispatch('getSources')
-
-      var totalInstances = 0
-      // Calculate the total number of function instances
-      Object.keys(this.functionsData.data).forEach(key => {
-        if (this.functionsData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.functionsData.data[key].parallelism
-        }
-      })
-
-      // Calculate the total number of sink instances
-      Object.keys(this.sinksData.data).forEach(key => {
-        if (this.sinksData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.sinksData.data[key].parallelism
-        }
-      })
-
-      // Calculate the total number of source instances
-      Object.keys(this.sourcesData.data).forEach(key => {
-        if (this.sourcesData.data[key].cluster === this.activeCluster) {
-          totalInstances = totalInstances + this.sourcesData.data[key].parallelism
-        }
-      })
-
-      console.log('Total instances', totalInstances)
-
-      var instancesAfterAction = totalInstances + Number(this.parallelism)
-      // If this is an update, we substract the current of instances
-      if (this.currentFunctionId) {
-        console.log(this.functionsData.data[this.currentFunctionId].parallelism)
-
-        instancesAfterAction = instancesAfterAction - Number(this.functionsData.data[this.currentFunctionId].parallelism)
-      }
-
-      console.log('Instances After Action', instancesAfterAction)
-
-      if (instancesAfterAction > maxFunctions) {
-        return {
-          result: 'fail',
-          maxInstances: maxFunctions,
-          currentInstances: totalInstances,
-          instancesAfterAction: instancesAfterAction
-        }
-      }
-
-      return { result: 'pass' }
-    },
     async createFunction () {
       if (!this.isFormValid()) {
         return
@@ -897,15 +827,6 @@ export default {
 
       // If alert is shown, hide it
       this.$refs.alert.hideAlert()
-
-      // Check if max functions is exceeded
-      const checkResult = await this.checkMaxFunctions()
-      console.log(checkResult)
-      if (checkResult.result === 'fail') {
-        this.errorText = `Exceeds maximum function/sink/source instances for ${this.activeCluster}. Max: ${checkResult.maxInstances} After: ${checkResult.instancesAfterAction}`
-        this.$refs.alert.showAlert()
-        return
-      }
 
       this.disableCreate = true
 
@@ -1079,15 +1000,6 @@ export default {
 
       // If alert is shown, hide it
       this.$refs.alert.hideAlert()
-
-      // Check if max functions is exceeded
-      const checkResult = await this.checkMaxFunctions()
-      console.log(checkResult)
-      if (checkResult.result === 'fail') {
-        this.errorText = `Exceeds maximum function/sink/source instances for ${this.activeCluster}. Max: ${checkResult.maxInstances} After: ${checkResult.instancesAfterAction}`
-        this.$refs.alert.showAlert()
-        return
-      }
 
       this.disableUpdate = true
 

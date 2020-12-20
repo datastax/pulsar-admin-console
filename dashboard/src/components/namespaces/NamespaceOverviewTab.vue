@@ -529,7 +529,6 @@
 
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
-import AjaxService from '@/services/AjaxService'
 import ApiService from '@/services/ApiService'
 import Alert from '../utils/Alert'
 
@@ -716,16 +715,7 @@ export default {
       const namespacePath = this.tenant + "/" + namespaceName
 
       try {
-        if (this.runningEnv === 'k8s') {
-          await ApiService.unloadNamespace(this.activeCluster, namespacePath)
-        } else {
-          await AjaxService.ajaxAction('unload_namespace',
-            {
-              dataCenter: this.activeCluster,
-              tenant: this.tenant,
-              namespace: namespaceName,
-            })
-        }
+        await ApiService.unloadNamespace(this.activeCluster, namespacePath)
         this.onSuccess('Namespace unloaded')
       } catch (error) {
         let [reason, statusCode] = this.decodeErrorObject(error)
@@ -812,18 +802,7 @@ export default {
 
 
       try {
-        if (this.runningEnv === 'k8s') {
-          console.log("In here")
-          await ApiService.deleteNamespace(this.activeCluster, namespacePath)
-
-        } else {
-          await AjaxService.ajaxAction('delete_namespace',
-            {
-              dataCenter: this.activeCluster,
-              tenant: this.tenant,
-              namespace: namespaceName
-            })
-        }
+        await ApiService.deleteNamespace(this.activeCluster, namespacePath)
 
         this.onSuccess('Namespace deleted')
         // Need to update master list of topics
@@ -863,17 +842,10 @@ export default {
     },
     async updateNamespacePersistence () {
       const namespaceName = this.namespacesConfig.data[this.$route.params.id].name
+      const namespacePath = this.tenant + "/" + namespaceName
 
       try {
-        await AjaxService.ajaxAction('update_namespace_persistence',
-          {
-            dataCenter: this.activeCluster,
-            tenant: this.tenant,
-            namespace: namespaceName,
-            ensembleQ: this.ensembleQ,
-            ackQ: this.ackQ,
-            writeQ: this.writeQ
-          })
+        await ApiService.updateNamespacePersistence(this.activeCluster,namespacePath, this.ensembleQ,this.ackQ, this.writeQ)
         this.onSuccess('Persistence updated')
         // Need to update master list of topics
         this.$store.dispatch('getNamespacesInfo')
@@ -885,16 +857,10 @@ export default {
     },
     async updateNamespaceCompaction () {
       const namespaceName = this.namespacesConfig.data[this.$route.params.id].name
+      const namespacePath = this.tenant + "/" + namespaceName
 
       try {
-        await AjaxService.ajaxAction('update_namespace_compaction',
-          {
-            dataCenter: this.activeCluster,
-            tenant: this.tenant,
-            namespace: namespaceName,
-            threshold: this.compactionThreshold,
-          })
-
+        await ApiService.updateNamespaceCompactionThreshold(this.activeCluster,namespacePath, this.compactionThreshold)
         this.onSuccess('Threshold updated')
 
         // Need to update master list of topics
@@ -909,17 +875,12 @@ export default {
     
     async updateNamespaceSchema () {
       const namespaceName = this.namespacesConfig.data[this.$route.params.id].name
-      try {
-        await AjaxService.ajaxAction('update_namespace_schema',
-          {
-            dataCenter: this.activeCluster,
-            tenant: this.tenant,
-            namespace: namespaceName,
-            autoUpdateSchema: this.autoUpdateSchema,
-            compatCheck: this.compatCheck.id,
-            enforceValidation: this.enforceValidation,
-          })
+      const namespacePath = this.tenant + "/" + namespaceName
 
+      try {
+        await ApiService.updateNamespaceSchemaAutoUpdate(this.activeCluster,namespacePath, this.autoUpdateSchema)
+        await ApiService.updateNamespaceSchemaValidationEnforced(this.activeCluster,namespacePath, this.enforceValidation)
+        await ApiService.updateNamespaceSchemaCompatabilityStrategy(this.activeCluster,namespacePath, this.compatCheck.id)
         this.onSuccess('Schema updated')
         // Need to update master list of topics
         this.$store.dispatch('getNamespacesInfo')

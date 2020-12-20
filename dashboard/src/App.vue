@@ -8,9 +8,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import ApiService from './services/ApiService'
-// import { ApiBase } from './services/ApiBase'
-import AjaxService from '@/services/AjaxService'
 
 export default {
   name: 'app',
@@ -25,8 +22,6 @@ export default {
     }
   },
   created: async function () {
-    this.$store.dispatch('getClusterInfo')
-    this.$store.dispatch('getPlanInfo')
   },
   beforeMount () {
     // If the user is not logged in, redirect to the login page
@@ -85,12 +80,6 @@ export default {
         this.$store.commit('setPlanToCreate', wpData.plan_to_create)
         this.$store.commit('setNeedToCreatePlan', wpData.need_to_create_plan)
       }
-
-      // Get the latest entitlement info for this user
-      this.$store.dispatch('getCurrentUserEntitlements')
-
-      // Get the org information
-      this.$store.dispatch('getCurrentUserOrgInfo')
 
       if (wpData.private_org === 'true') {
         this.$store.commit('setPrivateOrg', wpData.private_org)

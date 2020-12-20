@@ -69,7 +69,6 @@
 
 import { mapGetters } from 'vuex'
 import mixins from '@/services/mixins'
-import AjaxService from '@/services/AjaxService'
 import ApiService from '@/services/ApiService'
 import Alert from '../utils/Alert'
 

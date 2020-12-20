@@ -214,10 +214,6 @@ export default {
     // Turn off stats polling
     this.$store.commit('setRunTimer', false)
     console.log('Stopping regular polling')
-    console.log('Use Token List ' + this.useTokenList)
-    if (this.useTokenList === 'true') {
-        this.$store.dispatch('getTokenList')
-    }
   },
   beforeDestroy () {
     // Turn on stats polling

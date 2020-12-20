@@ -24,6 +24,7 @@ var wpData = {
     "api_version": "2.6.1",
     "default_plan": "",
     "notice_text": "",
+    "grafana_url": "",
     "user_role": "administrator",
     "feature_flags": "{\"function\":true,\"sink\":true,\"source\":true,\"tenantStats\":false}",
     "security": "",
