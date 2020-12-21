@@ -1,4 +1,4 @@
-var wpData = {
+var globalConf = {
     "template_directory_uri": "",
     "ajax_url": "",
     "rest_url": "",

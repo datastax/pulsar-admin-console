@@ -9,7 +9,7 @@ export default {
 
     const data = new FormData()
     data.append('action', action)
-    data.append('security', wpData.security)
+    data.append('security', globalConf.security)
 
     Object.keys(parmObj).forEach(key => {
       data.append(key, parmObj[key])

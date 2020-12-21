@@ -14,7 +14,6 @@
 
 all: push
 
-#TAG ?= 0.0.1
 TAG ?= latest 
 PREFIX ?= kesque/pulsar-dashboard
 

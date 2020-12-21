@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export default() => {
-  const baseUrl = wpData.ajax_url.replace('admin-ajax.php', '')
+  const baseUrl = globalConf.ajax_url.replace('admin-ajax.php', '')
 
   return axios.create({
     baseURL: baseUrl,

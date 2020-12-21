@@ -1,4 +1,4 @@
-/* global wpData */
+/* global globalConf */
 
 <template>
   <div id="app" class="app">
@@ -26,7 +26,7 @@ export default {
   beforeMount () {
     // If the user is not logged in, redirect to the login page
     // And don't do anything else
-    if (wpData.login === '') {
+    if (globalConf.login === '') {
       window.location = '/wp-login.php'
     } else {
       this.$nextTick(() => {
@@ -39,67 +39,67 @@ export default {
       let public_path = i[1]
 
       // Get data injected 
-      // console.log(wpData);
+      // console.log(globalConf);
 
-      this.$store.commit('setTest', wpData.test)
-      this.$store.commit('setTenant', wpData.tenant)
-      this.$store.commit('changeActiveCluster', wpData.home_cluster)
+      this.$store.commit('setTest', globalConf.test)
+      this.$store.commit('setTenant', globalConf.tenant)
+      this.$store.commit('changeActiveCluster', globalConf.home_cluster)
 
-      const allowClusterList = wpData.cluster_list
+      const allowClusterList = globalConf.cluster_list
 
       this.$store.commit('updateAllowedClusters', allowClusterList)
       this.$store.commit('updateNumAllowedClusters', allowClusterList.length)
 
-      this.$store.commit('setClientToken', wpData.client_token)
-      this.$store.commit('setPlan', wpData.plan)
-      this.$store.commit('setAdminToken', wpData.admin_token)
-      this.$store.commit('setApiBaseUrl', wpData.api_base_url)
-      this.$store.commit('setCaCertficate', wpData.ca_certificate)
-      this.$store.commit('setNoticeText', wpData.notice_text)
-      this.$store.commit('setChargebeeSite', wpData.chargebee_site)
-      this.$store.commit('setBillingProvider', wpData.billing_provider)
-      this.$store.commit('setApiVersion', wpData.api_version)
-      this.$store.commit('setDefaultPlan', wpData.default_plan)
-      this.$store.commit('setUserRole', wpData.user_role)
-      this.$store.commit('setFeatureFlags', wpData.feature_flags)
-      this.$store.commit('setPollingInterval', wpData.polling_interval)
-      this.$store.commit('setWssUrlOverride', wpData.wss_url)
-      this.$store.commit('setGrafanaUrlOverride', wpData.grafana_url)
-      this.$store.commit('setDisableBilling', wpData.disable_billing)
-      this.$store.commit('setRunningEnv', wpData.running_env)
-      this.$store.commit('setAuthMode', wpData.auth_mode)
-      this.$store.commit('setLogin', wpData.login)
-      this.$store.commit('setEmail', wpData.email)
-      this.$store.commit('setHostOverrides', wpData.host_overrides)
+      this.$store.commit('setClientToken', globalConf.client_token)
+      this.$store.commit('setPlan', globalConf.plan)
+      this.$store.commit('setAdminToken', globalConf.admin_token)
+      this.$store.commit('setApiBaseUrl', globalConf.api_base_url)
+      this.$store.commit('setCaCertficate', globalConf.ca_certificate)
+      this.$store.commit('setNoticeText', globalConf.notice_text)
+      this.$store.commit('setChargebeeSite', globalConf.chargebee_site)
+      this.$store.commit('setBillingProvider', globalConf.billing_provider)
+      this.$store.commit('setApiVersion', globalConf.api_version)
+      this.$store.commit('setDefaultPlan', globalConf.default_plan)
+      this.$store.commit('setUserRole', globalConf.user_role)
+      this.$store.commit('setFeatureFlags', globalConf.feature_flags)
+      this.$store.commit('setPollingInterval', globalConf.polling_interval)
+      this.$store.commit('setWssUrlOverride', globalConf.wss_url)
+      this.$store.commit('setGrafanaUrlOverride', globalConf.grafana_url)
+      this.$store.commit('setDisableBilling', globalConf.disable_billing)
+      this.$store.commit('setRunningEnv', globalConf.running_env)
+      this.$store.commit('setAuthMode', globalConf.auth_mode)
+      this.$store.commit('setLogin', globalConf.login)
+      this.$store.commit('setEmail', globalConf.email)
+      this.$store.commit('setHostOverrides', globalConf.host_overrides)
 
-      console.log('plan to create: ' + wpData.plan_to_create)
-      console.log('need to create plan: ' + wpData.need_to_create_plan)
-      console.log('disable billing: ' + wpData.disable_billing)
+      console.log('plan to create: ' + globalConf.plan_to_create)
+      console.log('need to create plan: ' + globalConf.need_to_create_plan)
+      console.log('disable billing: ' + globalConf.disable_billing)
 
-      if (wpData.plan_to_create) {
-        this.$store.commit('setPlanToCreate', wpData.plan_to_create)
-        this.$store.commit('setNeedToCreatePlan', wpData.need_to_create_plan)
+      if (globalConf.plan_to_create) {
+        this.$store.commit('setPlanToCreate', globalConf.plan_to_create)
+        this.$store.commit('setNeedToCreatePlan', globalConf.need_to_create_plan)
       }
 
-      if (wpData.private_org === 'true') {
-        this.$store.commit('setPrivateOrg', wpData.private_org)
+      if (globalConf.private_org === 'true') {
+        this.$store.commit('setPrivateOrg', globalConf.private_org)
       }
 
-      if (wpData.use_token_list === 'true') {
-        this.$store.commit('setUseTokenList', wpData.use_token_list)
+      if (globalConf.use_token_list === 'true') {
+        this.$store.commit('setUseTokenList', globalConf.use_token_list)
       }
 
-      if (wpData.functions_disabled === 'true') {
-        this.$store.commit('setFunctionsDisabled', wpData.functions_disabled)
+      if (globalConf.functions_disabled === 'true') {
+        this.$store.commit('setFunctionsDisabled', globalConf.functions_disabled)
       }
 
-      if (wpData.clients_disabled === 'true') {
-        this.$store.commit('setClientsDisabled', wpData.clients_disabled)
+      if (globalConf.clients_disabled === 'true') {
+        this.$store.commit('setClientsDisabled', globalConf.clients_disabled)
       }
 
       if (this.runningEnv === 'web') {
         try {
-          heap.identify(wpData.email)
+          heap.identify(globalConf.email)
         } catch (error) {
           console.log('Error calling heap', error)
         }
@@ -108,7 +108,7 @@ export default {
       if ((this.tenant === '') || (this.tenant === '::needs_to_be_created::')) {
         // Make sure the plan to create is set to something before the redirect
         if (this.planToCreate === '') {
-          this.$store.commit('setPlanToCreate', wpData.default_plan)
+          this.$store.commit('setPlanToCreate', globalConf.default_plan)
         }
         this.$router.push('/welcome')
       }
