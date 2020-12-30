@@ -478,7 +478,7 @@
 
                                 <div slot="title">View Message</div>
                                 <div>
-                                 <textarea :value="currentPeekedMessage" :rows="peekRows">
+                                 <textarea :value="currentPeekedMessage" :rows="peekRows" style="width: 100%;">
                                  </textarea>
                                   <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="currentPeekedMessage"
                                   v-clipboard:success="onCopy" v-clipboard:error="onError">
