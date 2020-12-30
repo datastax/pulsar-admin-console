@@ -39,7 +39,7 @@ const state = {
   grafanaUrlOverride: '',
   disableBilling: 'false',
   runningEnv: 'web',
-  authMode: 'wp',
+  authMode: 'none',
   planInfo: {},
   hostOverrides: {},
   subscriptionInfo: [],
@@ -83,6 +83,7 @@ const mutations = {
     state.tenant = tenant
   },
   setLogin (state, login) {
+    console.log(`Setting login to ${login}`)
     state.login = login
   },
   setMultiUserOrg (state, flag) {
@@ -138,9 +139,8 @@ const mutations = {
   setUserRole (state, role) {
     state.userRole = role
   },
-  setFeatureFlags (state, flagsJson) {
-    const featureFlags = JSON.parse(flagsJson)
-    state.featureFlags = featureFlags
+  setFeatureFlags (state, flags) {
+    state.featureFlags = flags
   },
   setTest (state, value) {
     state.test = value

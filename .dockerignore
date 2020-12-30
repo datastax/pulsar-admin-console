@@ -5,11 +5,14 @@ docker-compose*
 .dockerignore
 .git
 .gitignore
+*.jwt
 README.md
 LICENSE
 .vscode
 *.crt
 *.key
 env.list
+.env
 docker-run.sh
 docker-compose.yml
+config-override.js

@@ -111,7 +111,14 @@
             </template>
           </vuestic-dropdown>
         </button>
-          
+        <vuestic-tooltip :options="{content: `Log out ${login}`, placement: 'bottom'}">
+          <button v-if="authMode !=='none' && loggedIn()" @click="logOut()" class="btn btn-right btn-micro">
+          <span
+              class="fa fa-sign-out"
+              aria-hidden="true"
+          />
+        </button>
+        </vuestic-tooltip>
       </template>
     </div>
   </vuestic-navbar>
@@ -133,6 +140,10 @@ import MessageDropdown from './components/dropdowns/MessageDropdown'
 import { mapGetters } from 'vuex'
 import ApiService from '@/services/ApiService'
 import mixins from '@/services/mixins'
+import {logoutUser, isLoggedIn} from '../../../components/auth/login/auth.js'
+
+console.log(isLoggedIn())
+
 
 export default {
   name: 'app-navbar',
@@ -168,7 +179,9 @@ export default {
       'clusterInfo',
       'privateOrg',
       'tenantList',
-      'runningEnv'
+      'runningEnv',
+      'authMode',
+      'login'
     ]),
     availableClusters () {
       const availableClusters = []
@@ -215,6 +228,14 @@ export default {
   methods: {
     openTenantModal () {
       this.$refs.tenantModal.open()
+    },
+    loggedIn () {
+      return isLoggedIn()
+    },
+    logOut () {
+      logoutUser()
+      // Redirect to login
+      this.$router.push('/auth/login')
     },
     setActiveCluster (cluster) {
       this.$store.dispatch('changeActiveCluster', cluster)

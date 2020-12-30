@@ -211,6 +211,7 @@
         </span>
       </sidebar-link>
     </template>
+
   </vuestic-sidebar>
 </template>
 

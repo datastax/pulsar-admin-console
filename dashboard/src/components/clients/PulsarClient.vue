@@ -361,7 +361,12 @@ export default {
         let url = override.replace('<cluster>', splitInfo.name)
         return url.replace('<cloud>', splitInfo.cloud)
       }
-      return "ws://localhost:8500"
+      const currentHost = document.location.host
+      let currentProto = 'ws'
+      if (document.location.protocol === 'https:') {
+        currentProto = 'wss'
+      }
+      return currentProto + "://" + currentHost
     },
     updateNsSelect () {
       this.currentNamespace = ''

@@ -26,19 +26,22 @@ if (fs.existsSync(kubeConfigFile)) {
   cfg.L.error("no kubernetes cluster access ")
 }
 const client = new K8sClient(k8sClientConfig);
-
+console.log(client)
 /**
  * Get secret from the key
  * @param {*} namespace 
  * @param {*} key 
  */
 const getSecrets = async (namespace, key) => {
+    await client.loadSpec()
+    console.log(client)
     const secrets = await client.api.v1.namespace(namespace).secrets.get();
     const secretName = secretPrefix + key
     for (let i = 0; i < secrets.body.items.length; i++) {
         let item = secrets.body.items[i]
         if (item.metadata && item.metadata.name && secretName === item.metadata.name
                 && item.data && item.data.password) {
+                  console.log("Found matching secret " + secretName)
             let buff = Buffer.from(item.data.password, 'base64')
             return buff.toString('ascii')
         }

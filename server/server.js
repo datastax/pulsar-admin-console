@@ -11,8 +11,10 @@ const jwt = require('jsonwebtoken');
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
 
+let k8s = ''
+
 if (cfg.dashboardConfig.auth_mode === "k8s") {
-  const k8s = require('./k8s.js')
+  k8s = require('./k8s.js')
 } 
 
 const app = express(),
@@ -20,7 +22,6 @@ const app = express(),
       cookieSession = require('cookie-session');
 
 process.env['NODE_ENV']='production'
-process.env['VUE_APP_YANDEX_METRICS_KEY']=''
 // place holder for the data
 const users = [];
 

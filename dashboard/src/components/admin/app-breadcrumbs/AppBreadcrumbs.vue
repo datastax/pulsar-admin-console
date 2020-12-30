@@ -15,6 +15,7 @@
           :breadcrumbs="breadcrumbs"
           :currentRouteName="currentRouteName"
         />
+      
       </vuestic-widget>
     </div>
   </div>

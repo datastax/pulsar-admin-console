@@ -1,5 +1,8 @@
 <template>
+
   <div class="login">
+    <alert ref="alert" :errorText="errorText"></alert>
+
     <h2>{{ $t('auth.welcome') }}</h2>
     <!-- form method="post" action="/auth/login" name="login" -->
       <div class="form-group">
@@ -24,9 +27,6 @@
         <button class="btn btn-primary" type="submit" v-on:click="login">
           {{ $t('auth.login') }}
         </button>
-        <router-link class='link flex-center pl-2 text-center' :to="{name: 'signup'}">
-          {{ $t('auth.createAccount') }}
-        </router-link>
       </div>
     <!-- /form -->
   </div>
@@ -34,13 +34,37 @@
 
 <script>
     import { loginUser } from './auth'
+    import Alert from '../../utils/Alert'
+    import mixins from '@/services/mixins'
+
+
     export default {
         name: 'login',
         data() {
             return {
                 email: '',
-                password: ''
+                password: '',
+                errorText: ''
             }
+        },
+        mounted () {
+          this.$store.dispatch('getClusterInfo')
+
+          // Turn off stats polling
+          this.$store.commit('setRunTimer', false)
+          console.log('Stopping regular polling')
+        },
+        beforeDestroy () {
+          // Turn on stats polling
+          this.$store.commit('setRunTimer', true)
+          console.log('Starting regular polling')
+
+          // Trigger an update so we don't have to wait for the next interval
+          this.$store.dispatch('updateAll')
+        },
+        mixins: [mixins],
+        components: {
+          Alert
         },
         methods: {
             async login() {
@@ -48,8 +72,11 @@
                     await loginUser(this.email, this.password)
                     this.$router.push('/')
                 }
-                catch (err) {
-                    alert(`Error: ${err}`)
+                catch (error) {
+                      let [reason, statusCode] = this.decodeErrorObject(error)
+                      this.errorText = `Login failed: ${reason} (${statusCode})`
+                      this.$refs.alert.showAlert()
+
                 }
             }
         }

@@ -8,7 +8,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { isK8sAuthRequired, isLoggedIn } from './components/auth/login/auth.js'
 export default {
   name: 'app',
   data () {
@@ -24,11 +24,7 @@ export default {
   created: async function () {
   },
   beforeMount () {
-    // If the user is not logged in, redirect to the login page
-    // And don't do anything else
-    if (globalConf.login === '') {
-      window.location = '/wp-login.php'
-    } else {
+
       this.$nextTick(() => {
         window.addEventListener('visibilitychange', this.onVisiblityChange)
       })
@@ -39,7 +35,14 @@ export default {
       let public_path = i[1]
 
       // Get data injected 
-      // console.log(globalConf);
+      console.log(globalConf);
+      console.log(isK8sAuthRequired())
+      console.log(isLoggedIn())
+
+      if (typeof overrideConf !== 'undefined' && overrideConf) {
+        const mergedConf = {...globalConf, ...overrideConf }
+        globalConf = mergedConf
+      }
 
       this.$store.commit('setTest', globalConf.test)
       this.$store.commit('setTenant', globalConf.tenant)
@@ -97,31 +100,6 @@ export default {
         this.$store.commit('setClientsDisabled', globalConf.clients_disabled)
       }
 
-      if (this.runningEnv === 'web') {
-        try {
-          heap.identify(globalConf.email)
-        } catch (error) {
-          console.log('Error calling heap', error)
-        }
-      }
-      // If user doesn't nave a tenant name, redirect to welcome
-      if ((this.tenant === '') || (this.tenant === '::needs_to_be_created::')) {
-        // Make sure the plan to create is set to something before the redirect
-        if (this.planToCreate === '') {
-          this.$store.commit('setPlanToCreate', globalConf.default_plan)
-        }
-        this.$router.push('/welcome')
-      }
-
-      // If plan needs to be created, redirect to plans
-      if (this.needToCreatePlan) {
-        this.$router.push('/admin/plans/add')
-      }
-      if ((this.tenant !== '') && (this.tenant !== '::needs_to_be_created::')) {
-        this.$store.dispatch('updateAll')
-      } else {
-        console.log('Tenant could not be found or is invalid', this.tenant)
-      }
       // Start the auto refresh timer since the tenant may be configured later
       this.startAutoUpdate()
 
@@ -140,15 +118,8 @@ export default {
         this.startAutoSourceUpdate()
         this.cancelAutoSourceUpdate()
       }
-    }
   },
   mounted () {
-    // Initialize Chargebee
-    if (this.runningEnv === "web") {
-      let chargebeeInstance = Chargebee.init({
-        site: this.chargebeeSite
-      })
-    }
 
     console.log(`Build URL: ${process.env.BASE_URL}`)
   },

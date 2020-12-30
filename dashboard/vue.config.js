@@ -46,10 +46,16 @@ module.exports = {
       hot: true,
       proxy: {
         '/api/*': { 
-	   target: 'http://localhost:8002',
-	   secure: false,
-           changeOrigin: true
-	}
+          target: 'http://localhost:8002',
+          secure: false,
+          changeOrigin: true
+        },
+        '/ws/*': { 
+          target: 'ws://localhost:8002',
+          secure: false,
+          ws: true,
+          changeOrigin: true
+        }
       },
       headers: {
         'X-Custom-Foo': 'bar',

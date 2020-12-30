@@ -7,7 +7,7 @@ const AUTH_TOKEN_KEY = 'authToken'
 
 export function loginUser(username, password) {
     return new Promise((resolve, reject) => {
-        let url = store.getters.backendUrl + '/api/v1/auth/token';
+        let url = '/api/v1/auth/token';
         return axios.post(url, {
                 username: username,
                 password: password,
@@ -15,6 +15,9 @@ export function loginUser(username, password) {
         }).then(response => {
             setAuthToken(response.data.token)
             resolve();
+            console.log(`Setting user to  ${username}`)
+            store.commit('setLogin', username)
+
         }).catch (err => {
             console.error('Caught an error during login:', err)
             reject(err);
@@ -23,6 +26,7 @@ export function loginUser(username, password) {
 }
 
 export function logoutUser() {
+    console.log("Logging out user")
     clearAuthToken()
 }
 
@@ -43,12 +47,12 @@ export function clearAuthToken() {
 
 export function isLoggedIn() {
     let authToken = getAuthToken()
-    console.log("this is token from local storage", authToken)
+    // console.log("this is token from local storage", authToken)
     return !!authToken && !isTokenExpired(authToken)
 }
 
 export function isK8sAuthRequired() {
-    return store.getters.authMode === "k8s";
+    return globalConf.auth_mode === "k8s";
 }
 
 export function getUserInfo() {
