@@ -15,7 +15,7 @@ RUN npm run build-standalone
 # 
 FROM node:11.15-alpine  
 
-LABEL maintainer="ming.luo@kafkaesque.io"
+LABEL maintainer="ming luo"
 
 # Enable header rewrites in apache
 WORKDIR /root/
