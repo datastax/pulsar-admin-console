@@ -14,14 +14,15 @@
 
 all: push
 
-TAG ?= latest 
-PREFIX ?= kesque/pulsar-dashboard
+TAG ?= 0.0.1
+PREFIX ?= datastax/pulsar-dashboard
 
 container:
 	docker build -t $(PREFIX):$(TAG) .
 
 push: container
 	docker push $(PREFIX):$(TAG)
+	docker push $(PREFIX):latest
 
 clean:
 	docker rmi $(PREFIX):$(TAG)

@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-          path: go/src/github.com/kafkaesque-io/pulsar-dashboard
+          path: go/src/github.com/datastax/pulsar-dashboard
       - name: Set up node
         uses: actions/setup-node@master
         with:
@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-          path: go/src/github.com/kafkaesque-io/pulsar-dashboard
+          path: go/src/github.com/datastax/pulsar-dashboard
 
       - name: Build dashboard Docker Image
         run: |

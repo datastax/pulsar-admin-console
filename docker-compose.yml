@@ -12,7 +12,7 @@ services:
       - './localhost.key:/certs/localhost.key'
   dashboard:
     container_name: dashboard 
-    image: kesque/pulsar-dashboard 
+    image: datastax/pulsar-dashboard
     expose:
       - '80'
     depends_on:
