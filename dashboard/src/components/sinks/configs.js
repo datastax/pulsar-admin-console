@@ -98,6 +98,74 @@ export default {
       'Description': "Number of records to batch for processing."
     },
   },
+  'cassandra-enhanced': {
+    'contactPoints': {
+      'Default': null,
+      'Type': 'String',
+      'Required': 'true',
+      'Description': 'A comma-separated list of host names or IP addresses. '
+    },
+    'loadBalancing.localDc': {
+      'Default': null,
+      'Type': 'String',
+      'Required': 'true',
+      'Description': 'The case-sensitive datacenter name for the driver to use for load balancing.'
+    },
+    'auth.provider': {
+      'Default': null,
+      'Type': 'String',
+      'Required': 'true',
+      'Description': 'Type of authentication: None, DSE (internal).'
+    },
+    'auth.username': {
+      'Default': null,
+      'Type': 'String',
+      'Required': 'false',
+      'Description': 'Login role name'
+    },
+    'auth.password': {
+      'Default': null,
+      'Type': 'String',
+      'Required': 'false',
+      'Description': 'Login password'
+    },
+    'ssl.hostnameValidation': {
+      'Type': 'Boolean',
+      'Required': 'false',
+      'Default': 'true',
+      'Description': 'Whether to validate node hostnames when using SSL.'
+    },
+    'port': {
+      'Type': 'Integer',
+      'Required': 'false',
+      'Default': '9042',
+      'Description': 'Cassandra native transport port.'
+    },
+    'batchSize': {
+      'Type': 'Long',
+      'Required': 'false',
+      'Default': '32',
+      'Description': 'The batch size that the sink attempts to batch records together before sending them to Cassandra.'
+    },
+    'batchFlushTimeoutMs': {
+      'Type': 'Long',
+      'Required': 'false',
+      'Default': '1000',
+      'Description': 'The time that the sink attempts to batch records together before sending them to Cassandra.'
+    },
+    'topics': {
+      'Type': 'String',
+      'Required': 'true',
+      'Default': 'mytopic',
+      'Description': 'Comma-separated list of input topics. For each input topic, you much add a setting that maps the topic fields to a Cassandra table. For example: topic.mytopic.mykeyspace.user.mapping = name=value.name,age=value.age,surname=value.surname'
+    },
+    'verbose': {
+      'Type': 'Boolean',
+      'Required': 'false',
+      'Default': 'false',
+      'Description': 'Log verbosity'
+    },
+  },
   'sap-em': {
     'connectionName': {
       'Type': 'String',
