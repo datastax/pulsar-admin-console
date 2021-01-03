@@ -205,6 +205,64 @@
                           </tbody>
                           </table>
                       </div>
+                      <div class="va-row">
+                         <div class="flex md12">
+                             <vuestic-collapse ref="keyCollapse">
+                                        <span slot="header">Click for Extra Settings</span>
+                                        <div slot="body">
+                                                <div class="va-row collapse-page__content">
+                                                        <div class="flex md4">
+                                                            <div class="form-group with-icon-right">
+                                                                    <div class="input-group">
+                                                                    <input v-model="userKey" id="user-key" name="user-key"/>
+                                                                    <label class="control-label" for="user-key" role="button">Key</label><i class="bar"></i>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex md4">
+                                                            <div class="form-group with-icon-right">
+                                                                    <div class="input-group">
+                                                                    <input v-model="userValue" id="user-value" name="user-value"/>
+                                                                    <label class="control-label" for="user-value" role="button">Value</label><i class="bar"></i>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="flex md4">
+                                                            <button :disabled="!userKey || !userValue" class="btn btn-micro" @click="addKeyValue()">Add Key</button>
+                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped first-td-padding table-header-active">
+                                                            <thead>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td>Key</td>
+                                                                <td>Value</td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="(item, index) in userConfig" :key="index">
+                                                                    <td>
+                                                                        <i class="fa fa-times pointer"
+                                                                                    @click="removeKeyValue(item.key)"></i>
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ item.key}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ item.value}}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+
+                                        </div>
+                            </vuestic-collapse>
+                         </div>
+                     </div>
                        <div class="va-row">
 
                         <div class="flex md3">
@@ -508,9 +566,24 @@ export default {
             console.log(key)
             if (this.currentConfigData[key]) {
               this.currentConfigData[key].Value = this.loadedSourceConfig[key]
+            } else {
+              // Assume it is part of the user added config
+              this.userConfig.push(
+                {key: key,
+                value: this.loadedSourceConfig[key]
+              })
+
+              // Since we are loading data into userConfig, expand the widget
+              setTimeout(() => {
+                // Wait a bit to let the data update
+                this.$refs.keyCollapse.expand()
+              }, 1000)
+              
+
             }
             // this.$refs[key][0].value = ''
           })
+
         }
       }
     }
@@ -524,6 +597,20 @@ export default {
     //   this.currentConfigData[name].Value = value
     //   console.log(this.currentConfigData)
     // },
+    addKeyValue () {
+      this.userConfig.push(
+        {
+          key: this.userKey,
+          value: this.userValue
+        }
+      )
+      this.userKey = ''
+      this.userValue = ''
+      this.$refs.keyCollapse.expand()
+    },
+    removeKeyValue (key) {
+      this.userConfig.splice(this.userConfig.findIndex(item => item.key === key), 1)
+    },
     loadSource (id) {
       console.log('Loading Source')
 
@@ -620,6 +707,8 @@ export default {
       })
       this.parallelism = 1
       this.guarantee = { id: 'ATLEAST_ONCE', name: 'At Least Once' }
+      this.userConfig = []
+
     },
     goToSourceDetail (sourceId) {
       this.$router.push('/admin/sources/view/' + sourceId)
@@ -724,6 +813,11 @@ export default {
           console.log("Setting default value for key " + key)
           userConfigKeys[key] = this.currentConfigData[key].DefaultOverride
         }
+      })
+
+      // Add the custom config
+      Object.keys(this.userConfig).forEach(key => {
+        userConfigKeys[this.userConfig[key].key] = this.userConfig[key].value
       })
 
       // For Debezium sources, adding Pulsar URL and token info
