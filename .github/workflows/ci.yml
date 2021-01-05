@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-          path: go/src/github.com/datastax/pulsar-dashboard
+          path: go/src/github.com/datastax/pulsar-admin-console
       - name: Set up node
         uses: actions/setup-node@master
         with:
@@ -40,9 +40,9 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-          path: go/src/github.com/datastax/pulsar-dashboard
+          path: go/src/github.com/datastax/pulsar-admin-console
 
-      - name: Build dashboard Docker Image
+      - name: Build Admin Console Docker Image
         run: |
           pwd
-          sudo docker build -t pulsar-dashboard .
+          sudo docker build -t pulsar-admin-console .

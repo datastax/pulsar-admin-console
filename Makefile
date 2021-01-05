@@ -17,8 +17,8 @@ all: push
 #
 # Docker tag with v prefix to differentiate the official release build, triggered by git tagging
 #
-TAG ?= v0.0.2
-PREFIX ?= datastax/pulsar-dashboard
+TAG ?= v0.0.1
+PREFIX ?= datastax/pulsar-admin-console
 
 container:
 	docker build -t $(PREFIX):$(TAG) .
