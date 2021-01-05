@@ -1,4 +1,4 @@
-# Dashboard and its backend
+# Admin console and its backend
 This is a private repo.
 
 ### Dev
@@ -11,7 +11,7 @@ $ node -v
 v11.15.0
 ```
 
-#### Build Dashboard
+#### Build the Admin Console
 ```
 $ npm install
 ```
@@ -40,10 +40,10 @@ npm install -g @vue/cli
 npm run build
 
 
-# Run Dashboard in development
+# Run the Admin Console dashboard in development
 
 
-1. Configure the dashboard. By default the settings expect a Pulsar running standalone mode reachable on localhost (using the Docker static IP address). Configuration is controlled by these files:
+1. Configure the Admin Console dashboard. By default the settings expect a Pulsar running standalone mode reachable on localhost (using the Docker static IP address). Configuration is controlled by these files:
 
 * nginx.conf. This defines the forwarding rules. The name of the cluster in the form `/api/v1/cluster` (default: standalone) needs to forward to the actual Pulsar cluster for the various rules.
 * dashboard/public/config.js. This specifies the dashboard global configuration, including the cluster name (default: standalone), cluster_list (default: ["standaone]) and various other settings.
@@ -61,4 +61,4 @@ cd dashboard
 npm run serve
 ```
 
-4. Connect to dashboard on port 9080. The dashboard server will proxy Pulsar API calls to nginx which then forwards to the actual Pulsar cluster (local or remote, depending on configuration)
+4. Connect to the Admin Console dashboard on port 9080. The dashboard server will proxy Pulsar API calls to nginx which then forwards to the actual Pulsar cluster (local or remote, depending on configuration)
