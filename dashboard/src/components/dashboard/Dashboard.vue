@@ -30,7 +30,7 @@
 
         <p>To see interactive code samples, go to <router-link to="code/java">Code Samples</router-link>. </p>
 
-          <p>To see the available namespaces, go to <router-link to="namespaces">Namespaces</router-link>. Messages published to namespaces, such as worldwide are automatically replicated to all cluster.</p>
+          <p>To see the available namespaces, go to <router-link to="namespaces">Namespaces</router-link>.</p>
 
           <p>Topics are <span class="vue-highlighted-text">automatically created</span> (by default) when you first try to publish or subscribe. To manually create a topic or to create a partitioned topic, go to <router-link to="topics">Topics</router-link>.</p>
 

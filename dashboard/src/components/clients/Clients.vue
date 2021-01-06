@@ -26,11 +26,6 @@
                     <p>The quickest way to try out your service is to use the test clients below. Try sending messages from one client to other.
 
                     <p>
-                    If you have multiple clusters, use the worldwide namespace and connect to clusters in different locations to
-                    see geo-replication working.
-                    </p>
-
-                    <p>
                         Connect using <span class="vue-highlighted-text">Read/Earliest</span> instead of <span class="vue-highlighted-text">Consume</span> to replay all message that have been sent to a topic.
                     </p>
 
