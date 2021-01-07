@@ -13,7 +13,7 @@
     "url": ""
   },
   "author": "ming luo",
-  "license": "apache",
+  "license": "apache 2",
   "dependencies": {
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
