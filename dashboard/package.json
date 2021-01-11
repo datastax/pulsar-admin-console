@@ -2,7 +2,7 @@
   "name": "vuestic-admin",
   "version": "1.9.0",
   "description": "Vue.js admin template",
-  "author": "smartapant <smartapant@gmail.com>",
+  "author": "",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve --port 9080",
@@ -15,9 +15,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/epicmaxco/vuestic-admin.git"
+    "url": "https://github.com/datastax/pulsar-admin-console.git"
   },
-  "license": "MIT",
+  "license": "Apache 2",
   "dependencies": {
     "awesome-bootstrap-checkbox": "1.0.0-alpha.5",
     "babel-polyfill": "^6.26.0",

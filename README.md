@@ -1,6 +1,6 @@
-# Admin console and its backend
-This is a private repo.
+# Pulsar Admin Console
 
+Pulsar Admin Console is a web based UI that administrates topics, namespaces, sources, sinks and various aspects of Apache Pulsar features.
 ### Dev
 #### Node and NPM version
 Node and npm version required are. In fact, do not upgrade to node 14+. Some 12 versions may not work either especially on OSX.
@@ -11,37 +11,20 @@ $ node -v
 v11.15.0
 ```
 
-#### Build the Admin Console
+#### Build the standalone console
 ```
-$ npm install
-```
-
-##### Run dev 
-```
-$ npm run dev
-```
-
-##### Build vue components
-This is required since the Node server loads these components
-```
-$ npm run build
-```
-#### Node server
-```
+cd dashboard
 npm install
-
-npm server.js
+npm install -g @vue/cli
+npm run build-standalone
 ```
 
-cd ./dashboard
+#### Run the standalone console 
+```
+npm run serve
+```
 
-npm install 
-npm install -g @vue/cli 
-npm run build
-
-
-# Run the Admin Console dashboard in development
-
+### Run Admin Console in development
 
 1. Configure the Admin Console dashboard. By default the settings expect a Pulsar running standalone mode reachable on localhost (using the Docker static IP address). Configuration is controlled by these files:
 
