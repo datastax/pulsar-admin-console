@@ -39,7 +39,7 @@
 
         <p>Here is an example of a topic using its full name:
           <ul  class="vue-unordered">
-            <li  class="no-padding">
+            <li>
               <div class="form-group with-icon-right list-item">
                 <div class="copy-text">
                   {{ tenant }}/namespace/my-topic
@@ -67,14 +67,14 @@
       <div class="flex md6 xs12">
  
         <vuestic-widget
-          headerText="Connecting"
+          headerText="Connecting Clients"
         >
 
           <p>
             To connect using the Pulsar binary protocol, use the following URLs:
           </p>
           <ul  class="vue-unordered">
-            <li v-for="allowedCluster in allowedClusters" :key="allowedCluster"  class="no-padding">
+            <li v-for="allowedCluster in allowedClusters" :key="allowedCluster">
              <div class="form-group with-icon-right list-item">
                <div class="copy-text">
                  {{ getClusterUrl(allowedCluster, 'pulsar') }}
@@ -87,7 +87,7 @@
           </ul>
           <p>To connect using the WebSocket API, use the following URLs:</p>
           <ul  class="vue-unordered">
-            <li v-for="allowedCluster in allowedClusters" :key="allowedCluster"  class="no-padding">
+            <li v-for="allowedCluster in allowedClusters" :key="allowedCluster">
               <div class="form-group with-icon-right list-item">
                 <div class="copy-text">
                   {{ getClusterUrl(allowedCluster, 'ws') }}
@@ -98,19 +98,57 @@
               </div>
             </li>
           </ul>
-          <p>To connect using HTTP, use the following URLs:</p>
+          <template v-if="clusterInfo.info[activeCluster] && clusterInfo.info[activeCluster].host_override_http">
+            <p>To connect using HTTP, use the following URLs:</p>
+            <ul  class="vue-unordered">
+              <li v-for="allowedCluster in allowedClusters" :key="allowedCluster">
+                <div class="form-group with-icon-right list-item">
+                  <div class="copy-text">
+                    {{ getClusterUrl(allowedCluster, 'http') }}
+                  </div>
+                  <i class="fa fa-clipboard pointer icon-right input-icon" v-clipboard:copy="getClusterUrl(allowedCluster, 'http')"
+                        v-clipboard:success="onCopy" v-clipboard:error="onError">
+                        </i>
+                </div>
+              </li>
+            </ul>
+          </template>
+        </vuestic-widget>
+          <vuestic-widget
+          headerText="Admin API"
+        >
+          <p>To connect to the admin API, use the following URLs:</p>
           <ul  class="vue-unordered">
-            <li v-for="allowedCluster in allowedClusters" :key="allowedCluster"  class="no-padding">
+            <li v-for="allowedCluster in allowedClusters" :key="allowedCluster">
               <div class="form-group with-icon-right list-item">
                 <div class="copy-text">
-                  {{ getClusterUrl(allowedCluster, 'http') }}
+                  {{ getClusterUrl(allowedCluster, 'admin') }}
                 </div>
-                <i class="fa fa-clipboard pointer icon-right input-icon" v-clipboard:copy="getClusterUrl(allowedCluster, 'http')"
+                <i class="fa fa-clipboard pointer icon-right input-icon" v-clipboard:copy="getClusterUrl(allowedCluster, 'admin')"
                       v-clipboard:success="onCopy" v-clipboard:error="onError">
                       </i>
               </div>
             </li>
           </ul>
+          <p>For example, you can list all the tenants like this:</p>
+
+          <div class="form-group with-icon-right">
+            <pre v-highlightjs="simpleAdminCommand"><code class="bash"></code></pre>
+            <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="simpleAdminCommand"
+                    v-clipboard:success="onCopy" v-clipboard:error="onError">
+                    </i>
+          </div>
+
+          <p>Or if you have authentication enabled, like this: </p>
+          <div class="form-group with-icon-right">
+            <pre v-highlightjs="adminCommandWithAuth"><code class="bash"></code></pre>
+            <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="adminCommandWithAuth"
+                    v-clipboard:success="onCopy" v-clipboard:error="onError">
+                    </i>
+          </div>
+
+        <p>You can get token from <router-link to="credentials">Credentials</router-link>. 
+        </p><p>Alternatively, you can save the URL authentication parameters in your <span class="vue-highlighted-text">client.conf</span> file.</p>
         </vuestic-widget>
 
       </div>
@@ -144,6 +182,13 @@ export default {
       'runningEnv',
       'clientsDisabled'
     ]),
+    simpleAdminCommand() {
+      return 'pulsar-admin --admin-url ' + this.getClusterUrl(this.allowedClusters[0], 'admin')
+    },
+    adminCommandWithAuth() {
+      return 'pulsar-admin --admin-url ' + this.getClusterUrl(this.allowedClusters[0], 'admin') + ' --auth-plugin org.apache.pulsar.client.impl.auth.AuthenticationToken ----auth-params file:///token.jwt'
+
+    }
   },
   mounted () {
     this.$store.dispatch('getClusterInfo')
@@ -161,6 +206,19 @@ export default {
     this.$store.dispatch('updateAll')
   },
   methods: {
+    getLocation(href) {
+      var match = href.match(/^(.+\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+      return match && {
+          href: href,
+          protocol: match[1],
+          host: match[2],
+          hostname: match[3],
+          port: match[4],
+          pathname: match[5],
+          search: match[6],
+          hash: match[7]
+        }
+    },
     getClusterUrl (cluster, type) {
       // console.log("clusterINfo", this.clusterInfo);
 
@@ -181,6 +239,32 @@ export default {
             return this.clusterInfo.info[cluster].host_override_http
         }
         return "http://localhost:8085"
+
+      } else if (type === 'admin') {
+        if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_admin) {
+            return this.clusterInfo.info[cluster].host_override_admin
+        }
+        // Come up with a reasonable default
+        let adminUrl = "http://localhost:8080"
+        // If a pulsar override is given, assume admin API is similarly formatted
+        if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_pulsar) {
+
+          // const url = new URL(this.clusterInfo.info[cluster].host_override_pulsar)
+          const url = this.getLocation(this.clusterInfo.info[cluster].host_override_pulsar)
+          console.log(url)
+
+          let proto = 'http'
+          let port  = '8080'
+          if (url.protocol.includes('ssl') ) {
+            proto = 'https'
+            port = '8443'
+          }
+
+          adminUrl = proto + '://' + url.hostname + ':' + port
+
+        }
+
+        return adminUrl
       }
 
     },
