@@ -77,8 +77,9 @@
           <span slot="title">
             <span>WebSocket</span>
           </span>
-        </sidebar-link>
+        </sidebar-link >
          <sidebar-link
+          v-if="clusterInfo.info[activeCluster] && clusterInfo.info[activeCluster].host_override_http"
           :to="{ name: 'httpclients' }">
           <span slot="title">
             <span>HTTP</span>
@@ -250,7 +251,9 @@ export default {
       'functionsDisabled',
       'clientsDisabled',
       'isAdminUser',
-      'runningEnv'
+      'runningEnv',
+      'clusterInfo',
+      'activeCluster'
     ]),
   },
   components: {
