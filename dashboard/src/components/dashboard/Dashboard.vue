@@ -130,7 +130,15 @@
               </div>
             </li>
           </ul>
-          <p>For example, you can list all the tenants like this:</p>
+          <p>A quick way to connect to the Admin API is start the Docker image, like this:</p>
+          <div class="form-group with-icon-right">
+            <pre v-highlightjs="pulsarAdminDocker"><code class="bash"></code></pre>
+            <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="pulsarAdminDocker"
+                    v-clipboard:success="onCopy" v-clipboard:error="onError">
+                    </i>
+          </div>
+
+          <p>And then, for example, you can list all the tenants using pulsar-admin like this:</p>
 
           <div class="form-group with-icon-right">
             <pre v-highlightjs="simpleAdminCommand"><code class="bash"></code></pre>
@@ -147,8 +155,14 @@
                     </i>
           </div>
 
-        <p>You can get token from <router-link to="credentials">Credentials</router-link>. 
-        </p><p>Alternatively, you can save the URL authentication parameters in your <span class="vue-highlighted-text">client.conf</span> file.</p>
+        <p>You can get the token from <router-link to="credentials">Credentials</router-link>. 
+        </p><p>Alternatively, you can save the URL (webServiceUrl) and authentication parameters (authPlugin, authParams) in a <span class="vue-highlighted-text">client.conf</span> file. Then you can use that file like this:</p>
+        <div class="form-group with-icon-right">
+            <pre v-highlightjs="dockerClientConf"><code class="bash"></code></pre>
+            <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="pulsarAdminDocker"
+                    v-clipboard:success="onCopy" v-clipboard:error="onError">
+                    </i>
+          </div>
         </vuestic-widget>
 
       </div>
@@ -167,6 +181,8 @@ export default {
   name: 'dashboard',
   data () {
     return {
+      pulsarAdminDocker: 'docker run -it datastax/pulsar bash',
+      dockerClientConf: 'docker run -it -v $PWD/client.conf:/pulsar/conf/client.conf datastax/pulsar bash'
     }
   },
   mixins: [mixins],
@@ -183,10 +199,10 @@ export default {
       'clientsDisabled'
     ]),
     simpleAdminCommand() {
-      return 'pulsar-admin --admin-url ' + this.getClusterUrl(this.allowedClusters[0], 'admin')
+      return 'bin/pulsar-admin --admin-url ' + this.getClusterUrl(this.allowedClusters[0], 'admin') + ' tenants list'
     },
     adminCommandWithAuth() {
-      return 'pulsar-admin --admin-url ' + this.getClusterUrl(this.allowedClusters[0], 'admin') + ' --auth-plugin org.apache.pulsar.client.impl.auth.AuthenticationToken ----auth-params file:///token.jwt'
+      return 'bin/pulsar-admin --admin-url ' + this.getClusterUrl(this.allowedClusters[0], 'admin') + ' --auth-plugin org.apache.pulsar.client.impl.auth.AuthenticationToken --auth-params file:///tmp/token.jwt' + ' tenants list'
 
     }
   },
