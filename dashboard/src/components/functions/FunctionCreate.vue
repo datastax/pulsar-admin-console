@@ -158,6 +158,9 @@
                                 :clearable="false"
                                 >
                             </vuestic-simple-select>
+                            <small v-show="namespacesConfig.list.length === 0" class="help text-danger">
+                              No namespaces found for this tenant. You must create a namespace.
+                            </small>
                             <vuestic-simple-select
                                 label="Runtime"
                                 v-model="runtime"
