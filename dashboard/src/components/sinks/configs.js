@@ -102,20 +102,26 @@ export default {
     'contactPoints': {
       'Default': null,
       'Type': 'String',
-      'Required': 'true',
+      'Required': 'false',
       'Description': 'A comma-separated list of host names or IP addresses. '
     },
     'loadBalancing.localDc': {
       'Default': null,
       'Type': 'String',
-      'Required': 'true',
+      'Required': 'false',
       'Description': 'The case-sensitive datacenter name for the driver to use for load balancing.'
+    },
+    'cloud.secureConnectBundle': {
+      'Default': null,
+      'Type': 'File',
+      'Required': 'false',
+      'Description': 'The secure connect bundle for your DataStax Astra database (secure-connect-database_name.zip). Download the secure connect bundle from the DataStax Cloud console. If this option is specified, you must also include the auth.username and auth.password for the database user.'
     },
     'auth.provider': {
       'Default': null,
       'Type': 'String',
-      'Required': 'true',
-      'Description': 'Type of authentication: None, DSE (internal).'
+      'Required': 'false',
+      'Description': 'Type of authentication: None,  PLAIN, GSSAPI.'
     },
     'auth.username': {
       'Default': null,
@@ -134,6 +140,36 @@ export default {
       'Required': 'false',
       'Default': 'true',
       'Description': 'Whether to validate node hostnames when using SSL.'
+    },
+    'ssl.provider': {
+      'Type': 'String',
+      'Required': 'false',
+      'Default': '',
+      'Description': 'Keystore password.'
+    },
+    'ssl.keystore.password': {
+      'Type': 'String',
+      'Required': 'false',
+      'Default': 'None',
+      'Description': 'SSL provider to use, if any. Valid choices: None, JDK, OpenSSL'
+    },
+    'ssl.keystore.path': {
+      'Type': 'File',
+      'Required': 'false',
+      'Default': '',
+      'Description': 'Path to the keystore file.'
+    },
+    'ssl.truststore.password': {
+      'Type': 'String',
+      'Required': 'false',
+      'Default': '',
+      'Description': 'Truststore password.'
+    },
+    'ssl.truststore.path': {
+      'Type': 'File',
+      'Required': 'false',
+      'Default': '',
+      'Description': 'Path to the truststore file.'
     },
     'port': {
       'Type': 'Integer',

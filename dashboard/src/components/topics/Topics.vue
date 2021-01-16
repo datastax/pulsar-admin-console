@@ -27,7 +27,6 @@
                           :cancelText="'modal.cancel' | translate">
             <div slot="title">Create Topic</div>
             <div>
-                <p> <span class="vue-highlighted-text">Note:</span> Partitioned topics must be created before use. Non-partitioned topics are automatically created when they are first used by a client. </p>
                 <fieldset>
                       <vuestic-simple-select
                     label="Namespace"
@@ -39,6 +38,9 @@
                     ref="namespaceSelect"
                     v-bind:options="namespacesList">
                   </vuestic-simple-select>
+                  <small v-show="namespacesConfig.list.length === 0" class="help text-danger">
+                    No namespaces found for this tenant. You must create a namespace.
+                  </small>
                   <div class="form-group">
                       <div class="input-group">
                         <input id="topicName"
@@ -446,7 +448,7 @@ export default {
       return false
     },
     openCreateTopicModal () {
-      if (this.createTopicNamespace === '') {
+      if (this.createTopicNamespace === '' && this.namespacesConfig.list.length > 0) {
         this.createTopicNamespace = this.namespacesConfig.list[0].name
       }
       this.$refs.partitionedTopicModal.open()

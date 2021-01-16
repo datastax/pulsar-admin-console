@@ -58,6 +58,9 @@
                                 :clearable="false"
                                 >
                             </vuestic-simple-select>
+                            <small v-show="namespacesConfig.list.length === 0" class="help text-danger">
+                              No namespaces found for this tenant. You must create a namespace.
+                            </small>
 
                         </div>
                         <div class="flex md8">
@@ -161,8 +164,7 @@
                                       </template>
                                       <template v-else-if="item.Required === 'false' && (item.Type ==='Boolean')">
                                         <input   :placeholder="item.Default"
-                                                :id="name"
-                                                :ref="name"
+                                                
                                                 v-model="item.Value"
                                                 v-validate="'in:true,false'"
                                                 :name="name"/>
@@ -170,6 +172,20 @@
                                                             class="help text-danger">
                                                         {{ errors.first(name) }}
                                           </small>
+                                      </template>
+                                      <template v-else-if="item.Required === 'false' && (item.Type ==='File')">
+                                        <div class="form-group with-icon-right">
+                                          <div class="input-group">
+                                          <input style="margin-top: 10px;" type="file"
+                                              :id="name"
+                                              :ref="name"
+                                              :name="name"
+                                              v-on:change="handleFileUpload(name)"
+                                              />
+                                          </div>
+                                          <i v-show="item.Value !==''" class="fa fa-times pointer"
+                                                  @click="item.Value =''"></i>
+                                      </div>
                                       </template>
                                       <template v-else-if="item.Required === 'true'">
                                         <input   :placeholder="item.Default"
@@ -413,6 +429,8 @@ import mixins from '@/services/mixins'
 import Alert from '../utils/Alert'
 import ApiService from '@/services/ApiService'
 import ConfigData from './configs'
+import JSZip from 'jszip'
+
 
 export default {
   name: 'SinkCreate',
@@ -480,6 +498,7 @@ export default {
         { id: 'JSON', name: 'Json' },
       ],
       sinkData: {},
+      configFile: ''
     }
   },
   computed: {
@@ -606,11 +625,29 @@ export default {
     clear (field) {
       this[field] = ''
     },
-    // updateConfigValue (name, value) {
-    //   console.log(`Updating config value for ${name} to value ${value}`)
-    //   this.currentConfigData[name].Value = value
-    //   console.log(this.currentConfigData)
-    // },
+   handleFileUpload (refName) {
+
+      let configFile = ''
+
+      if (this.$refs[refName][0].files[0]) {
+        configFile = this.$refs[refName][0].files[0]
+        console.log(configFile)
+      } else {
+        console.log("No file found")
+        return
+      }
+
+      let reader = new FileReader()
+
+      reader.addEventListener('load', function () {
+        this.currentConfigData[refName].Value = 'base64:'+ reader.result.split(',')[1]
+        console.log(this.currentConfigData[refName])
+      }.bind(this), false)
+
+      if (configFile) {
+        reader.readAsDataURL(configFile)
+      }
+    },
     loadSink (id) {
       console.log('Loading Sink')
 
