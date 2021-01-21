@@ -3,7 +3,7 @@
 Pulsar Admin Console is a web based UI that administrates topics, namespaces, sources, sinks and various aspects of Apache Pulsar features.
 ### Dev
 #### Node and NPM version
-Node and npm version required are. In fact, do not upgrade to node 14+. Some 12 versions may not work either especially on OSX.
+Use these versions of node and npm:
 ```
 $ npm -v
 6.7.0
