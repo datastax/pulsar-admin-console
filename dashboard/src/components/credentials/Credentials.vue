@@ -79,7 +79,7 @@
 
                 <h5>CA Certificate</h5>
 
-                        <p>The clsuter may be using certificates signed by trusted certicate authorities, for example, Let's Encrypt. That means that you
+                        <p>The cluster may be using certificates signed by trusted certicate authorities, for example, Let's Encrypt. That means that you
                             can use the default set of certificate authorities in your environment. The path to the default CA bundle
                             varies by environment. For example:
                         </p>

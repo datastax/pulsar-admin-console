@@ -55,7 +55,7 @@
 
         <p>
             To see detailed information about your topics,
-            got to <router-link to="topics">Topics</router-link>.
+            go to <router-link to="topics">Topics</router-link>.
 
         </p>
 

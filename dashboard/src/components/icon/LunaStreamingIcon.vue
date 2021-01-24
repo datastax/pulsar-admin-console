@@ -16,10 +16,8 @@
  -->
 
 <template>
-  <div class="auth-layout">
-    <div class="nav d-lg-none">
-          <div  style="" >
-              <svg height="100" viewBox="-50 -25 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<div>
+  <svg style="position: abosolute;" viewBox="-50 -10 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M10.708 23.1263C9.89001 22.9032 9.22076 22.5314 8.73741 22.048C8.25407 21.5647 7.88226 20.8954 7.65918 20.0775C7.4361 19.2595 7.32455 18.2556 7.32455 17.0287V0H0V18.0325C0 25.7661 3.86677 29.6328 11.6003 29.6328H21.7506V23.4609H13.7568C12.5298 23.4609 11.5259 23.3493 10.708 23.1263Z" fill="white"/>
   <path d="M40.0804 24.0928H35.6931C34.429 24.0928 33.4995 23.7954 32.9418 23.2376C32.384 22.6799 32.0866 21.7504 32.0866 20.4863V7.84493H24.9108V20.4863C24.9108 22.0851 25.0967 23.4236 25.4313 24.5761C25.8031 25.7287 26.3236 26.6583 27.0672 27.4019C27.8108 28.1455 28.7404 28.7032 29.893 29.0378C31.0455 29.4096 32.4212 29.5583 33.9828 29.5583H47.2562V7.88211H40.0432V24.0928H40.0804Z" fill="white"/>
   <path d="M72.539 10.0387C71.7954 9.29505 70.8659 8.73734 69.7133 8.40272C68.5607 8.03091 67.185 7.88219 65.6234 7.88219H52.1641V29.6328H59.3771V13.3849H63.9131C65.1772 13.3849 66.0696 13.6823 66.6645 14.2401C67.2222 14.7978 67.5196 15.6901 67.5196 16.9542V29.6328H74.7698V16.9542C74.7698 15.3555 74.5839 14.017 74.2493 12.8644C73.8031 11.7118 73.2826 10.7823 72.539 10.0387Z" fill="white"/>
@@ -34,103 +32,18 @@
   <path d="M86.4074 46.2525L80.756 37.5895H79.2316V48H80.4585V39.2626L86.1471 48H87.5972V37.5895H86.4074V46.2525Z" fill="white"/>
   <path d="M96.223 42.1627V43.2781H99.309V46.8846H96.8922C96.223 46.8846 95.6281 46.8102 95.1447 46.6615C94.6614 46.5128 94.2896 46.2525 93.9922 45.9179C93.6947 45.5833 93.4716 45.1743 93.3601 44.6538C93.2114 44.1332 93.1742 43.5383 93.1742 42.7947C93.1742 42.0883 93.2486 41.4562 93.3601 40.9357C93.5088 40.4152 93.6947 40.0062 93.9922 39.6716C94.2896 39.3369 94.6614 39.1139 95.1447 38.928C95.6281 38.7792 96.1858 38.7049 96.8922 38.7049H100.164V37.5895H96.632C94.996 37.5895 93.8063 37.9984 93.0255 38.8536C92.2447 39.7087 91.8357 41.0101 91.8357 42.7947C91.8357 43.6871 91.9472 44.4679 92.1331 45.0999C92.319 45.7692 92.6165 46.2897 93.0255 46.7359C93.4344 47.182 93.9178 47.4795 94.5127 47.7026C95.1076 47.9256 95.814 48 96.632 48H100.573V42.1627H96.223V42.1627Z" fill="white"/>
   </svg>
-          </div>
-    </div>
-    <div class="main va-row">
-      <div class="auth-content flex lg6 xs12 fill-height">
-        <div class="flex-center">
-          <router-view/>
-        </div>
-      </div>
-      <div class="auth-layout__auth-wallpaper flex md6">
-        <div class="flex-center">
-          <div class="auth-layout__auth-wallpaper__cross-line"/>
-          <router-link class="auth-layout__auth-wallpaper__logo" :to="{path: '/'}">
-            <luna-streaming-icon style="margin-top: -80px;"></luna-streaming-icon>
-          </router-link>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 </template>
 
 <script>
-import PulsarIcon from '../icon/PulsarIcon'
-import LunaStreamingIcon from '../icon/LunaStreamingIcon'
-
-
 export default {
-  name: 'AuthLayout',
-  components: { PulsarIcon, LunaStreamingIcon },
-}
+  name: "luna-streaming-icon"
+};
 </script>
 
-<style lang="scss" scoped>
-.auth-layout {
-  height: 100vh;
-  margin: 0;
-
-  &__auth-wallpaper {
-    position: relative;
-    background-color: $top-nav-bg;
-    overflow: hidden;
-    @include va-flex-center();
-    &__logo {
-      z-index: 2;
-      position: absolute;
-      height: $auth-wallpaper-ivuestic-h;
-      width: 100%;
-    }
-    .vuestic-icon-vuestic {
-      height: $auth-wallpaper-ivuestic-h;
-      width: 100%;
-    }
-
-    &__cross-line {
-      z-index: 1;
-      position: absolute;
-      background-color: $auth-wallpaper-oblique-line;
-      left: calc(50% - 27% / 2);
-      transform: rotate(15deg);
-      width: 27%;
-      height: 115%;
-    }
-  }
-
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: $top-mobile-nav-height;
-    background-color: $top-nav-bg;
-    .vuestic-icon-vuestic {
-      height: $auth-mobile-nav-ivuestic-h;
-      width: 100%;
-    }
-  }
-  .main {
-    margin: 0;
-    height: 100vh;
-    .auth-content {
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: white;
-    }
-  }
-
-  @include media-breakpoint-down(md) {
-    .main {
-      height: $auth-mobile-main-h;
-      .auth-content {
-        align-items: flex-start;
-        padding-top: $auth-content-padding-t;
-      }
-      .auth-wallpaper {
-        display: none;
-      }
-    }
-  }
+<style lang="scss">
+.in-front {
+  z-index: 100;
 }
+
 </style>
