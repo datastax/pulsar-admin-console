@@ -9,6 +9,7 @@ RUN rm -rf node_modules
 RUN npm install
 RUN npm install -g @vue/cli
 RUN npm run build-standalone
+RUN chmod -R g=u /build/dist
 
 #
 # build node app in the next stage
@@ -17,26 +18,25 @@ FROM node:11.15-alpine
 
 LABEL maintainer="ming luo"
 
-# Enable header rewrites in apache
-WORKDIR /root/
+# Default to the root group for openshift compatibility.
+RUN adduser -u 10001 -S appuser -G root
 
-#RUN rm -rf /var/lib/apt/lists/* && \
-#    apt-get update && apt-get install -y \
-#    nodejs \
-#    npm \
-#    && rm -rf /var/lib/apt/lists/*
-RUN mkdir -p dashboard/dist
-RUN mkdir server
-RUN ls
-COPY --from=UI-BUILD /build/dist /root/dashboard/dist
-COPY --from=UI-BUILD /build/dist/index.html /root/dashboard/dist/index.html.template
-RUN pwd
-COPY server/package*.json /root/server/
-COPY server/*.js /root/server/
-COPY server/*.html /root/server/
+WORKDIR /home/appuser/
+USER 10001:0
+
+RUN mkdir -p dashboard/dist && mkdir server && ls
+COPY --from=UI-BUILD --chown=10001:0 /build/dist /home/appuser/dashboard/dist
+COPY --from=UI-BUILD --chown=10001:0 /build/dist/index.html /home/appuser/dashboard/dist/index.html.template
+COPY --chown=10001:0 server/package*.json /home/appuser/server/
+COPY --chown=10001:0 server/*.js /home/appuser/server/
+COPY --chown=10001:0 server/*.html /home/appuser/server/
 RUN cd server && npm install
 
-WORKDIR /root/server
+WORKDIR /home/appuser/server
+
+# OpenShift compatibility
+RUN chmod g+w /home/appuser
+ENV HOME /home/appuser
 
 EXPOSE 8080 8081 6454 6455
 
