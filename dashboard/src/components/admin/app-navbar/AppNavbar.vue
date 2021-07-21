@@ -198,6 +198,7 @@ export default {
       'tenantList',
       'runningEnv',
       'authMode',
+      'oauthClientId',
       'login'
     ]),
     availableClusters () {

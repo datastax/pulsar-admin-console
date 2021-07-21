@@ -56,6 +56,7 @@ const state = {
   disableBilling: 'false',
   runningEnv: 'web',
   authMode: 'none',
+  oauthClientId: '',
   planInfo: {},
   hostOverrides: {},
   subscriptionInfo: [],
@@ -145,6 +146,9 @@ const mutations = {
   },
   setAuthMode (state, value) {
     state.authMode = value
+  },  
+  setOauthClientId (state, value) {
+    state.oauthClientId = value
   },
   setChargebeeSite (state, site) {
     state.chargebeeSite = site
@@ -485,6 +489,7 @@ const getters = {
   disableBilling: state => state.disableBilling,
   runningEnv: state => state.runningEnv,
   authMode: state => state.authMode,
+  oauthClientId: state => state.oauthClientId,
   chargebeeSite: state => state.chargebeeSite,
   billingProvider: state => state.billingProvider,
   userRole: state => state.userRole,
