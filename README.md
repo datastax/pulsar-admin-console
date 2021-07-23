@@ -15,6 +15,11 @@ In addition to configuring the `auth_mode`, you also need to configure the `oaut
 the Console will use when authenticating with Keycloak. Note that in Keycloak, it is important that this client exists
 and that it has the `sub` claim properly mapped to your desired Pulsar subject. Otherwise, the JWT won't work as desired.
 
+#### Connecting to an OpenID Connect Auth/Identity Provider
+When opening the Console, the first page is the login page. When using the `openidconnect` auth mode, the auth call
+needs to go to the Provider's server. In the current design, nginx must be configured to route the call to the provider.
+The [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart) does this automatically.
+
 ### Dev
 #### Node and NPM version
 Use these versions of node and npm:
