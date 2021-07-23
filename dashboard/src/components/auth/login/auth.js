@@ -24,22 +24,38 @@ const AUTH_TOKEN_KEY = 'authToken'
 
 export function loginUser(username, password) {
     return new Promise((resolve, reject) => {
+        // This url is then routed by nginx to the correct location
         let url = '/api/v1/auth/token';
-        return axios.post(url, {
-                username: username,
-                password: password,
-                grant_type: 'password'
-        }).then(response => {
-            setAuthToken(response.data.token)
+        return axios.post(url, buildLoginBody(username, password)).then(response => {
+            // This complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
+            setAuthToken(response.data.access_token)
             resolve();
             console.log(`Setting user to  ${username}`)
             store.commit('setLogin', username)
-
         }).catch (err => {
             console.error('Caught an error during login:', err)
             reject(err);
         });
     })
+}
+
+function buildLoginBody(username, password) {
+    if (globalConf.auth_mode === 'openidconnect') {
+        return new URLSearchParams({
+            username: username,
+            password: password,
+            client_id: globalConf.oauth_client_id,
+            grant_type: 'password'
+        })
+    } else if (globalConf.auth_mode === 'k8s') {
+        return {
+            username: username,
+            password: password,
+            grant_type: 'password'
+        }
+    } else {
+        return {}
+    }
 }
 
 export function logoutUser() {
@@ -68,8 +84,8 @@ export function isLoggedIn() {
     return !!authToken && !isTokenExpired(authToken)
 }
 
-export function isK8sAuthRequired() {
-    return globalConf.auth_mode === "k8s";
+export function isAuthRequired() {
+    return globalConf.auth_mode !== 'none';
 }
 
 export function getUserInfo() {

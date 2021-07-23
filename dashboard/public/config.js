@@ -59,6 +59,7 @@ var globalConf = {
     "running_env": "k8s",
     "use_token_list": "false",
     "auth_mode": "none",
+    "oauth_client_id": "",
     "host_overrides": {
         "pulsar": "http://localhost:6650",
         "ws": "ws://localhost:8080",

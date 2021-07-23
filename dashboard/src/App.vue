@@ -25,7 +25,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { isK8sAuthRequired, isLoggedIn } from './components/auth/login/auth.js'
+import { isAuthRequired, isLoggedIn } from './components/auth/login/auth.js'
 export default {
   name: 'app',
   data () {
@@ -53,7 +53,7 @@ export default {
 
       // Get data injected 
       console.log(globalConf);
-      console.log(isK8sAuthRequired())
+      console.log(isAuthRequired())
       console.log(isLoggedIn())
 
       if (typeof overrideConf !== 'undefined' && overrideConf) {
@@ -88,6 +88,7 @@ export default {
       this.$store.commit('setDisableBilling', globalConf.disable_billing)
       this.$store.commit('setRunningEnv', globalConf.running_env)
       this.$store.commit('setAuthMode', globalConf.auth_mode)
+      this.$store.commit('setOauthClientId', globalConf.oauth_client_id)
       this.$store.commit('setLogin', globalConf.login)
       this.$store.commit('setEmail', globalConf.email)
       this.$store.commit('setHostOverrides', globalConf.host_overrides)

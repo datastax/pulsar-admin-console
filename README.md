@@ -1,6 +1,25 @@
 # Pulsar Admin Console
 
 Pulsar Admin Console is a web based UI that administrates topics, namespaces, sources, sinks and various aspects of Apache Pulsar features.
+
+## Auth Modes
+There are three available configurations for `auth_mode`: `none`, `k8s`, and `openidconnect`.
+
+### Auth Mode: OpenID Connect
+In this auth mode, the dashboard will use your login credentials to attempt to retrieve a JWT from an authentication
+provider. In the [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart), this is implemented by
+integrating the Pulsar Admin Console with Keycloak. Upon successful retrieval of the JWT, the Pulsar Admin Console will
+use the retrieved JWT as the bearer token when making calls to Pulsar.
+
+In addition to configuring the `auth_mode`, you also need to configure the `oauth_client_id`. This is the client id that
+the Console will use when authenticating with Keycloak. Note that in Keycloak, it is important that this client exists
+and that it has the `sub` claim properly mapped to your desired Pulsar subject. Otherwise, the JWT won't work as desired.
+
+#### Connecting to an OpenID Connect Auth/Identity Provider
+When opening the Console, the first page is the login page. When using the `openidconnect` auth mode, the auth call
+needs to go to the Provider's server. In the current design, nginx must be configured to route the call to the provider.
+The [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart) does this automatically.
+
 ### Dev
 #### Node and NPM version
 Use these versions of node and npm:

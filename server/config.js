@@ -61,7 +61,7 @@ const generateIndexHtml = (indexHtml) => {
 
     let overrideConfig = {}
 
-    if (dashboardConfig.token_path) {
+    if (dashboardConfig.token_path && (dashboardConfig.auth_mode === 'none' || dashboardConfig.auth_mode === 'k8s')) {
         
         const token = fs.readFileSync(dashboardConfig.token_path, "utf8")
         overrideConfig.admin_token = token.trim()

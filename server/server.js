@@ -73,7 +73,8 @@ app.post('/api/v1/auth/token', async (req, res) => {
       let result = await k8s.authenticate(username, password);
       if (result) {
         const secret = process.env.TOKEN_SECRET || "default-secret"
-        res.send({token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
+        // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
+        res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
         return;
       }
     }

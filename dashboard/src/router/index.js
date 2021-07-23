@@ -20,7 +20,7 @@ import Router from 'vue-router'
 import AppLayout from '../components/admin/AppLayout'
 import Login from '../components/auth/login/Login'
 import AuthLayout from '../components/auth/AuthLayout'
-import { isK8sAuthRequired, isLoggedIn } from '../components/auth/login/auth.js'
+import { isAuthRequired, isLoggedIn } from '../components/auth/login/auth.js'
 // import { isLoggedIn } from '../auth/auth'
 // import WelcomeLayout from '../components/welcome/WelcomeLayout'
 import lazyLoading from './lazyLoading'
@@ -339,7 +339,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (isK8sAuthRequired() && !to.meta.allowAnonymous && !isLoggedIn()) {
+  if (isAuthRequired() && !to.meta.allowAnonymous && !isLoggedIn()) {
     next({
       path: '/auth/login',
       query: { redirect: to.fullPath }
