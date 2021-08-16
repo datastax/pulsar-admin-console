@@ -232,7 +232,7 @@ export default {
       connectError: false,
       consumerInterface: true,
       earliestMessages: true,
-      errorText: 'Error detected with client connnection. Try again.'
+      errorText: 'Error detected with client connection. Try again.'
     }
   },
   components: {

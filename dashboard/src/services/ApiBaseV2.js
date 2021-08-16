@@ -17,7 +17,6 @@
 
 import axios from 'axios'
 import store from '../store/index'
-import { getAuthToken } from '../components/auth/login/auth.js'
 
 export default() => {
   return axios.create({
@@ -26,7 +25,7 @@ export default() => {
     timeout: 4500,
     headers: {
       'Accept': 'application/json',
-      'Authorization': `Bearer ${getAuthToken()}`
+      'Authorization': `Bearer ${store.getters.clientToken}`
     }
   })
 }

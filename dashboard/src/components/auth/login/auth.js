@@ -67,6 +67,8 @@ export function setAuthToken(token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
     console.log('set token', token)
     localStorage.setItem(AUTH_TOKEN_KEY, token)
+    // Add to vuex, as it is retrieved from there to make many calls
+    store.commit('setClientToken', token)
 }
 
 export function getAuthToken() {
@@ -76,6 +78,7 @@ export function getAuthToken() {
 export function clearAuthToken() {
     axios.defaults.headers.common['Authorization'] = ''
     localStorage.removeItem(AUTH_TOKEN_KEY)
+    store.commit('setClientToken', null)
 }
 
 export function isLoggedIn() {
