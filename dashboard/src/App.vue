@@ -25,7 +25,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { isAuthRequired, isLoggedIn } from './components/auth/login/auth.js'
+import { getAuthToken, isAuthRequired, isLoggedIn } from './components/auth/login/auth.js'
 export default {
   name: 'app',
   data () {
@@ -70,7 +70,12 @@ export default {
       this.$store.commit('updateAllowedClusters', allowClusterList)
       this.$store.commit('updateNumAllowedClusters', allowClusterList.length)
 
-      this.$store.commit('setClientToken', globalConf.client_token)
+      // If unexpired token is stored in local storage, use that one.
+      if (isLoggedIn()) {
+        this.$store.commit('setClientToken', getAuthToken())
+      } else {
+        this.$store.commit('setClientToken', globalConf.client_token)
+      }
       this.$store.commit('setPlan', globalConf.plan)
       this.$store.commit('setAdminToken', globalConf.admin_token)
       this.$store.commit('setApiBaseUrl', globalConf.api_base_url)
