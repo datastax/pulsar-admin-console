@@ -183,12 +183,13 @@
             <span>Brokers</span>
           </span>
         </sidebar-link>
+<!-- Temporarily removed becuase grafana is already externally accessible. Might permanently remove lated.
         <sidebar-link
           :to="{ name: 'clusterMonitor' }">
           <span slot="title">
             <span>Monitoring</span>
           </span>
-        </sidebar-link>
+        </sidebar-link> -->
         <sidebar-link
           :to="{ name: 'clusterDetail' }">
           <span slot="title">
