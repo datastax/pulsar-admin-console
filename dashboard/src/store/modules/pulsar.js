@@ -116,7 +116,7 @@ const mutations = {
   setFunctionsDisabled (state, flag) {
     state.functionsDisabled = flag
   },
-  setRenderMonitoringTb (state, flag) {
+  setRenderMonitoringTab (state, flag) {
     state.renderMonitoringTab = flag
   },
   setClientsDisabled (state, flag) {
