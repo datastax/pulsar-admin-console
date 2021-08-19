@@ -24,7 +24,7 @@
     <!-- form method="post" action="/auth/login" name="login" -->
       <div class="form-group">
         <div class="input-group">
-          <input type="text" id="email" required="required" v-model="email"/>
+          <input type="text" id="email" required="required" v-model="email" v-on:keyup.enter="login"/>
           <label class="control-label" for="email">
             Username
           </label>
@@ -33,7 +33,7 @@
       </div>
       <div class="form-group">
         <div class="input-group">
-          <input type="password" id="password" required="required" v-model="password"/>
+          <input type="password" id="password" required="required" v-model="password" v-on:keyup.enter="login"/>
           <label class="control-label" for="password">
             {{ $t('auth.password') }}
           </label>

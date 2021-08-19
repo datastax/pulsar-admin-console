@@ -183,7 +183,7 @@
             <span>Brokers</span>
           </span>
         </sidebar-link>
-        <sidebar-link
+        <sidebar-link v-if="this.renderMonitoringTab === 'true'"
           :to="{ name: 'clusterMonitor' }">
           <span slot="title">
             <span>Monitoring</span>
@@ -248,6 +248,7 @@ export default {
       'featureFlags',
       'disableBilling',
       'privateOrg',
+      'renderMonitoringTab',
       'functionsDisabled',
       'clientsDisabled',
       'isAdminUser',

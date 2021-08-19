@@ -55,6 +55,7 @@ var globalConf = {
     "multi_user_org": "",
     "private_org": "true",
     "functions_disabled": "false",
+    "render_monitoring_tab": "false",
     "clients_disabled": "false",
     "running_env": "k8s",
     "use_token_list": "false",
