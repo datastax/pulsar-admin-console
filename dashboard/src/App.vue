@@ -119,6 +119,10 @@ export default {
         this.$store.commit('setFunctionsDisabled', globalConf.functions_disabled)
       }
 
+      if (globalConf.rende_monitoring_tab === 'true') {
+        this.$store.commit('setRenderMonitoringTab', globalConf.rende_monitoring_tab)
+      }
+
       if (globalConf.clients_disabled === 'true') {
         this.$store.commit('setClientsDisabled', globalConf.clients_disabled)
       }

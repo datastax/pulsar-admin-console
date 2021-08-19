@@ -78,6 +78,7 @@ const state = {
   useTokenList: 'false',
   brokerLoadData: {},
   functionsDisabled: 'false',
+  renderMonitoringTab: 'false',
   clientsDisabled: 'false',
   userRole: 'admin',
   featureFlags: '',
@@ -114,6 +115,9 @@ const mutations = {
   },
   setFunctionsDisabled (state, flag) {
     state.functionsDisabled = flag
+  },
+  setRenderMonitoringTb (state, flag) {
+    state.renderMonitoringTab = flag
   },
   setClientsDisabled (state, flag) {
     state.clientsDisabled = flag
@@ -475,6 +479,7 @@ const getters = {
   email: state => state.email,
   multiUserOrg: state => state.multiUserOrg,
   functionsDisabled: state => state.functionsDisabled,
+  renderMonitoringTab: state => state.renderMonitoringTab,
   clientsDisabled: state => state.clientsDisabled,
   privateOrg: state => state.privateOrg,
   useTokenList: state => state.useTokenList,
