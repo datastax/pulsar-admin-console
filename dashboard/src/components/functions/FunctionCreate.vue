@@ -753,7 +753,7 @@ export default {
       }.bind(this), false)
 
       if (this.file) {
-        if (this.file.type === 'text/x-python') {
+        if (this.file.type === 'text/x-python' || this.file.type === 'text/x-python-script') {
           this.runtime = 'Python'
           // We will read the file and the load callback will
           // set the preview and find classnames
