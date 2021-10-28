@@ -1281,8 +1281,10 @@ const actions = {
           } else {
             compatMode = newStrat
           }
-          quota = state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage.limit
-          quotaPolicy = state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage.policy
+          if (state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage) {
+            quota = state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage.limit
+            quotaPolicy = state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage.policy
+          }
 
           if (state.namespacesConfig.data[nsIdx].publishMaxMessageRate[cluster]) {
             inRateMsg = state.namespacesConfig.data[nsIdx].publishMaxMessageRate[cluster].publishThrottlingRateInMsg
