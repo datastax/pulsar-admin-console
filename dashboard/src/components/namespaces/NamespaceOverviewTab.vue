@@ -660,7 +660,13 @@ export default {
     },
     storageLimitHuman () {
       if (this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage) {
-        const limit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit
+        // Handling backward incompatible changes introduced in 2.8
+        let limit = -1
+        if (this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit) {
+          const limit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit
+        } else {
+          const limit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limitSize
+        }
         // console.log(limit)
         if (limit >= 0) {
           return this.$options.filters.humanBytes(limit)
@@ -799,7 +805,12 @@ export default {
       if (this.namespacesConfig.stats[index]) {
         if (this.namespacesConfig.data[index].backlog_quota_map.destination_storage) {
           const currentStorage = this.namespacesConfig.stats[index].storage
-          const storageLimit = this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limit
+          if (this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limit) {
+            const storageLimit = this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limit
+          } else {
+            const storageLimit = this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limitSize
+
+          }
           if (storageLimit > 0) {
             return Math.round((currentStorage / storageLimit) * 100)
           }

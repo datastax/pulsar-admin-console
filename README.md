@@ -53,7 +53,7 @@ npm run serve
 2. Start nginx in Docker. Note that the compose file will also start the dashboard container, but it is not used for the development work flow.
 
 ```
-docker-compose up -dashboard
+docker-compose up -d
 ```
 
 3. Start the development dashboard server.

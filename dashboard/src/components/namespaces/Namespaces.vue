@@ -274,7 +274,11 @@ export default {
       if (this.namespacesConfig.stats[index]) {
         if (this.namespacesConfig.data[index].backlog_quota_map.destination_storage) {
           const currentStorage = this.namespacesConfig.stats[index].storage
-          const storageLimit = this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limit
+          if (this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limit) {
+            const storageLimit = this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limit
+          } else {
+            const storageLimit = this.namespacesConfig.data[index].backlog_quota_map.destination_storage.limitSize
+          }
           if (storageLimit > 0) {
             return Math.round((currentStorage / storageLimit) * 100)
           }
