@@ -748,7 +748,13 @@ export default {
     },
     storageLimitHuman () {
       if (this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage) {
-        const limit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit
+        // Handling backward incompatible changes introduced in 2.8
+        let limit = -1
+        if (this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit) {
+          limit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit
+        } else {
+          limit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limitSize
+        }
         // console.log(limit)
         if (limit >= 0) {
           return this.$options.filters.humanBytes(limit)
@@ -959,12 +965,23 @@ export default {
       this.$refs.updateProducerRateModal.open()
     },
     updateBacklog () {
-      this.backlogLimit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit
 
-      // Find current policy on list
-      this.backlogPolicy = this.backlogPolicyList.filter(obj => {
-        return obj.id === this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.policy
-      })[0]
+      if (this.namespacesConfig.data[this.$route.params.id].backlog_quota_map && this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage) {
+        // Handling backward incompatible changes introduced in 2.8
+        if (this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit) {
+          this.backlogLimit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limit
+        } else {
+          this.backlogLimit = this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.limitSize
+        }
+        // Find current policy on list
+        this.backlogPolicy = this.backlogPolicyList.filter(obj => {
+          return obj.id === this.namespacesConfig.data[this.$route.params.id].backlog_quota_map.destination_storage.policy
+        })[0]
+      } else {
+        this.backlogLimit = 0
+        this.backlogPolicy = null
+      }
+
       this.updateBacklogLimitDisplay()
       this.disableBacklogLimit = false
       this.deleteBacklogLimit = false
