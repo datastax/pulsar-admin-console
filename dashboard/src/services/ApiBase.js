@@ -18,14 +18,24 @@
 import axios from 'axios'
 import store from '../store/index'
 
+
+
 export default() => {
+
+  let token = ''
+  if (store.getters.authMode === 'k8s') {
+    token = store.getters.adminToken;
+  } else if (store.getters.authMode === 'openidconnect')  {
+    token = store.getters.clientToken;
+  } 
+  
   return axios.create({
     baseURL: store.getters.apiBaseUrl,
     withCredentials: false,
     timeout: 4500,
     headers: {
       'Accept': 'application/json',
-      'Authorization': `Bearer ${store.getters.clientToken}`
+      'Authorization': `Bearer ${token}`
     }
   })
 }
