@@ -4,9 +4,9 @@ WORKDIR /build
 
 COPY ./dashboard/ .
 
-# make sure node_modules is not copye although it should be skipped by .dockerignore
-RUN rm -rf node_modules
-RUN npm install
+# Prefer ci instead of install here
+RUN npm ci
+# Only need @vue/cli to run the "build-standalone" script. We don't need it in the final image.
 RUN npm install -g @vue/cli
 RUN npm run build-standalone
 RUN chmod -R g=u /build/dist
@@ -30,7 +30,7 @@ COPY --from=UI-BUILD --chown=10001:0 /build/dist/index.html /home/appuser/dashbo
 COPY --chown=10001:0 server/package*.json /home/appuser/server/
 COPY --chown=10001:0 server/*.js /home/appuser/server/
 COPY --chown=10001:0 server/*.html /home/appuser/server/
-RUN cd server && npm install
+RUN cd server && npm ci && npm cache clean --force
 
 WORKDIR /home/appuser/server
 
