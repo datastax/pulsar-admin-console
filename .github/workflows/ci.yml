@@ -28,7 +28,7 @@ jobs:
       - name: Build vue components
         run: |
           cd dashboard
-          npm install
+          npm ci
           npm install -g @vue/cli 
           npm run build
 
