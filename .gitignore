@@ -121,3 +121,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# These artifacts are a byproduct of running `make tarball`
+dest/
+pulsar-admin-console-*.tar.gz
