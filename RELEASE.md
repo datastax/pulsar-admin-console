@@ -5,8 +5,8 @@
 Here is the high level process. See other sections of this page for details on how each step works.
 
 1. Push git tag to GitHub repo.
-2. Once Docker Hub has the new image, pull that image to your local machine and run `make tarball`.
-3. Run `openssl dgst -sha512 pulsar-admin-console-v0.0.4.tar.gz` (using the correct version).
+2. Once Docker Hub has the new image, pull that image to your local machine and run `make tarball TAG=1.1.4` (use the correct tag).
+3. Run `openssl dgst -sha512 pulsar-admin-console-1.1.4.tar.gz` (use the correct version).
 4. Create the GitHub release page. Upload the tarball and make sure the release notes include the tarball's checksum and a reference to the docker image for the release.
 
 ## How to build a Docker release image
