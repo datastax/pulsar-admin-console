@@ -30,3 +30,9 @@ push: container
 
 clean:
 	docker rmi $(PREFIX):$(TAG)
+
+tarball:
+	docker create -ti --name pac-tarball $(PREFIX):$(TAG) sh
+	docker cp pac-tarball:/home/appuser/ dest/
+	docker rm -f pac-tarball
+	tar -czvf pulsar-admin-console-$(TAG).tar.gz dest/
