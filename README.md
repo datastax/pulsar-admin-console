@@ -25,10 +25,31 @@ The [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart) 
 Use these versions of node and npm:
 ```
 $ npm -v
-6.7.0
+6.14.15
 $ node -v
-v11.15.0
+v12.22.9
 ```
+
+In order to easily manage your node and npm versions across developer machines, we use [nvm](https://github.com/nvm-sh/nvm). We set the node version in the [.nvmrc](./.nvmrc) file. In order to set up your environment, open a shell, change to the project directory, and run the following:
+
+```shell
+nvm use
+nvm install
+```
+
+When upgrading versions of node, we should make sure to use LTS versions. You can find LTS versions on the node website or by using `nvm`.
+
+```shell
+nvm list
+```
+
+Then, pick which `lts/` version to use. Currently, we use `erbium`, so you can run the following:
+
+```shell
+nvm install lts/erbium
+```
+
+When upgrading node versions, make sure to update the [Dockerfile](./Dockerfile), the [.nvmrc](./.nvmrc) file, and the CI scripts (i.e. [.github/](./github/)).
 
 #### Build the standalone console
 ```
