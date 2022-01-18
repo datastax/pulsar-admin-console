@@ -32,6 +32,27 @@ v12.22.9
 
 In order to easily manage your node and npm versions, you can use [nvm](https://github.com/nvm-sh/nvm).
 
+There are two helpful commands for setting the correct version. First, you can set the exact node and npm version by running
+
+```shell
+nvm use node 12.22.9
+```
+
+When upgrading versions of node, we should make sure to use LTS versions. You can find LTS versions on the node website or by using `nvm`.
+
+```shell
+nvm list
+```
+
+Then, pick which `lts/` version to install. Currently, we use `erbium`, so you can run the following:
+
+```shell
+nvm install lts/erbium
+```
+
+When upgrading node versions, make sure to update the [Dockerfile](./Dockerfile).
+
+
 #### Build the standalone console
 ```
 cd dashboard
