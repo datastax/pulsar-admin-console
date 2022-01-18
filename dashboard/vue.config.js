@@ -20,7 +20,8 @@ const fs = require('fs')
 
 module.exports = {
   lintOnSave: false,
-  baseUrl: process.env.BASE_URL,
+  // baseUrl was deprecated https://cli.vuejs.org/config/#baseurl
+  publicPath: process.env.BASE_URL,
   // filenameHashing: false,
   // delete HTML related webpack plugins
   chainWebpack: config => {
