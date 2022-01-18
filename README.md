@@ -25,10 +25,12 @@ The [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart) 
 Use these versions of node and npm:
 ```
 $ npm -v
-6.7.0
+6.14.15
 $ node -v
-v11.15.0
+v12.22.9
 ```
+
+In order to easily manage your node and npm versions, you can use [nvm](https://github.com/nvm-sh/nvm).
 
 #### Build the standalone console
 ```
