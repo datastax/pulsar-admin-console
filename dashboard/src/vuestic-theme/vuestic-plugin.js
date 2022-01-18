@@ -21,8 +21,6 @@ import Breadcrumbs
 import Chart from './vuestic-components/vuestic-chart/VuesticChart.vue'
 import Chat from './vuestic-components/vuestic-chat/VuesticChat.vue'
 import Checkbox from './vuestic-components/vuestic-checkbox/VuesticCheckbox.vue'
-import DataTable
-  from './vuestic-components/vuestic-datatable/VuesticDataTable.vue'
 import Feed from './vuestic-components/vuestic-feed/VuesticFeed.vue'
 import MediumEditor
   from './vuestic-components/vuestic-medium-editor/VuesticMediumEditor.vue'
@@ -99,7 +97,6 @@ const VuesticPlugin = {
       Chart,
       Chat,
       Checkbox,
-      DataTable,
       Feed,
       Modal,
       MultiSelect,

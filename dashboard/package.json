@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "awesome-bootstrap-checkbox": "1.0.0-alpha.5",
+    "axios": "^0.25.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "4.0.0",
     "chart.js": "^2.9.4",
@@ -52,7 +53,6 @@
     "vue-router": "^3.5.3",
     "vue-slider-component": "2.7.8",
     "vue-toasted": "^1.1.28",
-    "vuetable-2": "1.7.5",
     "vuex": "^3.6.2",
     "vuex-i18n": "^1.13.1",
     "vuex-persist": "^2.3.0",
