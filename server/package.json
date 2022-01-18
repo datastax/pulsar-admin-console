@@ -15,6 +15,7 @@
   "author": "ming luo",
   "license": "Apache-2.0",
   "dependencies": {
+    "bufferutil": "^4.0.6",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.17.2",
@@ -24,6 +25,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "random-id": "^1.0.4",
+    "utf-8-validate": "^5.0.8",
     "winston": "^3.4.0"
   },
   "devDependencies": {
