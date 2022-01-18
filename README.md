@@ -50,8 +50,7 @@ Then, pick which `lts/` version to install. Currently, we use `erbium`, so you c
 nvm install lts/erbium
 ```
 
-When upgrading node versions, make sure to update the [Dockerfile](./Dockerfile).
-
+When upgrading node versions, make sure to update the [Dockerfile](./Dockerfile) as well as an CI scripts (i.e. [.github/](./github/)).
 
 #### Build the standalone console
 ```
