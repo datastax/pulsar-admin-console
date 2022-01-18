@@ -16,7 +16,7 @@
   "dependencies": {
     "awesome-bootstrap-checkbox": "1.0.0-alpha.5",
     "babel-polyfill": "^6.26.0",
-    "bootstrap": "4.0.0",
+    "bootstrap": "^4.6.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
     "detect-browser": "^3.0.0",
