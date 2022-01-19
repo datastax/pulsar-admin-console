@@ -33,7 +33,7 @@
   }
 
   .medium-editor-action {
-    @extend .btn.btn-primary;
+    @extend .btn, .btn-primary;
     height: $medium-editor-button-size;
     padding: $btn-padding-y $btn-group-button-padding-x;
     box-shadow: none;
@@ -108,7 +108,7 @@
 //v-tooltip
 
 .tooltip.vuestic-tooltip {
-  @extend .tooltip.show;
+  @extend .tooltip, .show;
 
   .tooltip-inner {
     box-shadow: $tooltip-box-shadow;
