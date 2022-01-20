@@ -27,7 +27,7 @@ Use these versions of node and npm:
 $ npm -v
 6.14.15
 $ node -v
-v12.22.9
+v14.18.3
 ```
 
 In order to easily manage your node and npm versions across developer machines, we use [nvm](https://github.com/nvm-sh/nvm). We set the node version in the [.nvmrc](./.nvmrc) file. In order to set up your environment, open a shell, change to the project directory, and run the following:
@@ -43,10 +43,10 @@ When upgrading versions of node, we should make sure to use LTS versions. You ca
 nvm list
 ```
 
-Then, pick which `lts/` version to use. Currently, we use `erbium`, so you can run the following:
+Then, pick which `lts/` version to use. Currently, we use `fermium`, so you can run the following:
 
 ```shell
-nvm install lts/erbium
+nvm install lts/fermium
 ```
 
 When upgrading node versions, make sure to update the [Dockerfile](./Dockerfile), the [.nvmrc](./.nvmrc) file, and the CI scripts (i.e. [.github/](./github/)).
