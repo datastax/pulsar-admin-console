@@ -291,6 +291,8 @@ export default {
       'allowedClusters',
       'tenant',
       'clientToken',
+      'adminToken',
+      'authMode',
       'namespacesConfig',
       'wssUrlOverride'
     ]),
@@ -410,12 +412,22 @@ export default {
     clearMessages () {
       this.messages = []
     },
+    getToken () {
+      let token = ''
+        if (this.authMode === 'k8s') {
+          token = this.adminToken;
+        } else if (this.authMode === 'openidconnect')  {
+          token = this.clientToken;
+        } 
+
+        return token
+    },
     connectProducer () {
       this.connectError = false
 
       const wsEndpoint = this.getClusterUrl(this.currentCluster.id, 'wss', this.wssUrlOverride) +
                     '/ws/v2/producer/' + this.topicType + '/' + this.tenant + '/' + this.currentNamespace.id + '/' + this.currentProduceTopic +
-                    '/?token=' + this.clientToken
+                    '/?token=' + this.getToken()
 
       console.log('connecting producer', wsEndpoint)
 
@@ -468,7 +480,7 @@ export default {
       const wsEndpoint = this.getClusterUrl(this.currentCluster.id, 'wss', this.wssUrlOverride) +
                     '/ws/v2/' + consumeType + '/' + this.topicType +'/' + this.tenant + '/' +
                     this.currentNamespace.id + '/' + this.currentConsumeTopic + subscriptionInfo +
-                    '?token=' + this.clientToken + queryParms 
+                    '?token=' + this.getToken() + queryParms 
       console.log('connecting consumer', wsEndpoint)
 
       this.consumerSocket = new WebSocket(wsEndpoint)

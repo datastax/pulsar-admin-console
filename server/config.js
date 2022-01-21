@@ -78,7 +78,7 @@ const generateIndexHtml = (indexHtml) => {
             L.error(err);
             return
         }
-        var result = fileData.replace(/<div id=wp-vue-app><\/div>/g, data);
+        var result = fileData.replace(/<div id="wp-vue-app"><\/div>/g, data);
         
         fs.writeFile(indexHtml, result, 'utf8', function (err) {
             if (err) return console.log(err);
