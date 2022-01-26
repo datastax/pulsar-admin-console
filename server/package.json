@@ -30,7 +30,6 @@
   "devDependencies": {
     "del": "^5.1.0",
     "fancy-log": "^1.3.3",
-    "gulp-zip": "^5.0.1",
     "nodemon": "^2.0.15"
   }
 }
