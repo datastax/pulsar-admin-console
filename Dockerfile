@@ -30,7 +30,7 @@ COPY --from=UI-BUILD --chown=10001:0 /build/dist/index.html /home/appuser/dashbo
 COPY --chown=10001:0 server/package*.json /home/appuser/server/
 COPY --chown=10001:0 server/*.js /home/appuser/server/
 COPY --chown=10001:0 server/*.html /home/appuser/server/
-RUN cd server && npm ci && npm cache clean --force
+RUN cd server && npm ci --production && npm cache clean --force
 
 WORKDIR /home/appuser/server
 
