@@ -20,7 +20,7 @@
        
         <p>Since Node.js npm package depends on C++ Pulsar library, please install C++ library as prerequisite. For Ubuntu based deb package, to install: </p>
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="ubuntuGet"><code></code></pre>
+            <pre v-highlightjs="ubuntuGet"><code class="bash"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="ubuntuGet"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>
@@ -37,7 +37,7 @@
         <p>To install Node.js package from npm:</p>
 
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="nodeget1"><code></code></pre>
+            <pre v-highlightjs="nodeget1"><code class="bash"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="nodeget1"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>
