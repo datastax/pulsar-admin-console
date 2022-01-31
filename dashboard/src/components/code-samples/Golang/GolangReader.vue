@@ -76,7 +76,7 @@
             </div>
         </div>
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="simpleReader"><code class="java"></code></pre>
+            <pre v-highlightjs="simpleReader"><code class="golang"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="simpleReader"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>

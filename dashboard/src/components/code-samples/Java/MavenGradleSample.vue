@@ -21,7 +21,7 @@
         <p>If you are using Maven in your project, add this to the &#60;properties&#62; section of your <span class="vue-highlighted-text">pom.xml</span> file:</p>
 
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="pom1"><code></code></pre>
+            <pre v-highlightjs="pom1"><code class="xml"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="pom1"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>
@@ -29,7 +29,7 @@
 
         <p>And add the following to the &#60;dependencies&#62; section:</p>
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="pom2"><code></code></pre>
+            <pre v-highlightjs="pom2"><code class="xml"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="pom2"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>
@@ -37,7 +37,7 @@
         <h5>Gradle</h5>
         <p>If you are using Gradle, add this to your <span class="vue-highlighted-text">build.gradle</span> file:</p>
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="gradle"><code></code></pre>
+            <pre v-highlightjs="gradle"><code class="groovy"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="gradle"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>

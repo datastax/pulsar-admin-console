@@ -38,7 +38,7 @@ import VueFriendlyIframe from 'vue-friendly-iframe'
 import vPage from 'v-page'
 
 // Use highlistjs tomorrow night  style
-import 'highlight.js/styles/tomorrow-night.css'
+import 'highlight.js/styles/tomorrow-night-bright.css'
 
 Vue.use(VueHighlightJS)
 

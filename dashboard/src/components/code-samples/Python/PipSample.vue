@@ -21,7 +21,7 @@
         <p>To do a native install using pip:</p>
 
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="pip1"><code></code></pre>
+            <pre v-highlightjs="pip1"><code class="bash"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="pip1"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>

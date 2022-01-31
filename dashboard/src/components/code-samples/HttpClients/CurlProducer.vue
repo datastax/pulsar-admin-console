@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="simpleProducer"><code class="python"></code></pre>
+            <pre v-highlightjs="simpleProducer"><code class="bash"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="simpleProducer"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>

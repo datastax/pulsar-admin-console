@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="form-group with-icon-right">
-            <pre v-highlightjs="simpleConsumer"><code class="golang"></code></pre>
+            <pre v-highlightjs="simpleConsumer"><code class="bash"></code></pre>
             <i class="fa fa-clipboard icon-right input-icon pointer icon-medium" v-clipboard:copy="simpleConsumer"
                     v-clipboard:success="onCopy" v-clipboard:error="onError">
                     </i>
