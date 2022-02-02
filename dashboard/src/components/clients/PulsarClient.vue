@@ -78,7 +78,7 @@
                             <input id="produce-topic-input"
                             v-model="currentProduceTopic"
                             class="has-value"
-                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                             name="currentProduceTopic"
                             data-vv-as="Produce Topic"
                             />
@@ -93,7 +93,7 @@
                             <input id="subscription-input"
                             v-model="currentSubscription"
                             class="has-value"
-                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                             name="currentSubscription"
                             data-vv-as="Subscription"
                             />
@@ -132,7 +132,7 @@
                             <input id="consume-topic-input"
                             v-model="currentConsumeTopic"
                             class="has-value"
-                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                             name="currentConsumeTopic"
                             data-vv-as="Consume Topic"
                             />
@@ -157,7 +157,7 @@
                                 <input id="key"
                                 v-model="key"
                                 class="has-value"
-                                v-validate="{ required: false, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                v-validate="{ required: false, regex: /^[-=:.\w]*$/  }"
                                 name="key"
                                 data-vv-as="Key"
                                 />

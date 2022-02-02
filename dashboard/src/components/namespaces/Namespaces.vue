@@ -35,13 +35,13 @@
                           name="Namespace Name"
                           ref="namespaceName"
                           v-model="namespaceName"
-                          v-validate="'required|alpha_dash|min:1'"
+                          v-validate="namedEntityValidationRegex()"
                           required
                         />
                         <label class="control-label" for="namespaceName">Namespace Name</label><i class="bar"></i>
                         <small v-show="errors.has('Namespace Name')"
                              class="help text-danger">
-                        {{ errors.first('Namespace Name') }}
+                        {{ errors.first('Namespace Name') ? namedEntityValidationError() : '' }}
                       </small>
                       </div>
                   </div>
