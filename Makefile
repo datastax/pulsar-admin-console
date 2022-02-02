@@ -32,10 +32,10 @@ clean:
 	docker rmi $(PREFIX):$(TAG)
 
 tarball:
-	rm -rf dest/
+	rm -rf pulsar-admin-console-$(TAG)/
 	docker create -ti --name pac-tarball $(PREFIX):$(TAG) sh
-	docker cp pac-tarball:/home/appuser/ dest/
+	docker cp pac-tarball:/home/appuser/ pulsar-admin-console-$(TAG)/
 	docker rm -f pac-tarball
-	tar -czf pulsar-admin-console-$(TAG).tar.gz dest/
-	rm -r dest/
+	tar -czf pulsar-admin-console-$(TAG).tar.gz pulsar-admin-console-$(TAG)/
+	rm -r pulsar-admin-console-$(TAG)/
 	openssl dgst -sha512 pulsar-admin-console-$(TAG).tar.gz
