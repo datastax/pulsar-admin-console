@@ -51,6 +51,14 @@ export default {
       }
     }
   },
+  computed: {
+    namedEntityValidationRegex: function() {
+      return { required: true, regex: /^[-=:.\w]*$/ };
+    },
+    namedEntityValidationError: function() {
+      return 'Name may contain alpha-numeric characters as well as underscores, dashes, equal signs, colons, and periods';
+    },
+  },
   methods: {
     onCopy: function () {
       this.showToast('Copied', this.toastOptionsCopy)
@@ -79,12 +87,6 @@ export default {
         provider = 'Azure'
       }
       return provider
-    },
-    namedEntityValidationRegex () {
-      return { required: true, regex: /^[-=:.\w]*$/ };
-    },
-    namedEntityValidationError () {
-      return 'Name may contain alpha-numeric characters as well as underscores, dashes, equal signs, colons, and periods';
     },
     splitClusterName (dataCenter) {
 
