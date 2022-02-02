@@ -123,5 +123,5 @@ dist
 .pnp.*
 
 # These artifacts are a byproduct of running `make tarball`
-dest/
+pulsar-admin-console-*/**
 pulsar-admin-console-*.tar.gz
