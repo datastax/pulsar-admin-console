@@ -31,13 +31,13 @@
                     name="Tenant Name"
                     ref="tenantName"
                     v-model="tenantName"
-                    v-validate="namedEntityValidationRegex()"
+                    v-validate="namedEntityValidationRegex"
                     required
                   />
                   <label class="control-label" for="tenantName">Tenant Name</label><i class="bar"></i>
                   <small v-show="errors.has('Tenant Name')"
                         class="help text-danger">
-                  {{ errors.first('Tenant Name') ? namedEntityValidationError() : '' }}
+                  {{ errors.first('Tenant Name') ? namedEntityValidationError : '' }}
                 </small>
                 </div>
             </div>
