@@ -80,6 +80,12 @@ export default {
       }
       return provider
     },
+    namedEntityValidationRegex () {
+      return { required: true, regex: /^[-=:.\w]*$/ };
+    },
+    namedEntityValidationError () {
+      return 'Name may contain alpha-numeric characters as well as underscores, dashes, equal signs, colons, and periods';
+    },
     splitClusterName (dataCenter) {
 
       let splitInfo = {

@@ -50,7 +50,7 @@
                                     <input id="topic-input" 
                                     v-model="currentTopic" 
                                     class="has-value" 
-                                    v-validate="{ required: true, regex: /^[-=:.\w]*$/ }"
+                                    v-validate="namedEntityValidationRegex()"
                                     name="currentTopic"
                                     data-vv-as="Produce Topic"
                                     />
