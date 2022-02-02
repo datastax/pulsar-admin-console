@@ -40,7 +40,7 @@
                                     <input v-model="sourceName"
                                             id="sourceadd-name"
                                             name="sourceadd-name"
-                                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                             data-vv-as="Source Name"
                                             placeholder="newSource"/>
                                             <i class="fa fa-times icon-right input-icon pointer"
@@ -310,7 +310,7 @@
                                   <input v-model="outputTopicToAdd"
                                       id="sourceadd-outtopic"
                                       name="sourceadd-intopic"
-                                      v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                      v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                       data-vv-as="Output Topic"
                                       />
                                   <label class="control-label" for="sourceadd-intopic" role="button">Topic</label><i class="bar"></i>

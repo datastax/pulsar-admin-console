@@ -54,7 +54,7 @@
                                     <input id="topic-input"
                                     v-model="currentTopic"
                                     class="has-value"
-                                    v-validate="'required|alpha_dash'"
+                                    v-validate="{ required: true, regex: /^[-=:.\w]*$/ }"
                                     name="currentTopic"
                                     data-vv-as="Produce Topic"
                                     />
@@ -71,7 +71,7 @@
                                     <input id="subscription-input"
                                     v-model="currentSubscription"
                                     class="has-value"
-                                    v-validate="'required|alpha_dash'"
+                                    v-validate="{ required: true, regex: /^[-=:.\w]*$/ }"
                                     name="currentSubscription"
                                     data-vv-as="Subscription"
                                     />

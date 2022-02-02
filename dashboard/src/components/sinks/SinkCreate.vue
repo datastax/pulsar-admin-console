@@ -40,7 +40,7 @@
                                     <input v-model="sinkName"
                                             id="sinkadd-name"
                                             name="sinkadd-name"
-                                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                             data-vv-as="Sink Name"
                                             placeholder="newSink"/>
                                             <i class="fa fa-times icon-right input-icon pointer"
@@ -337,7 +337,7 @@
                                   <input v-model="inputTopicToAdd"
                                       id="sinkadd-intopic"
                                       name="sinkadd-intopic"
-                                      v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                      v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                       data-vv-as="Input Topic"
                                       />
                                   <label class="control-label" for="sinkadd-intopic" role="button">Topic</label><i class="bar"></i>

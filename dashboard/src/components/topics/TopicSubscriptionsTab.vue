@@ -44,13 +44,13 @@
                         name="subscriptionName"
                         ref="subscriptionName"
                         v-model="subToCreate"
-                        v-validate="'required|alpha_dash'"
+                        v-validate="{ required: true, regex: /^[-=:.\w]*$/ }"
                         required
                         />
                         <label class="control-label" for="subscriptionName">Subscription Name</label><i class="bar"></i>
                         <small v-show="errors.has('subscriptionName')"
                             class="help text-danger">
-                        {{ errors.first('subscriptionName') }}
+                        {{ errors.first('subscriptionName') ? 'Subscription name may contain alpha-numeric characters as well as underscores, dashes, equal signs, colons, and periods' : '' }}
                     </small>
                     </div>
                 </div>

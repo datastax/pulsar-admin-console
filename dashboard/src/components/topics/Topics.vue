@@ -47,13 +47,13 @@
                           name="Topic Name"
                           ref="topicName"
                           v-model="createTopicName"
-                          v-validate="'required|alpha_dash'"
+                          v-validate="{ required: true, regex: /^[-=:.\w]*$/ }"
                           required
                         />
                         <label class="control-label" for="topicName">Topic Name</label><i class="bar"></i>
                         <small v-show="errors.has('Topic Name')"
                              class="help text-danger">
-                        {{ errors.first('Topic Name') }}
+                        {{ errors.first('Topic Name') ? 'Topic name may contain alpha-numeric characters as well as underscores, dashes, equal signs, colons, and periods' : '' }}
                       </small>
                       </div>
                   </div>

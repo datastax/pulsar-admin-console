@@ -54,7 +54,7 @@
                                     <div class="input-group">
                                         <input v-model="className"
                                             id="funcadd-classname"
-                                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                             data-vv-as="Class Name"
                                             name="funcadd-classname"
                                             placeholder="class"/>
@@ -80,7 +80,7 @@
                                   <input v-model="inputTopicToAdd"
                                       id="funcadd-intopic"
                                       name="funcadd-intopic"
-                                      v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                      v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                       data-vv-as="Input Topic"
                                       :placeholder="functionName ? functionName +'-input' : 'newFunction-input'"
                                       />
@@ -140,7 +140,7 @@
                                     <input v-model="functionName"
                                             id="funcadd-name"
                                             name="funcadd-name"
-                                            v-validate="{ required: true, regex: /^[a-zA-Z0-9_.-]+$/ }"
+                                            v-validate="{ required: true, regex: /^[-=:.\w]*$/  }"
                                             data-vv-as="Function Name"
                                             placeholder="newFunction"/>
                                             <i class="fa fa-times icon-right input-icon pointer"

@@ -31,13 +31,13 @@
                     name="Tenant Name"
                     ref="tenantName"
                     v-model="tenantName"
-                    v-validate="'required|alpha_dash|min:1'"
+                    v-validate="{ required: true, regex: /^[-=:.\w]*$/ }"
                     required
                   />
                   <label class="control-label" for="tenantName">Tenant Name</label><i class="bar"></i>
                   <small v-show="errors.has('Tenant Name')"
                         class="help text-danger">
-                  {{ errors.first('Tenant Name') }}
+                  {{ errors.first('Tenant Name') ? 'Tenant name may contain alpha-numeric characters as well as underscores, dashes, equal signs, colons, and periods' : '' }}
                 </small>
                 </div>
             </div>
