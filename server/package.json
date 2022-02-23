@@ -31,8 +31,5 @@
     "del": "^5.1.0",
     "fancy-log": "^1.3.3",
     "nodemon": "^2.0.15"
-  },
-  "resolutions": {
-    "minimatch": "3.0.5"
   }
 }
