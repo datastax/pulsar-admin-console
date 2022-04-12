@@ -10,12 +10,12 @@ services:
       - './nginx-test.conf:/etc/nginx/nginx.conf'
       - './localhost.crt:/certs/localhost.crt'
       - './localhost.key:/certs/localhost.key'
-  # dashboard:
-  #   container_name: dashboard 
-  #   image: datastax/pulsar-admin-console
-  #   expose:
-  #     - '80'
-  #   depends_on:
-  #     - nginx
-  #   environment:
-  #     PORT: "80"
+  dashboard:
+    container_name: dashboard 
+    image: datastax/pulsar-admin-console
+    expose:
+      - '80'
+    depends_on:
+      - nginx
+    environment:
+      PORT: "80"

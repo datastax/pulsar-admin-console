@@ -96,64 +96,116 @@
 
     <vuestic-widget>
       <div class="row">
-        <div class="col-md-12">
-          <div slot="body">
-            <div class="row filters-page__filter-bar-container">
+        <div class="col-md-8">
+            <div class="va-row ">
+              <div class="va-row">
+                <div class="flex md4">
+                  <filter-bar
+                  v-model="topicFilter"
+                  class="filters-page__filter-bar"
+                  label="Topic"
+                />
 
-              <filter-bar
-                v-model="topicFilter"
-                class="filters-page__filter-bar"
-                label="Topic"
-              />
-              <vuestic-simple-select
-                class="filters-page__filter-bar"
-                label="Namespace"
-                v-model="namespaceFilter"
-                name="topic-ns-filter-bar"
-                :options="namespacesList"
-              />
-              <vuestic-simple-select
-                class="filters-page__filter-bar"
-                label="Type"
-                v-model="typeFilter"
-                name="topic-type-filter-bar"
-                :options="typesList"
-              />
+                </div>
+                <div class="flex md4">
+                  <vuestic-simple-select
+                  class="filters-page__filter-bar"
+                  label="Namespace"
+                  v-model="namespaceFilter"
+                  name="topic-ns-filter-bar"
+                  :options="namespacesList"
+                />
+                </div>
+                <div class="flex md4">
+                  <vuestic-simple-select
+                  class="filters-page__filter-bar"
+                  label="Type"
+                  v-model="typeFilter"
+                  name="topic-type-filter-bar"
+                  :options="typesList"
+                />
+                </div>
+                
+              
+            
+              
+              </div>
+              <div class="va-row">
+                <div class="flex md6">
+                <vuestic-simple-select
+                  class=""
+                  label="Sort By"
+                  v-model="topicSort"
+                  :clearable=clearable
+                  name="topic-sort-by"
+                  :options="sortProperties"
+                />
+
+                </div>
+                <div class="flex md6">
+                  <vuestic-simple-select
+                    class=""
+                    label="Sort Direction"
+                    v-model="topicSortDir"
+                    :clearable=clearable
+                    name="topic-sort-by"
+                    :options="sortDirList"
+                  />
+
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="filters-page__tags">
-            <vuestic-tag
-              v-if="topicFilter"
-              :name="`Topic: ${ topicFilter }`"
-              removable
-              @remove="topicFilter = ''"
-            />
-            <vuestic-tag
-              v-if="namespaceFilter"
-              :name="`Namespace: ${ namespaceFilter }`"
-              removable
-              @remove="namespaceFilter = ''"
-            />
-             <vuestic-tag
-              v-if="typeFilter"
-              :name="`Type: ${ typeFilter }`"
-              removable
-              @remove="typeFilter = ''"
-            />
-            <span
-              v-if="this.namespaceFilter || this.topicFilter || this.typeFilter"
-              class="filters-page__clear-all-text"
-              @click="clearAll"
-            >
-              Clear all filters
-            </span>
-          </div>
+        
+          
+        </div>
+        <div class="flex md4">
+          <div class="flex md12">
+                <span
+                  v-if="this.namespaceFilter || this.topicFilter || this.typeFilter"
+                  class="filters-page__clear-all-text"
+                  @click="clearAll"
+                >
+                  Clear all filters
+                </span>
+                <vuestic-tag
+                  v-if="topicFilter"
+                  :name="`Topic: ${ topicFilter }`"
+                  removable
+                  @remove="topicFilter = ''"
+                />
+                <vuestic-tag
+                  v-if="namespaceFilter"
+                  :name="`Namespace: ${ namespaceFilter }`"
+                  removable
+                  @remove="namespaceFilter = ''"
+                />
+                <vuestic-tag
+                  v-if="typeFilter"
+                  :name="`Type: ${ typeFilter }`"
+                  removable
+                  @remove="typeFilter = ''"
+                />
+                
+              </div>
+
         </div>
       </div>
     </vuestic-widget>
 
-    <div v-for="topicId in topicsConfig.list" :key="topicId">
-      <vuestic-widget :headerText="topicsConfig.data[topicId] ? topicsConfig.data[topicId].name : 'Unknown' " v-show="showTopic(topicId)" :class="{ globebackground: isGlobal(topicId), partitionbackground: isPartition(topicId)}">
+     <vuestic-widget>
+    <v-page
+          :total-row="totalRow"
+          v-model="currentPage"
+          align="center"
+          :pageSizeMenu="pageSizeMenu"
+          @page-change="pageChange"
+      ></v-page>
+     </vuestic-widget>  
+
+    <!-- {{ topicsConfig.data }} -->
+
+    <div v-for="topicId in topicsList" :key="topicId">
+      <vuestic-widget :headerText="topicsConfig.data[topicId] ? topicsConfig.data[topicId].name : 'Unknown' "  :class="{ globebackground: isGlobal(topicId), partitionbackground: isPartition(topicId)}">
         <div class="va-row" >
           <div class="flex md4">
 
@@ -355,11 +407,18 @@ export default {
       numPartitions: 2,
       required: true,
       clearable: false,
+      clearable: false,
       typesList: [
         'persistent',
         'non-persistent',
         'partitioned'
-      ]
+      ],
+      sortProperties: ["name", "storageSize","producers", "consumers", "subscriptions","inRate", "outRate"],
+      sortDirList: ["Up", "Down"],
+      pageSize: 10,
+      pageSizeMenu: [10, 20, 50, 100],
+      currentPage: 1,
+      totalRow: 0
     }
   },
   mixins: [mixins],
@@ -380,16 +439,83 @@ export default {
       })
       return nsList
     },
+    topicsList () {
+     
+      let returnedTopicsList = []
+
+      let unsortedList = []
+      // Copy list from vuex object
+      Object.assign(unsortedList, this.topicsConfig.list);
+
+      const sortedTopicList = unsortedList.sort((a,b) => {
+                let modifier = 1
+                if(this.topicSortDir === 'Down') modifier = -1
+                let c = ''
+                let d = ''
+                if (this.topicSort === "storageSize") {
+                  c = this.topicStats.data[a]?.stats[this.topicSort]
+                  d = this.topicStats.data[b]?.stats[this.topicSort]
+                } else if (this.topicSort === "name"){
+                  c = this.topicStats.data[a]?.info.url
+                  d = this.topicStats.data[b]?.info.url
+                } else {
+                  c = this.topicStats.data[a]?.info[this.topicSort]
+                  d = this.topicStats.data[b]?.info[this.topicSort]
+                  
+                }
+              
+                // Treat nulls as empty string 
+                if (c===null || c === undefined) c=''
+                if (d===null || d === undefined) d=''
+                if(c < d) return -1 * modifier
+                if(c > d) return 1 * modifier
+                return 0
+            })
+
+      sortedTopicList.forEach(topicId => {
+        if (this.showTopic(topicId)) {
+          returnedTopicsList.push(topicId)
+        } 
+      });
+
+      this.totalRow = returnedTopicsList.length
+
+      return returnedTopicsList.filter((row, index) => {
+                let start = (this.currentPage-1)*this.pageSize;
+                let end = this.currentPage*this.pageSize;
+                if(index >= start && index < end) return true;
+            })
+    },
     topicFilter: {
       set (topic) {
+        this.currentPage = 1
         this.$store.commit('setFilterObject', { key: 'topicTopic', value: topic })
       },
       get () {
         return this.filterObject.topicTopic
       }
     },
+    topicSort: {
+      set (key) {
+        this.currentPage = 1
+        this.$store.commit('setFilterObject', { key: 'topicSortKey', value: key })
+      },
+      get () {
+        return this.filterObject.topicSortKey
+      }
+    },
+    topicSortDir: {
+      set (dir) {
+        this.currentPage = 1
+        this.$store.commit('setFilterObject', { key: 'topicSortDir', value: dir })
+      },
+      get () {
+        return this.filterObject.topicSortDir
+      }
+    },
     namespaceFilter: {
       set (ns) {
+        this.currentPage = 1
         this.$store.commit('setFilterObject', { key: 'topicNamespace', value: ns })
       },
       get () {
@@ -398,6 +524,7 @@ export default {
     },
     typeFilter: {
       set (type) {
+        this.currentPage = 1
         // console.log('Setting filter type to ' + type)
         this.$store.commit('setFilterObject', { key: 'topicType', value: type })
       },
@@ -417,6 +544,29 @@ export default {
   },
   methods: {
 
+    sort (s) {
+        //if s == current sort, reverse
+        if(s === this.topicSort) {
+        this.topicSortDir = this.topicSortDir==='asc'?'desc':'asc';
+        }
+        this.topicSort = s;
+    },
+    addSortClass (field) {
+        let classArray = [ 'sortable']
+        if (this.topicSort === field) {
+            classArray.push('sortField')
+            if (this.topicSortDir === 'desc') {
+                classArray.push('headerSortDown')
+            } else {
+                classArray.push('headerSortUp')
+            }
+        }
+        return classArray
+    },
+    pageChange(pInfo) {
+        this.currentPage = pInfo.pageNumber
+        this.pageSize = pInfo.pageSize
+    },
     clearAll () {
       this.namespaceFilter = ''
       this.topicFilter = ''

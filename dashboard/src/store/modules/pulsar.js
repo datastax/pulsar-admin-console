@@ -92,7 +92,9 @@ const state = {
     sinkNamespace: '',
     sourceSource: '',
     sourceNamespace: '',
-    topicType: ''
+    topicType: '',
+    topicSortKey: 'name',
+    topicSortDir: 'Up'
   }
 }
 
