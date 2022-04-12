@@ -18,10 +18,10 @@
 <template>
   <div class="filters-page">
     <vuestic-widget headerText="Show filters">
-      <div class="row">
+      <!-- <div class="row"> -->
         <div class="col-md-12">
           <div slot="body">
-            <div class="row filters-page__filter-bar-container">
+            <div class="filters-page__filter-bar-container">
               <filter-bar
                 v-model="name"
                 class="filters-page__filter-bar"
@@ -68,7 +68,7 @@
             </span>
           </div>
         </div>
-      </div>
+      <!-- </div> -->
     </vuestic-widget>
     <vuestic-widget>
       <div class="table-responsive">
