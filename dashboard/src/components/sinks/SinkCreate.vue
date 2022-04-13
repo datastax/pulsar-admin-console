@@ -471,6 +471,7 @@ export default {
       userConfig: [],
       userKey: '',
       userValue: '',
+      mode: 'Create',
       inputTopicToAdd: '',
       inputTopicList: [],
       outputSchemaType: '',
@@ -564,7 +565,10 @@ export default {
     }
     // If an id is passed, load that sink info
     if (this.$route.params.id) {
+      this.mode = "Update"
       this.loadSink(this.$route.params.id)
+    } else {
+      this.mode = "Create"
     }
     // this.startAutoSinkUpdate()
   },
@@ -586,11 +590,13 @@ export default {
       if (val) {
         this.className = val.sinkClass
         this.description = val.description
-        this.sinkName = val.name + 'Sink'
-        this.inputTopic = this.sinkName + '-input'
-        this.inputTopicToAdd = this.sinkName + '-input'
         this.currentConfigData = this.configData[val.name]
-        if (this.loadedSinkConfig) {
+        if (this.mode === "Create") {
+          this.sinkName = val.name + 'Sink'
+          this.clearValues()
+        }
+        this.inputTopicToAdd = this.sinkName + '-input'
+        if (this.mode === "Update") {
           console.log('Updating config based on loaded values')
 
           Object.keys(this.loadedSinkConfig).forEach(key => {
@@ -651,9 +657,9 @@ export default {
     loadSink (id) {
       console.log('Loading Sink')
 
-      console.log(`***${id}***`)
-      console.log(this.sinksData)
-      console.log(this.sinksData.data)
+      // console.log(`***${id}***`)
+      // console.log(this.sinksData)
+      // console.log(this.sinksData.data)
       Object.keys(this.sinksData.data).forEach(key => {
         console.log(`***${key}***`)
       })
@@ -712,7 +718,7 @@ export default {
           })
 
           // If we've loads a sinkType, use that
-          if (this.loadedSinkType) {
+          if (this.mode === "Update") {
             this.sinkType = this.builtInSinks.find(o => o.name === this.loadedSinkType)
             this.loadedSinkType = ''
             return
