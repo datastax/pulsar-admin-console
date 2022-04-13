@@ -444,6 +444,7 @@ export default {
       userConfig: [],
       userKey: '',
       userValue: '',
+      mode: "Create",
       outputTopicToAdd: '',
       outputTopicList: [],
       outputSchemaType: '',
@@ -535,7 +536,10 @@ export default {
     }
     // If an id is passed, load that source info
     if (this.$route.params.id) {
+      this.mode = "Update"
       this.loadSource(this.$route.params.id)
+    } else {
+      this.mode = "Create"
     }
     // this.startAutoSourceUpdate()
   },
@@ -558,11 +562,13 @@ export default {
         let configName = val.name
         this.className = val.sourceClass
         this.description = val.description
-        this.sourceName = val.name + 'Source'
-        this.outputTopic = this.sourceName + '-output'
-        this.outputTopicToAdd = this.sourceName + '-output'
         this.currentConfigData = this.configData[configName]
-        if (this.loadedSourceConfig) {
+        if (this.mode === "Create") {
+          this.sourceName = val.name + 'Source'
+          this.clearValues()
+        }
+        this.outputTopicToAdd = this.sourceName + '-output'
+        if (this.mode === "Update") {
           console.log('Updating config based on loaded values')
 
           Object.keys(this.loadedSourceConfig).forEach(key => {
@@ -676,7 +682,7 @@ export default {
           })
 
           // If we've loads a sourceType, use that
-          if (this.loadedSourceType) {
+          if (this.mode === "Update") {
             this.sourceType = this.builtInSources.find(o => o.name === this.loadedSourceType)
             this.loadedSourceType = ''
             return
