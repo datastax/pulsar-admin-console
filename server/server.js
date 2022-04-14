@@ -25,7 +25,7 @@ const path = require('path');
 const randomId = require('random-id');
 const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
-cfg.config('../dashboard/dist/index.html');
+cfg.config();
 cfg.L.info('server config ', cfg.dashboardConfig)
 
 let k8s = ''
@@ -55,6 +55,32 @@ app.use(express.static(path.join(__dirname, '../dashboard/dist')));
 app.get('/api/users', (req, res) => {
   cfg.L.info('api/users called!!!!!!!')
   res.json(users);
+});
+
+app.post('/api/v1/auth/pulsar-token', async (req, res) => {
+  cfg.L.info('api/v1/auth/pulsar-token called!!!!!!!')
+  
+  const username = req.body.username;
+  const password = req.body.password;
+  try {
+    if (username && password) {
+      let result = await k8s.authenticate(username, password);
+      if (result) {
+        const retVal = {
+          admin_token: cfg.dashboardConfig.admin_token,
+          client_token: cfg.dashboardConfig.client_token
+        }
+        res.json(retVal);
+        return;
+      }
+    }
+    res.status(401).send("incorrect credentials");
+  } catch (e) {
+    cfg.L.error(e);
+    res.status(401).send("login exception");
+  }
+
+
 });
 
 app.post('/api/user', (req, res) => {

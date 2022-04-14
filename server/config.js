@@ -50,42 +50,20 @@ const reconcileConfig = (obj) => {
     }
 }
 
-const config = (indexHtml) => {
+const config = () => {
     reconcileConfig(serverConfig)
     reconcileConfig(dashboardConfig)
-    generateIndexHtml(indexHtml)
+
+    if (dashboardConfig.token_path && (dashboardConfig.auth_mode === 'none' || dashboardConfig.auth_mode === 'k8s')) {
+        console.log("Using override for token from topic_path")
+        const token = fs.readFileSync(dashboardConfig.token_path, "utf8")
+        dashboardConfig.admin_token = token.trim()
+        dashboardConfig.client_token = token.trim()
+    }
+
 }
 const fs = require('fs');
 
-const generateIndexHtml = (indexHtml) => {
-
-    let overrideConfig = {}
-
-    if (dashboardConfig.token_path && (dashboardConfig.auth_mode === 'none' || dashboardConfig.auth_mode === 'k8s')) {
-        
-        const token = fs.readFileSync(dashboardConfig.token_path, "utf8")
-        overrideConfig.admin_token = token.trim()
-        overrideConfig.client_token = token.trim()
-        
-    }
-
-    const data = '<div id=wp-vue-app></div><script type=\'text/javascript\' id=\'chunk-index-js-extra\'> /* <![CDATA[ */'
-           + 'let overrideConf = ' + JSON.stringify(overrideConfig)
-           + '/* ]]> */</script>';
-
-    fs.readFile(indexHtml+'.template', 'utf8', function (err,fileData) {
-        if (err) {
-            L.error(err);
-            return
-        }
-        var result = fileData.replace(/<div id="wp-vue-app"><\/div>/g, data);
-        
-        fs.writeFile(indexHtml, result, 'utf8', function (err) {
-            if (err) return console.log(err);
-        });
-    });
-    
-}
 
 module.exports = {
     L,
