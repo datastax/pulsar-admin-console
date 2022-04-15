@@ -416,7 +416,7 @@ export default {
       let token = ''
         if (this.authMode === 'k8s') {
           token = this.adminToken;
-        } else if (this.authMode === 'openidconnect')  {
+        } else {
           token = this.clientToken;
         } 
 
