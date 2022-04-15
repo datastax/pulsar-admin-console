@@ -23,7 +23,7 @@ export default() => {
   let token = ''
   if (store.getters.authMode === 'k8s') {
     token = store.getters.adminToken;
-  } else if (store.getters.authMode === 'openidconnect')  {
+  } else {
     token = store.getters.clientToken;
   } 
 
