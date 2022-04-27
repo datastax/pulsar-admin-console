@@ -25,10 +25,9 @@
                           v-on:ok="createNamespace()"
                           :okDisabled="!isFormValid"
                           :cancelText="'modal.cancel' | translate">
-            <div v-if="runningEnv ==='k8s'" slot="title">Create Namespace</div>              
-            <div v-else slot="title">Create Namespace ({{maxNamespaces - availableNamespaces}} of {{maxNamespaces}} used)</div>
+            <div slot="title">Create Namespace</div>
             <div>
-                <fieldset v-if="runningEnv === 'k8s' || availableNamespaces > 0">
+                <fieldset>
                   <div class="form-group">
                       <div class="input-group">
                         <input id="namespaceName"
@@ -46,7 +45,6 @@
                       </div>
                   </div>
                 </fieldset>
-                <p v-else>Sorry, you cannot create more namespaces with this plan. Please upgrade your plan.</p>
             </div>
           </vuestic-modal>
           <div
@@ -211,7 +209,6 @@ export default {
       required: true,
       clearable: false,
       namespaceName: '',
-      maxNamespaces: 0
     }
   },
   mixins: [mixins],
@@ -227,18 +224,6 @@ export default {
     isFormValid () {
       return Object.keys(this.formFields).every(key => this.formFields[key].valid)
     },
-    availableNamespaces () {
-      let avail = this.maxNamespaces
-      this.namespacesConfig.list.forEach(ns => {
-        if (!ns.name.includes('local-') && !ns.name.includes('worldwide')) {
-          avail = avail - 1
-        }
-      })
-      if (avail < 0) {
-        avail = 0
-      }
-      return avail
-    }
 
   },
   beforeDestroy () {
@@ -294,11 +279,6 @@ export default {
       this.$refs.namespaceModal.open()
     },
     async createNamespace () {
-      if (this.runningEnv ==="web" && this.availableNamespaces < 1) {
-        this.errorText = `Creating namespace: not available namespaces left (${this.availableNamespaces})`
-        this.$refs.alert.showAlert()
-        return
-      }
       try {
         await ApiService.createNamespace(this.activeCluster, this.tenant + "/" + this.namespaceName)
 
