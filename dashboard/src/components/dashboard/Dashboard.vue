@@ -244,11 +244,11 @@ export default {
         }
         return "pulsar://localhost:6650"
         
-      } else if (type === 'ws'){
+      } else if (type === 'ws') {
         if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_ws) {
             return this.clusterInfo.info[cluster].host_override_ws
         }
-        return "ws://localshost:8080"
+        return "ws://localhost:8080"
 
       } else if (type === 'http') {
         if (this.clusterInfo.info[cluster] && this.clusterInfo.info[cluster].host_override_http) {
