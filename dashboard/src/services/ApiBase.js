@@ -29,14 +29,18 @@ export default() => {
     token = store.getters.clientToken;
   } 
 
-  //TODO: FixME
+  const headers = {
+    'Accept': 'application/json',
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  };
+
   return axios.create({
     baseURL: store.getters.apiBaseUrl,
     withCredentials: false,
     timeout: 4500,
-    headers: {
-      'Accept': 'application/json',
-      // 'Authorization': `Bearer ${token}`
-    }
+    headers,
   })
 }
