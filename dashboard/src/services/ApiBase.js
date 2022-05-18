@@ -28,14 +28,19 @@ export default() => {
   } else {
     token = store.getters.clientToken;
   } 
-  
+
+  const headers = {
+    'Accept': 'application/json',
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  };
+
   return axios.create({
     baseURL: store.getters.apiBaseUrl,
     withCredentials: false,
     timeout: 4500,
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+    headers,
   })
 }

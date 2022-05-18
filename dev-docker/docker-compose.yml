@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  nginx:
+    image: 'nginx'
+    ports:
+      - '8001:443'
+      - '8002:80'
+    volumes:
+      - './nginx.conf:/etc/nginx/nginx.conf'
+      - './localhost.crt:/certs/localhost.crt'
+      - './localhost.key:/certs/localhost.key'
+    depends_on:
+      - dashboard
+  dashboard:
+    container_name: dashboard 
+    image: datastax/pulsar-admin-console
+    expose:
+      - '80'
+    environment:
+      PORT: "80"
