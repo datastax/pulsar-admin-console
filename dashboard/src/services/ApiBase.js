@@ -28,14 +28,15 @@ export default() => {
   } else {
     token = store.getters.clientToken;
   } 
-  
+
+  //TODO: FixME
   return axios.create({
     baseURL: store.getters.apiBaseUrl,
     withCredentials: false,
     timeout: 4500,
     headers: {
       'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`
+      // 'Authorization': `Bearer ${token}`
     }
   })
 }
