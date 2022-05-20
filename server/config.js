@@ -38,6 +38,8 @@ let dashboardConfig = {
 
 let serverConfig = {
     'PORT': '6454',
+    'PULSAR_URL': 'http://localhost:8080',
+    'WEBSOCKET_URL': 'https://websocket.example.com:8500',
     'LOG_LEVEL': 'info',
     'K8S_NAMESPACE': 'pulsar'
 }

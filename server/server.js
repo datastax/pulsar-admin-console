@@ -19,6 +19,7 @@ const express = require('express');
 'use strict';
 
 const https = require('https');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const watch = require('./file-watch.js');
 const fs = require('fs');
 const path = require('path');
@@ -27,6 +28,7 @@ const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
+require('dotenv').config()
 
 let k8s = ''
 
@@ -41,6 +43,38 @@ const app = express(),
 process.env['NODE_ENV']='production'
 // place holder for the data
 const users = [];
+
+app.use('/ws/', createProxyMiddleware({
+  target: cfg.serverConfig.WEBSOCKET_URL,
+  'option.ws': true,
+}));
+
+app.use('/api/v1/standalone/functions', createProxyMiddleware({
+  target: cfg.serverConfig.PULSAR_URL,
+  pathRewrite: {'^/api/v1/standalone/functions/': '/admin/v3/functions/'},
+  'option.headers': {Accept: 'application/json/'},
+  'option.toProxy': true
+}));
+
+app.use('/api/v1/standalone/sinks', createProxyMiddleware({
+  target: cfg.serverConfig.PULSAR_URL,
+  pathRewrite: {'^/api/v1/standalone/sinks/': '/admin/v3/sinks/'},
+  'option.headers': {Accept: 'application/json/'},
+  'option.toProxy': true
+}));
+
+app.use('/api/v1/standalone/sources', createProxyMiddleware({
+  target: cfg.serverConfig.PULSAR_URL,
+  pathRewrite: {'^/api/v1/standalone/sources/': '/admin/v3/sources/'},
+  'option.headers': {Accept: 'application/json/'},
+  'option.toProxy': true
+}));
+
+app.use('/api/v1/standalone', createProxyMiddleware({
+  target: 'http://localhost:8080',
+  pathRewrite: {'^/api/v1/standalone/': '/admin/v2/'},
+  'option.toProxy': true
+}))
 
 // app.use(require('cors'));
 app.use(bodyParser.json());
@@ -115,7 +149,7 @@ app.get('/login', (req,res) => {
   // res.sendFile(path.join(__dirname, '../dashboard/dist/index.html'));
   res.sendFile(path.join(__dirname + '/login.html'));
 });
-
+console.log(process.env) 
 const caPath = process.env.CA_PATH || '';
 const certPath = process.env.CERT_PATH || '';
 const keyPath = process.env.KEY_PATH || '';
