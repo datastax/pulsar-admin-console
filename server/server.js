@@ -149,7 +149,7 @@ app.get('/login', (req,res) => {
   // res.sendFile(path.join(__dirname, '../dashboard/dist/index.html'));
   res.sendFile(path.join(__dirname + '/login.html'));
 });
-console.log(process.env) 
+
 const caPath = process.env.CA_PATH || '';
 const certPath = process.env.CERT_PATH || '';
 const keyPath = process.env.KEY_PATH || '';
