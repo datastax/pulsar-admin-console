@@ -16,6 +16,25 @@
 //
 
 var globalConf = {
+    "auth_mode": "none",
+    "token_path": "",
+    "token_secret": "",
+    "server_config": {
+        "port": "6454",
+        "pulsar_url": "http://localhost:8080",
+        "websocket_url": "https://websocket.example.com:8500",
+        "log_level": "info",
+        "k8s_namespace": "pulsar",
+    },
+    "ssl": {
+        "ca_path": "",
+        "cert_path": "",
+        "key_path": "",
+    },
+    "kubernetes": {
+        "kubernetes_service_host": "",
+        "kubernetese_service_port": "",
+    },
     "template_directory_uri": "",
     "ajax_url": "",
     "rest_url": "",
@@ -59,11 +78,13 @@ var globalConf = {
     "clients_disabled": "false",
     "running_env": "k8s",
     "use_token_list": "false",
-    "auth_mode": "none",
     "oauth_client_id": "",
     "host_overrides": {
         "pulsar": "http://localhost:6650",
         "ws": "ws://localhost:8080",
         "http": "http://localhost:8964" 
-    }
+    },
+    
 }
+
+module.exports = { globalConf };
