@@ -19,16 +19,21 @@ const express = require('express');
 'use strict';
 
 const https = require('https');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const watch = require('./file-watch.js');
 const fs = require('fs');
 const path = require('path');
 const randomId = require('random-id');
 const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
+const { globalConf } = require('../dashboard/public/config.js')
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
+require('dotenv').config()
+
 
 let k8s = ''
+const cluster = globalConf.home_cluster;
 
 if (cfg.dashboardConfig.auth_mode === "k8s") {
   k8s = require('./k8s.js')
@@ -41,6 +46,47 @@ const app = express(),
 process.env['NODE_ENV']='production'
 // place holder for the data
 const users = [];
+
+app.use('/ws/', createProxyMiddleware({
+  target: globalConf.server_config.websocket_url,
+  'option.ws': true,
+}));
+
+const connectorPathRewrite = (path, req) => {
+  return path.replace(`/api/v1/${cluster}/`, '/admin/v3/')
+}
+
+const rootPathRewrite = (path, req) => {
+  return path.replace(`/api/v1/${cluster}/`, '/admin/v2/')
+}
+
+app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
+  target: globalConf.server_config.pulsar_url,
+  pathRewrite: connectorPathRewrite,
+  'option.headers': {Accept: 'application/json/'},
+  'option.toProxy': true
+}));
+
+app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
+  target: globalConf.server_config.pulsar_url,
+  pathRewrite: connectorPathRewrite,
+  'option.headers': {Accept: 'application/json/'},
+  'option.toProxy': true
+}));
+
+app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
+  target: globalConf.server_config.pulsar_url,
+  pathRewrite: connectorPathRewrite,
+  'option.headers': {Accept: 'application/json/'},
+  'option.toProxy': true
+}));
+
+app.use(`/api/v1/${cluster}`, createProxyMiddleware({
+  target: globalConf.server_config.pulsar_url,
+  pathRewrite: rootPathRewrite,
+  'option.toProxy': true
+}))
+
 
 // app.use(require('cors'));
 app.use(bodyParser.json());
@@ -72,7 +118,7 @@ app.post('/api/v1/auth/token', async (req, res) => {
     if (username && password) {
       let result = await k8s.authenticate(username, password);
       if (result) {
-        const secret = process.env.TOKEN_SECRET || "default-secret"
+        const secret = process.env.TOKEN_SECRET || globalConf.token_secret || "default-secret"
         // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
         res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
         return;
@@ -116,9 +162,9 @@ app.get('/login', (req,res) => {
   res.sendFile(path.join(__dirname + '/login.html'));
 });
 
-const caPath = process.env.CA_PATH || '';
-const certPath = process.env.CERT_PATH || '';
-const keyPath = process.env.KEY_PATH || '';
+const caPath = process.env.CA_PATH || globalConf.ssl.ca_path || '';
+const certPath = process.env.CERT_PATH || globalConf.ssl.cert_path || '';
+const keyPath = process.env.KEY_PATH || globalConf.ssl.key_path || '';
 if (caPath != '' && certPath != '' && keyPath != '') {
   const options = {
     ca: [fs.readFileSync(caPath)],

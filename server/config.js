@@ -20,9 +20,10 @@
  * a logger
  */
 const { createLogger, format, transports } = require('winston');
+const { globalConf } = require('../dashboard/public/config.js')
 
 const L = createLogger({
-    level: process.env.LOG_LEVEL || 'info',
+    level: process.env.LOG_LEVEL || globalConf.server_config.log_level || 'info',
     format: format.combine(format.timestamp(), format.colorize(), format.simple() ),
     transports: [
         new transports.Console({})
@@ -32,14 +33,14 @@ const L = createLogger({
  * All dashboard and node server config is sourced from environment variables at runtime 
  **/
 let dashboardConfig = {
-    'token_path': '',
-    'auth_mode': 'none'
+    'token_path': globalConf.token_path,
+    'auth_mode': globalConf.auth_mode,
 }
 
 let serverConfig = {
-    'PORT': '6454',
-    'LOG_LEVEL': 'info',
-    'K8S_NAMESPACE': 'pulsar'
+    'PORT': globalConf.server_config.port,
+    'LOG_LEVEL': globalConf.server_config.log_level,
+    'K8S_NAMESPACE': globalConf.server_config.k8s_namespace
 }
 
 const reconcileConfig = (obj) => {

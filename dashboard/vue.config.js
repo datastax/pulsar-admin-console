@@ -64,7 +64,7 @@ module.exports = {
       hot: true,
       proxy: {
         '/api/*': { 
-          target: 'http://localhost:8002',
+          target: 'http://localhost:6454',
           secure: false,
           changeOrigin: true
         },

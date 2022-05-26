@@ -25,6 +25,7 @@ const fs = require('fs');
 const K8sClient = require('kubernetes-client').Client;
 const Request = require('kubernetes-client/backends/request');
 const config = require('kubernetes-client/backends/request').config;
+const { globalConf } = require('../dashboard/public/config.js')
 const kubeConfigFile = process.env.HOME + '/.kube/config';
 
 const secretPrefix = 'dashboard-user-'
@@ -36,7 +37,10 @@ if (fs.existsSync(kubeConfigFile)) {
     config: config.fromKubeconfig(),
     version: '1.13'
   }
-} else if (process.env.KUBERNETES_SERVICE_HOST != '' && process.env.KUBERNETES_SERVICE_PORT != '') {
+} else if (
+  (process.env.KUBERNETES_SERVICE_HOST != '' || globalConf.kubernetes.kubernetes_service_host != '') &&
+  (process.env.KUBERNETES_SERVICE_PORT != '' || globalConf.kubernetes.kubernetese_service_port != '')
+) {
   k8sClientConfig = new Request(Request.config.getInCluster()); 
   cfg.L.info('set up kubernetes in-cluster access');
 } else {
