@@ -63,7 +63,7 @@ const rootPathRewrite = (path, req) => {
 
 // broker/load-report handler
 app.use('/api/v1/brokerPath/', (req, res, next) => {
-  const broker = req.url.replaceAll('/', '');
+  const broker = req.url.replace('/', '');
   const brokerTarget = `http://${broker}/admin/v2/broker-stats/load-report`;
 
   axios({
