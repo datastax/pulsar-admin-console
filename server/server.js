@@ -66,11 +66,14 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
   const broker = req.url.replace('/', '');
   const brokerTarget = `http://${broker}/admin/v2/broker-stats/load-report`;
 
+  const headers = {};
+  if (req.url.authorization) {
+    headers.Authorization = req.url.authorization
+  }
+
   axios({
     url: brokerTarget,
-    headers: {
-      'Authorization': req.headers.authorization,
-    }
+    headers
   }).then((resp) => {
     res.send(resp.data)
   }).catch((error) => {
