@@ -73,9 +73,9 @@
                                     </i>
                             </div>
                         </div>
-                        <div v-if="isAdminUser" class="flex md6">
+                        <!-- <div v-if="isAdminUser" class="flex md6">
                             <button class="btn btn-micor" @click="openTokenModal()">Create New Token</button>
-                        </div>
+                        </div> -->
 
                 <h5>CA Certificate</h5>
 

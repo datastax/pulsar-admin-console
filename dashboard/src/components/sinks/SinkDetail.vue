@@ -105,7 +105,7 @@ export default {
         if (this.sinksData.status[this.$route.params.id]) {
           tabNames.push(this.$t('sinkDetail.tabs.instances'))
         }
-        tabNames.push(this.$t('sinkDetail.tabs.logs'))
+        // tabNames.push(this.$t('sinkDetail.tabs.logs'))
       }
       return tabNames
     },

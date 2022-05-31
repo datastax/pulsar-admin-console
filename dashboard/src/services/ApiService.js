@@ -79,9 +79,13 @@ export default {
     const response = ApiBaseV2().get(`${cluster}/br/stats/topics/${tenant}`)
     return response
   },
-  getBrokerLoadReport (cluster) {
-    const response = ApiBaseV2().get(`${cluster}/broker-stats/load-report`)
-    return response
+  getActiveBrokersList (cluster) {
+    const response = ApiBase().get(`${cluster}/brokers/${cluster}`);
+    return response;
+  },
+  getBrokerLoadReport (broker) {
+    const response = ApiBase().get(`brokerPath/${broker}`);
+    return response;
   },
   getFunctionLogs (cluster, sourcePath, backPos, forwardPos, instance = 0) {
     if (backPos > 0) {

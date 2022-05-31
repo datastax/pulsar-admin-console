@@ -27,6 +27,7 @@ const randomId = require('random-id');
 const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
 const { globalConf } = require('../dashboard/public/config.js')
+const axios = require('axios');
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
 require('dotenv').config()
@@ -60,6 +61,26 @@ const rootPathRewrite = (path, req) => {
   return path.replace(`/api/v1/${cluster}/`, '/admin/v2/')
 }
 
+// broker/load-report handler
+app.use('/api/v1/brokerPath/', (req, res, next) => {
+  const broker = req.url.replace('/', '');
+  const brokerTarget = `http://${broker}/admin/v2/broker-stats/load-report`;
+
+  const headers = {};
+  if (req.url.authorization) {
+    headers.Authorization = req.url.authorization
+  }
+
+  axios({
+    url: brokerTarget,
+    headers
+  }).then((resp) => {
+    res.send(resp.data)
+  }).catch((error) => {
+    console.error(error)
+  })
+})
+
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
@@ -84,11 +105,9 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
-  'option.toProxy': true
+  'option.toProxy': true,
 }))
 
-
-// app.use(require('cors'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({

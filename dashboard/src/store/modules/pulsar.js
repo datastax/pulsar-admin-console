@@ -1569,15 +1569,24 @@ const actions = {
   },
   async getBrokerLoadReport ({ commit, state }) {
     try {
-      const response = await ApiService.getBrokerLoadReport(state.activeCluster)
+      const response = await ApiService.getActiveBrokersList(state.activeCluster)
+      const brokerList = response.data;
+      let brokerLoadData = {};
 
-      if (response) {
-        // console.log(response.data.data)
+      if (Array.isArray(brokerList)) {
+        let brokerStats;
 
-        let brokerLoadData = {}
-        response.data.data.forEach(brokerObj => {
-          brokerLoadData[brokerObj.broker] = brokerObj
-        })
+        brokerList.forEach(async (broker) => {
+          try {
+            brokerStats = await ApiService.getBrokerLoadReport(broker);
+            brokerLoadData = {
+              ...brokerLoadData,
+              [broker]: {...brokerStats.data},
+            }
+          } catch (error) {
+            console.error(error)
+          }
+        }) 
 
         commit('updateBrokerLoadData', brokerLoadData)
       }

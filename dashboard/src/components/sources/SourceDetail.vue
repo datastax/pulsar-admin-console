@@ -105,7 +105,7 @@ export default {
         if (this.sourcesData.status[this.$route.params.id]) {
           tabNames.push(this.$t('sourceDetail.tabs.instances'))
         }
-        tabNames.push(this.$t('sourceDetail.tabs.logs'))
+        // tabNames.push(this.$t('sourceDetail.tabs.logs'))
       }
 
       return tabNames
