@@ -99,7 +99,7 @@ export default {
         if (this.functionsData.status[this.$route.params.id]) {
           tabNames.push(this.$t('functionDetail.tabs.instances'))
         }
-        tabNames.push(this.$t('functionDetail.tabs.logs'))
+        // tabNames.push(this.$t('functionDetail.tabs.logs'))
       }
       return tabNames
     },
