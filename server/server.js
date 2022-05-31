@@ -68,6 +68,9 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
 
   axios({
     url: brokerTarget,
+    headers: {
+      'Authorization': req.headers.authorization,
+    }
   }).then((resp) => {
     res.send(resp.data)
   }).catch((error) => {
