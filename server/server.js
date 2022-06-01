@@ -83,17 +83,18 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
 
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
-  if (proxyRes.headers.location) {
-    console.log(proxyRes.headers)
-
-    const headers = {};
+  if (proxyRes?.headers?.location) {
+    const headers = req.headers;
+    const body = req.body;
     if (req.headers.authorization) {
       headers.Authorization = req.headers.authorization
     }
 
     axios({
       url: proxyRes.headers.location,
-      headers
+      headers,
+      method: req.method,
+      data: body
     }).then((resp) => {
       res.send(resp.data)
     }).catch((error) => {
@@ -107,30 +108,32 @@ const onProxyRes = (proxyRes, req, res) => {
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  followRedirects: true,
+  onProxyRes,
   secure: false,
+  selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  followRedirects: true,
+  onProxyRes,
   secure: false,
+  selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  followRedirects: true,
+  onProxyRes,
   secure: false,
+  selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
-  followRedirects: true,
-  secure: false,
   onProxyRes,
+  secure: false,
   selfHandleResponse: true
 }))
 
