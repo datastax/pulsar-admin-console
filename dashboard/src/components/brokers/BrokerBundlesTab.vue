@@ -57,7 +57,7 @@
                         <div class="flex md3">
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input v-model="this.brokerLoadData[this.$route.params.id].data.numBundles" id="num-bundles" name="num-bundles"
+                                    <input v-model="this.brokerLoadData[this.$route.params.id].numBundles" id="num-bundles" name="num-bundles"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="numBunles" role="button">Number of Bundles</label><i class="bar"></i>
                                 </div>
@@ -152,7 +152,7 @@ export default {
     },
     sortedList () {
 
-      const brokerDataList =  this.brokerLoadData[this.$route.params.id].data.bundleStats
+      const brokerDataList =  this.brokerLoadData[this.$route.params.id].bundleStats
       console.log("Broker data List")
       console.log(brokerDataList)
 

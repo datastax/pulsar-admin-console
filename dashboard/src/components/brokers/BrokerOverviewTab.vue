@@ -30,42 +30,42 @@
                         <div class="flex md4">
                           <div class="form-group">
                                 <div class="input-group">
-                                    <input :value="this.brokerLoadData[this.$route.params.id].data.brokerVersionString" id="broker-ver" name="broker-ver"
+                                    <input :value="this.brokerLoadData[this.$route.params.id].brokerVersionString" id="broker-ver" name="broker-ver"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="broker-ver" role="button">Broker Version</label><i class="bar"></i>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input :value="this.brokerLoadData[this.$route.params.id].data.bandwidthIn.limit | humanBytes" id="bw-in-limit" name="bw-in-limit"
+                                    <input :value="this.brokerLoadData[this.$route.params.id].bandwidthIn.limit | humanBytes" id="bw-in-limit" name="bw-in-limit"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="bw-in-limit" role="button">Bandwidth In Limit</label><i class="bar"></i>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input :value="this.brokerLoadData[this.$route.params.id].data.bandwidthOut.limit | humanBytes" id="bw-out-limit" name="bw-out-limit"
+                                    <input :value="this.brokerLoadData[this.$route.params.id].bandwidthOut.limit | humanBytes" id="bw-out-limit" name="bw-out-limit"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="bw-out-limit" role="button">Bandwidth Out Limit</label><i class="bar"></i>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input :value="this.brokerLoadData[this.$route.params.id].data.cpu.limit + '%'" id="cpu-limit" name="cpu-limit"
+                                    <input :value="this.brokerLoadData[this.$route.params.id].cpu.limit + '%'" id="cpu-limit" name="cpu-limit"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="cpu-limit" role="button">CPU Limit</label><i class="bar"></i>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input :value="this.brokerLoadData[this.$route.params.id].data.memory.limit * 1000 * 1000| humanBytes" id="mem-limit" name="mem-limit"
+                                    <input :value="this.brokerLoadData[this.$route.params.id].memory.limit * 1000 * 1000| humanBytes" id="mem-limit" name="mem-limit"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="mem-limit" role="button">Memory Limit</label><i class="bar"></i>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input :value="this.brokerLoadData[this.$route.params.id].data.directMemory.limit *1000 *1000 | humanBytes" id="dir-mem-limit" name="dir-mem-limit"
+                                    <input :value="this.brokerLoadData[this.$route.params.id].directMemory.limit *1000 *1000 | humanBytes" id="dir-mem-limit" name="dir-mem-limit"
                                     class="has-value" placeholder="" readonly />
                                     <label class="control-label" for="dir-mem-limit" role="button">Direct Memory Limit</label><i class="bar"></i>
                                 </div>
@@ -84,12 +84,12 @@
                     <div class="info-widget-inner has-chart">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[this.$route.params.id].data.cpu.usage | numberSeparate }}%
+                          {{ brokerLoadData[this.$route.params.id].cpu.usage | numberSeparate }}%
                         </div>
                         <div class="stats-title">CPU</div>
                       </div>
                       <div class="chart-container">
-                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].data.cpu.usage/brokerLoadData[this.$route.params.id].data.cpu.limit * 100)" :animated="animated" theme="Primary"
+                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].cpu.usage/brokerLoadData[this.$route.params.id].cpu.limit * 100)" :animated="animated" theme="Primary"
                                               backgroundTheme="White"/>
                       </div>
                     </div>
@@ -101,12 +101,12 @@
                     <div class="info-widget-inner has-chart">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[this.$route.params.id].data.memory.usage * 1000 * 1000| humanBytes }}
+                          {{ brokerLoadData[this.$route.params.id].memory.usage * 1000 * 1000| humanBytes }}
                         </div>
                         <div class="stats-title">Memory</div>
                       </div>
                       <div class="chart-container">
-                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].data.memory.usage/brokerLoadData[this.$route.params.id].data.memory.limit * 100)" :animated="animated" theme="Primary"
+                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].memory.usage/brokerLoadData[this.$route.params.id].memory.limit * 100)" :animated="animated" theme="Primary"
                                               backgroundTheme="White"/>
                       </div>
                     </div>
@@ -119,12 +119,12 @@
                     <div class="info-widget-inner has-chart">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[this.$route.params.id].data.directMemory.usage * 1000 * 1000 | humanBytes }}
+                          {{ brokerLoadData[this.$route.params.id].directMemory.usage * 1000 * 1000 | humanBytes }}
                         </div>
                         <div class="stats-title">Direct Memory</div>
                       </div>
                       <div class="chart-container">
-                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].data.directMemory.usage/brokerLoadData[this.$route.params.id].data.directMemory.limit * 100)" :animated="animated" theme="Primary"
+                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].directMemory.usage/brokerLoadData[this.$route.params.id].directMemory.limit * 100)" :animated="animated" theme="Primary"
                                               backgroundTheme="White"/>
                       </div>
                     </div>
@@ -135,12 +135,12 @@
                     <div class="info-widget-inner has-chart">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[this.$route.params.id].data.bandwidthIn.usage | humanBytes }}
+                          {{ brokerLoadData[this.$route.params.id].bandwidthIn.usage | humanBytes }}
                         </div>
                         <div class="stats-title">In (/s) </div>
                       </div>
                       <div class="chart-container">
-                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].data.bandwidthIn.usage/brokerLoadData[this.$route.params.id].data.bandwidthIn.limit * 100)" :animated="animated" theme="Primary"
+                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].bandwidthIn.usage/brokerLoadData[this.$route.params.id].bandwidthIn.limit * 100)" :animated="animated" theme="Primary"
                                               backgroundTheme="White"/>
                       </div>
                     </div>
@@ -152,12 +152,12 @@
                     <div class="info-widget-inner has-chart">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[this.$route.params.id].data.bandwidthOut.usage | humanBytes }}
+                          {{ brokerLoadData[this.$route.params.id].bandwidthOut.usage | humanBytes }}
                         </div>
                         <div class="stats-title">Out (/s) </div>
                       </div>
                       <div class="chart-container">
-                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].data.bandwidthOut.usage/brokerLoadData[this.$route.params.id].data.bandwidthOut.limit * 100)" :animated="animated" theme="Primary"
+                        <vuestic-progress-bar type="vertical" :value="Math.round(brokerLoadData[this.$route.params.id].bandwidthOut.usage/brokerLoadData[this.$route.params.id].bandwidthOut.limit * 100)" :animated="animated" theme="Primary"
                                               backgroundTheme="White"/>
                       </div>
                     </div>
@@ -178,7 +178,7 @@
                         <div class="info-widget-inner">
                           <div class="stats">
                             <div class="stats-number">
-                              {{ brokerLoadData[this.$route.params.id].data.numProducers}}
+                              {{ brokerLoadData[this.$route.params.id].numProducers}}
                             </div>
                             <div class="stats-title">Producers</div>
                           </div>
@@ -188,7 +188,7 @@
                       <div class="info-widget-inner">
                         <div class="stats">
                           <div class="stats-number">
-                            {{ brokerLoadData[this.$route.params.id].data.numBundles}}
+                            {{ brokerLoadData[this.$route.params.id].numBundles}}
                           </div>
                           <div class="stats-title">Bundles</div>
                         </div>
@@ -200,7 +200,7 @@
                       <div class="info-widget-inner">
                         <div class="stats">
                           <div class="stats-number">
-                            {{ brokerLoadData[this.$route.params.id].data.numConsumers}}
+                            {{ brokerLoadData[this.$route.params.id].numConsumers}}
                           </div>
                           <div class="stats-title">Consumers</div>
                         </div>
@@ -214,7 +214,7 @@
                 <div class="info-widget-inner">
                   <div class="stats">
                     <div class="stats-number">
-                      {{ brokerLoadData[this.$route.params.id].data.msgRateIn |  numberSeparate()}}
+                      {{ brokerLoadData[this.$route.params.id].msgRateIn |  numberSeparate()}}
                     </div>
                     <div class="stats-title">Rate In (msg/s)</div>
                   </div>
@@ -224,7 +224,7 @@
               <div class="info-widget-inner">
                 <div class="stats">
                   <div class="stats-number">
-                    {{ brokerLoadData[this.$route.params.id].data.msgRateOut |  numberSeparate()}}
+                    {{ brokerLoadData[this.$route.params.id].msgRateOut |  numberSeparate()}}
                   </div>
                   <div class="stats-title">Rate Out (msg/s)</div>
                 </div>
@@ -274,7 +274,7 @@ export default {
     },
     sortedList () {
 
-      const brokerDataList =  this.brokerLoadData[this.$route.params.id].data.bundleStats
+      const brokerDataList =  this.brokerLoadData[this.$route.params.id].bundleStats
       console.log("Broker data List")
       console.log(brokerDataList)
 

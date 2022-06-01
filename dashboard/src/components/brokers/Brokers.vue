@@ -25,7 +25,7 @@
                 <div class="info-widget-inner">
                   <div class="stats">
                     <div class="stats-number">
-                      {{ brokerLoadData[index].data.cpu.usage | numberSeparate()}} %
+                      {{ brokerLoadData[index].cpu.usage | numberSeparate()}} %
                     </div>
                     <div class="stats-title">CPU</div>
                   </div>
@@ -37,7 +37,7 @@
                 <div class="info-widget-inner">
                   <div class="stats">
                     <div class="stats-number">
-                      {{ brokerLoadData[index].data.msgRateIn |  numberSeparate()}}
+                      {{ brokerLoadData[index].msgRateIn |  numberSeparate()}}
                     </div>
                     <div class="stats-title">Rate In (msg/s)</div>
                   </div>
@@ -50,7 +50,7 @@
                     <div class="info-widget-inner">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[index].data.bandwidthIn.usage | humanBytes}}
+                          {{ brokerLoadData[index].bandwidthIn.usage | humanBytes}}
                         </div>
                         <div class="stats-title">In (/s)</div>
                       </div>
@@ -63,7 +63,7 @@
                     <div class="info-widget-inner">
                       <div class="stats">
                         <div class="stats-number">
-                          {{ brokerLoadData[index].data.numProducers}}
+                          {{ brokerLoadData[index].numProducers}}
                         </div>
                         <div class="stats-title">Producers</div>
                       </div>
@@ -78,7 +78,7 @@
               <div class="info-widget-inner">
                 <div class="stats">
                   <div class="stats-number">
-                    {{ brokerLoadData[index].data.memory.usage*1024*1024 | humanBytes}}
+                    {{ brokerLoadData[index].memory.usage*1024*1024 | humanBytes}}
                   </div>
                   <div class="stats-title">Memory</div>
                 </div>
@@ -90,7 +90,7 @@
               <div class="info-widget-inner">
                 <div class="stats">
                   <div class="stats-number">
-                    {{ brokerLoadData[index].data.msgRateOut |  numberSeparate()}}
+                    {{ brokerLoadData[index].msgRateOut |  numberSeparate()}}
                   </div>
                   <div class="stats-title">Rate Out (msg/s)</div>
                 </div>
@@ -102,7 +102,7 @@
               <div class="info-widget-inner">
                 <div class="stats">
                   <div class="stats-number">
-                    {{ brokerLoadData[index].data.bandwidthOut.usage | humanBytes}}
+                    {{ brokerLoadData[index].bandwidthOut.usage | humanBytes}}
                   </div>
                   <div class="stats-title">Out (/s)</div>
                 </div>
@@ -114,7 +114,7 @@
                   <div class="info-widget-inner">
                     <div class="stats">
                       <div class="stats-number">
-                        {{ brokerLoadData[index].data.numConsumers}}
+                        {{ brokerLoadData[index].numConsumers}}
                       </div>
                       <div class="stats-title">Consumers</div>
                     </div>
@@ -157,7 +157,6 @@ export default {
     ]),
     brokerKeys () {
       let keys = Object.keys(this.brokerLoadData).sort()
-      console.log(keys)
       return keys
     },
   },

@@ -1574,24 +1574,24 @@ const actions = {
       let brokerLoadData = {};
 
       if (Array.isArray(brokerList)) {
-        let brokerStats;
-
-        brokerList.forEach(async (broker) => {
-          try {
-            brokerStats = await ApiService.getBrokerLoadReport(broker);
-            brokerLoadData = {
-              ...brokerLoadData,
-              [broker]: {...brokerStats.data},
-            }
-          } catch (error) {
-            console.error(error)
+        const promises = []
+        brokerList.forEach((broker) => {
+          promises.push(
+            ApiService.getBrokerLoadReport(broker).catch(e => console.error(e))
+          )
+        })
+        const brokersData = await Promise.all(promises)
+        brokersData.forEach(resp => {
+          let brokerName = resp.config.url.replace('brokerPath/', '');
+          brokerLoadData = {
+            ...brokerLoadData,
+            [brokerName]: resp.data
           }
-        }) 
-
+        });
         commit('updateBrokerLoadData', brokerLoadData)
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
   },
 

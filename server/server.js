@@ -84,28 +84,32 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  'option.headers': {Accept: 'application/json/'},
-  'option.toProxy': true
+  headers: {Accept: 'application/json/'},
+  followRedirects: true,
+  secure: false,
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  'option.headers': {Accept: 'application/json/'},
-  'option.toProxy': true
+  headers: {Accept: 'application/json/'},
+  followRedirects: true,
+  secure: false,
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  'option.headers': {Accept: 'application/json/'},
-  'option.toProxy': true
+  headers: {Accept: 'application/json/'},
+  followRedirects: true,
+  secure: false,
 }));
 
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
-  'option.toProxy': true,
+  followRedirects: true,
+  secure: false,
 }))
 
 app.use(bodyParser.json());
