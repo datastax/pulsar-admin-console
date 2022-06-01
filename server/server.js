@@ -67,8 +67,8 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
   const brokerTarget = `http://${broker}/admin/v2/broker-stats/load-report`;
 
   const headers = {};
-  if (req.url.authorization) {
-    headers.Authorization = req.url.authorization
+  if (req.headers.authorization) {
+    headers.Authorization = req.headers.authorization
   }
 
   axios({
@@ -80,6 +80,29 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
     console.error(error)
   })
 })
+
+// Handle Redirects
+const onProxyRes = (proxyRes, req, res) => {
+  if (proxyRes.headers.location) {
+    console.log(proxyRes.headers)
+
+    const headers = {};
+    if (req.headers.authorization) {
+      headers.Authorization = req.headers.authorization
+    }
+
+    axios({
+      url: proxyRes.headers.location,
+      headers
+    }).then((resp) => {
+      res.send(resp.data)
+    }).catch((error) => {
+      console.error(error)
+    })
+  } else {
+    proxyRes.pipe(res);
+  }
+};
 
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
@@ -107,6 +130,8 @@ app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   pathRewrite: rootPathRewrite,
   followRedirects: true,
   secure: false,
+  onProxyRes,
+  selfHandleResponse: true
 }))
 
 app.use(bodyParser.json());
