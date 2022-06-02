@@ -102,6 +102,9 @@ const onProxyReq = (proxyReq, req, res) => {
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.headers?.location) {
+    if (req.method != 'GET') {
+      console.log(req.body)
+    }
     const headers = req.headers;
     const body = req.body;
     if (req.headers.authorization) {
@@ -126,6 +129,7 @@ const onProxyRes = (proxyRes, req, res) => {
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
+  onProxyReq,
   onProxyRes,
   secure: false,
   selfHandleResponse: true
@@ -134,6 +138,7 @@ app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
+  onProxyReq,
   onProxyRes,
   secure: false,
   selfHandleResponse: true
@@ -142,6 +147,7 @@ app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
+  onProxyReq,
   onProxyRes,
   secure: false,
   selfHandleResponse: true
