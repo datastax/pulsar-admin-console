@@ -48,11 +48,7 @@ process.env['NODE_ENV']='production'
 // place holder for the data
 const users = [];
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 app.use('/ws/', createProxyMiddleware({
   target: globalConf.server_config.websocket_url,
@@ -81,11 +77,27 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
     url: brokerTarget,
     headers
   }).then((resp) => {
-    res.send(resp.data)
+    res.send(JSON.stringify(resp.data))
   }).catch((error) => {
     console.error(error)
   })
 })
+
+// Right the body to the req object. Fixes the issues body-parser causes for the proxies
+const onProxyReq = (proxyReq, req, res) => {
+  if (!req.body || !Object.keys(req.body).length) {
+    return;
+  }
+
+  const writeBody = (bodyData) => {
+    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+    proxyReq.write(bodyData);
+  };
+
+  if (proxyReq.getHeader('Content-Type') === 'application/json') {
+    writeBody(JSON.stringify(req.body));
+  }
+}
 
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
@@ -138,12 +150,12 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
+  onProxyReq,
   onProxyRes,
   secure: false,
   selfHandleResponse: true
 }))
 
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'mysession',
