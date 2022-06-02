@@ -28,6 +28,7 @@ const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
 const { globalConf } = require('../dashboard/public/config.js')
 const axios = require('axios');
+const bodyParser = require('body-parser');
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
 require('dotenv').config()
@@ -41,12 +42,17 @@ if (cfg.dashboardConfig.auth_mode === "k8s") {
 } 
 
 const app = express(),
-      bodyParser = require('body-parser'),
       cookieSession = require('cookie-session');
 
 process.env['NODE_ENV']='production'
 // place holder for the data
 const users = [];
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 app.use('/ws/', createProxyMiddleware({
   target: globalConf.server_config.websocket_url,
