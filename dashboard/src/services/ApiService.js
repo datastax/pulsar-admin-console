@@ -746,7 +746,7 @@ export default {
   },
   createSubscriptionLatest (cluster, type, topicPath, subName) {
     var encodedSub = encodeURIComponent(subName)
-    const magicString = '{"ledgerId":9223372036854775807,"entryId":9223372036854775807,"partitionIndex":-1}'
+    const magicString = '{"ledgerId":"9223372036854775807","entryId":"9223372036854775807","partitionIndex":-1}'
     const response = ApiBase().put(`${cluster}/${type}/${topicPath}/subscription/${encodedSub}`, magicString, {
       headers: {
         'Content-Type': 'application/json'
