@@ -28,6 +28,7 @@ const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
 const { globalConf } = require('../dashboard/public/config.js')
 const axios = require('axios');
+const bodyParser = require('body-parser');
 cfg.config('../dashboard/dist/index.html');
 cfg.L.info('server config ', cfg.dashboardConfig)
 require('dotenv').config()
@@ -41,16 +42,18 @@ if (cfg.dashboardConfig.auth_mode === "k8s") {
 } 
 
 const app = express(),
-      bodyParser = require('body-parser'),
       cookieSession = require('cookie-session');
 
 process.env['NODE_ENV']='production'
 // place holder for the data
 const users = [];
 
+app.use(bodyParser.json());
+
 app.use('/ws/', createProxyMiddleware({
   target: globalConf.server_config.websocket_url,
-  'option.ws': true,
+  ws: true,
+  secure: globalConf.ssl.verify_certs,
 }));
 
 const connectorPathRewrite = (path, req) => {
@@ -67,48 +70,105 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
   const brokerTarget = `http://${broker}/admin/v2/broker-stats/load-report`;
 
   const headers = {};
-  if (req.url.authorization) {
-    headers.Authorization = req.url.authorization
+  if (req.headers.authorization) {
+    headers.Authorization = req.headers.authorization
   }
 
   axios({
     url: brokerTarget,
     headers
   }).then((resp) => {
-    res.send(resp.data)
+    res.status(resp.status).send(JSON.stringify(resp.data))
   }).catch((error) => {
-    console.error(error)
+    console.error(error);
+    res.status(error.response.status).send(error.response.data)
   })
 })
+
+// Right the body to the req object. Fixes the issues body-parser causes for the proxies
+const onProxyReq = (proxyReq, req, res) => {
+  if (!req.body || !Object.keys(req.body).length) {
+    return;
+  }
+
+  const writeBody = (bodyData) => {
+    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+    proxyReq.write(bodyData);
+  };
+
+  if (proxyReq.getHeader('Content-Type') === 'application/json') {
+    writeBody(JSON.stringify(req.body));
+  }
+}
+
+let httpsAgent;
+if (!globalConf.ssl.hostname_validation) {
+  httpsAgent = new https.Agent({ checkServerIdentity: () => undefined })
+}
+
+// Handle Redirects
+const onProxyRes = (proxyRes, req, res) => {
+  if (proxyRes?.headers?.location) {
+    const headers = req.headers;
+    const body = req.body;
+    if (req.headers.authorization) {
+      headers.Authorization = req.headers.authorization
+    }
+
+    axios({
+      url: proxyRes.headers.location,
+      headers,
+      httpsAgent,
+      method: req.method,
+      data: body
+    }).then((resp) => {
+      res.status(resp.status).send(resp.data)
+    }).catch((error) => {
+      console.error(error)
+      res.status(error.response.status).send(error.response.data)
+    })
+  } else {
+    res.statusCode = proxyRes.statusCode;
+    proxyRes.pipe(res);
+  }
+};
 
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  'option.headers': {Accept: 'application/json/'},
-  'option.toProxy': true
+  onProxyReq,
+  onProxyRes,
+  secure: globalConf.ssl.verify_certs,
+  selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  'option.headers': {Accept: 'application/json/'},
-  'option.toProxy': true
+  onProxyReq,
+  onProxyRes,
+  secure: globalConf.ssl.verify_certs,
+  selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
-  'option.headers': {Accept: 'application/json/'},
-  'option.toProxy': true
+  onProxyReq,
+  onProxyRes,
+  secure: globalConf.ssl.verify_certs,
+  selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   target: globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
-  'option.toProxy': true,
+  onProxyReq,
+  onProxyRes,
+  secure: globalConf.ssl.verify_certs,
+  selfHandleResponse: true
 }))
 
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'mysession',

@@ -27,6 +27,8 @@ var globalConf = {
         "k8s_namespace": "pulsar",
     },
     "ssl": {
+        "verify_certs": false,
+        "hostname_validation": false,
         "ca_path": "",
         "cert_path": "",
         "key_path": "",
