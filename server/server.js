@@ -78,9 +78,10 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
     url: brokerTarget,
     headers
   }).then((resp) => {
-    res.send(JSON.stringify(resp.data))
+    res.status(resp.status).send(JSON.stringify(resp.data))
   }).catch((error) => {
-    console.error(error)
+    console.error(error);
+    res.status(error.response.status).send(error.response.data)
   })
 })
 
@@ -121,9 +122,10 @@ const onProxyRes = (proxyRes, req, res) => {
       method: req.method,
       data: body
     }).then((resp) => {
-      res.status(resp.statusCode).send(resp.data)
+      res.status(resp.status).send(resp.data)
     }).catch((error) => {
       console.error(error)
+      res.status(error.response.status).send(error.response.data)
     })
   } else {
     res.statusCode = proxyRes.statusCode;
