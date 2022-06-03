@@ -52,7 +52,8 @@ app.use(bodyParser.json());
 
 app.use('/ws/', createProxyMiddleware({
   target: globalConf.server_config.websocket_url,
-  'option.ws': true,
+  ws: true,
+  secure: globalConf.ssl.verify_certs,
 }));
 
 const connectorPathRewrite = (path, req) => {
@@ -99,12 +100,14 @@ const onProxyReq = (proxyReq, req, res) => {
   }
 }
 
+let httpsAgent;
+if (!globalConf.ssl.hostname_validation) {
+  httpsAgent = new https.Agent({ checkServerIdentity: () => undefined })
+}
+
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.headers?.location) {
-    if (req.method != 'GET') {
-      console.log(req.body)
-    }
     const headers = req.headers;
     const body = req.body;
     if (req.headers.authorization) {
@@ -114,14 +117,16 @@ const onProxyRes = (proxyRes, req, res) => {
     axios({
       url: proxyRes.headers.location,
       headers,
+      httpsAgent,
       method: req.method,
       data: body
     }).then((resp) => {
-      res.send(resp.data)
+      res.status(resp.statusCode).send(resp.data)
     }).catch((error) => {
       console.error(error)
     })
   } else {
+    res.statusCode = proxyRes.statusCode;
     proxyRes.pipe(res);
   }
 };
@@ -131,7 +136,7 @@ app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: false,
+  secure: globalConf.ssl.verify_certs,
   selfHandleResponse: true
 }));
 
@@ -140,7 +145,7 @@ app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: false,
+  secure: globalConf.ssl.verify_certs,
   selfHandleResponse: true
 }));
 
@@ -149,7 +154,7 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: false,
+  secure: globalConf.ssl.verify_certs,
   selfHandleResponse: true
 }));
 
@@ -158,7 +163,7 @@ app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   pathRewrite: rootPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: false,
+  secure: globalConf.ssl.verify_certs,
   selfHandleResponse: true
 }))
 
