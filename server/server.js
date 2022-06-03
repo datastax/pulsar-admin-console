@@ -69,10 +69,7 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
   const broker = req.url.replace('/', '');
   const brokerTarget = `http://${broker}/admin/v2/broker-stats/load-report`;
 
-  const headers = {};
-  if (req.headers.authorization) {
-    headers.Authorization = req.headers.authorization
-  }
+  const headers = req.headers;
 
   axios({
     url: brokerTarget,
@@ -111,12 +108,13 @@ const onProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
     const body = req.body;
-    if (req.headers.authorization) {
-      headers.Authorization = req.headers.authorization
-    }
 
     axios({
       url: proxyRes.headers.location,
+      beforeRedirect: (options, { headers }) => {
+        console.log('multi-redirect handler ')
+        options.headers.authorization = req.headers.authorization
+      },
       headers,
       httpsAgent,
       method: req.method,
