@@ -25,7 +25,6 @@ const fs = require('fs');
 const K8sClient = require('kubernetes-client').Client;
 const Request = require('kubernetes-client/backends/request');
 const config = require('kubernetes-client/backends/request').config;
-const { globalConf } = require('../dashboard/public/config.js')
 const kubeConfigFile = process.env.HOME + '/.kube/config';
 
 const secretPrefix = 'dashboard-user-'
@@ -38,8 +37,8 @@ if (fs.existsSync(kubeConfigFile)) {
     version: '1.13'
   }
 } else if (
-  (process.env.KUBERNETES_SERVICE_HOST != '' || globalConf.kubernetes.kubernetes_service_host != '') &&
-  (process.env.KUBERNETES_SERVICE_PORT != '' || globalConf.kubernetes.kubernetese_service_port != '')
+  (process.env.KUBERNETES_SERVICE_HOST != '' || cfg.globalConf.server_config.kubernetes.kubernetes_service_host != '') &&
+  (process.env.KUBERNETES_SERVICE_PORT != '' || cfg.globalConf.server_config.kubernetes.kubernetes_service_port != '')
 ) {
   k8sClientConfig = new Request(Request.config.getInCluster()); 
   cfg.L.info('set up kubernetes in-cluster access');
@@ -47,7 +46,6 @@ if (fs.existsSync(kubeConfigFile)) {
   cfg.L.error("no kubernetes cluster access ")
 }
 const client = new K8sClient(k8sClientConfig);
-console.log(client)
 /**
  * Get secret from the key
  * @param {*} namespace 
@@ -76,7 +74,7 @@ const getSecrets = async (namespace, key) => {
  * @param {*} password 
  */
 const authenticate = async (username, password) => {
-    const namespace = cfg.serverConfig.K8S_NAMESPACE;
+    const namespace = cfg.globalConf.server_config.kubernetes.k8s_namespace;
     const secret = await getSecrets(namespace, username)
     cfg.L.debug('kubernetes secret based auth namespace ' + namespace + ' ' + username + ' ' + secret)
     if (secret && secret === password) {
@@ -89,7 +87,7 @@ const authenticate = async (username, password) => {
  * @param {*} username 
  */
 const matchUser = async (username) => {
-    const namespace = cfg.serverConfig.K8S_NAMESPACE;
+    const namespace = cfg.globalConf.server_config.kubernetes.k8s_namespace;
     const secret = await getSecrets(namespace, username)
     cfg.L.debug('kubernetes secrete based auth ' + namespace + ' ' + username)
     if (secret) {

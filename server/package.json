@@ -4,7 +4,7 @@
   "description": "backend of dashboard",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "serve": "node server.js",
     "dev": "nodemon ./server.js localhost 3080"
   },
   "repository": {

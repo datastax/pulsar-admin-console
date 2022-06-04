@@ -68,8 +68,13 @@ module.exports = {
           secure: false,
           changeOrigin: true
         },
+        '/config.js': { 
+          target: 'http://localhost:6454',
+          secure: false,
+          changeOrigin: true
+        },
         '/ws/*': { 
-          target: 'ws://localhost:8002',
+          target: 'ws://localhost:6454',
           secure: false,
           ws: true,
           changeOrigin: true
