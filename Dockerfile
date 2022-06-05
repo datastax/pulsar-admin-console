@@ -26,7 +26,7 @@ USER 10001:0
 
 RUN mkdir -p dashboard/dist && mkdir server && mkdir config && ls
 COPY --from=UI-BUILD --chown=10001:0 /build/dist /home/appuser/dashboard/dist
-COPY --chown=10001:0 config/*.json /home/appuser/config/
+COPY --chown=10001:0 config/default.json /home/appuser/config/
 COPY --chown=10001:0 server/package*.json /home/appuser/server/
 COPY --chown=10001:0 server/*.js /home/appuser/server/
 RUN cd server && npm ci --production && npm cache clean --force
