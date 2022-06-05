@@ -6,7 +6,7 @@ The admin console is a VueJS application that runs in a browser. It also include
 
 ## Configuration
 The configuration file for the Pulsar admin console is named `default.json` and is in the `./config` directory. Additional
-configuration files can be placed in this directory to override parameters, as described [here](https://github.com/node-config/node-config/wiki/Configuration-Files).
+configuration files (for example, `local.json`) can be placed in this directory to override parameters, as described [here](https://github.com/node-config/node-config/wiki/Configuration-Files).
 
 The `default.json` configuration file contains a set of general configs for the admin console plus a server-specific set under `server_config`.
 The admin console server proxies all requests from the admin console to the Pulsar broker (or Pulsar proxy). You need to configure `pulsar_url`
@@ -103,6 +103,7 @@ npm install
 1. Configure the Admin Console dashboard. By default the settings expect a Pulsar running standalone mode reachable on localhost. Configuration is controlled by these files:
 
 * config/default.json. This specifies the dashboard global configuration, including the Pulsar URL, cluster name and various other settings.
+* config/local.json. A override file that can be used for development specific settings.
 
 2. Start server.
 
