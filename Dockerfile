@@ -24,12 +24,11 @@ RUN adduser -u 10001 -S appuser -G root
 WORKDIR /home/appuser/
 USER 10001:0
 
-RUN mkdir -p dashboard/dist && mkdir server && ls
+RUN mkdir -p dashboard/dist && mkdir server && mkdir config && ls
 COPY --from=UI-BUILD --chown=10001:0 /build/dist /home/appuser/dashboard/dist
-COPY --from=UI-BUILD --chown=10001:0 /build/dist/index.html /home/appuser/dashboard/dist/index.html.template
+COPY --chown=10001:0 config/*.json /home/appuser/config/
 COPY --chown=10001:0 server/package*.json /home/appuser/server/
 COPY --chown=10001:0 server/*.js /home/appuser/server/
-COPY --chown=10001:0 server/*.html /home/appuser/server/
 RUN cd server && npm ci --production && npm cache clean --force
 
 WORKDIR /home/appuser/server
