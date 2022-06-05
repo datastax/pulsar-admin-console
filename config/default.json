@@ -1,0 +1,44 @@
+{
+    "auth_mode": "none",
+    "cluster_name": "standalone",
+    "tenant": "public",
+    "oauth_client_id": "",
+    "server_config": {
+        "port": "6454",
+        "pulsar_url": "http://localhost:8080",
+        "websocket_url": "https://websocket.example.com:8500",
+        "log_level": "info",
+        "token_path": "",
+        "admin_token": "",
+        "token_secret": "",
+        "ssl": {
+            "verify_certs": false,
+            "hostname_validation": false,
+            "ca_path": "",
+            "cert_path": "",
+            "key_path": ""
+        },
+        "kubernetes": {
+            "k8s_namespace": "pulsar",
+            "kubernetes_service_host": "",
+            "kubernetes_service_port": ""
+        },
+        "user_auth": {
+            "username": "",
+            "password": ""
+        }
+    },
+    "polling_interval": "10000",
+    "ca_certificate": "",
+    "api_version": "2.8.3",
+    "notice_text": "",
+    "functions_disabled": "false",
+    "render_monitoring_tab": "false",
+    "grafana_url": "",
+    "clients_disabled": "false",
+    "host_overrides": {
+        "pulsar": "http://localhost:6650",
+        "ws": "ws://localhost:8080",
+        "http": "http://localhost:8964" 
+    }
+}

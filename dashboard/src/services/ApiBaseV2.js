@@ -17,11 +17,13 @@
 
 import axios from 'axios'
 import store from '../store/index'
+import { isAuthRequired } from '../components/auth/login/auth.js'
+
 
 export default() => {
 
   let token = ''
-  if (store.getters.authMode === 'k8s') {
+  if (isAuthRequired()) {
     token = store.getters.adminToken;
   } else {
     token = store.getters.clientToken;

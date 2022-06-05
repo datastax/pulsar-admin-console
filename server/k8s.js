@@ -53,7 +53,6 @@ const client = new K8sClient(k8sClientConfig);
  */
 const getSecrets = async (namespace, key) => {
     await client.loadSpec()
-    console.log(client)
     const secrets = await client.api.v1.namespace(namespace).secrets.get();
     const secretName = secretPrefix + key
     for (let i = 0; i < secrets.body.items.length; i++) {

@@ -129,7 +129,7 @@
           </vuestic-dropdown>
         </button>
         <vuestic-tooltip :options="{content: `Log out ${login}`, placement: 'bottom'}">
-          <button v-if="authMode !=='none' && loggedIn()" @click="logOut()" class="btn btn-right btn-micro">
+          <button v-if="authRequired() && loggedIn()" @click="logOut()" class="btn btn-right btn-micro">
           <span
               class="fa fa-sign-out"
               aria-hidden="true"
@@ -157,9 +157,7 @@ import MessageDropdown from './components/dropdowns/MessageDropdown'
 import { mapGetters } from 'vuex'
 import ApiService from '@/services/ApiService'
 import mixins from '@/services/mixins'
-import {logoutUser, isLoggedIn} from '../../../components/auth/login/auth.js'
-
-console.log(isLoggedIn())
+import {isAuthRequired, logoutUser, isLoggedIn} from '../../../components/auth/login/auth.js'
 
 
 export default {
@@ -249,6 +247,9 @@ export default {
     },
     loggedIn () {
       return isLoggedIn()
+    },
+    authRequired () {
+      return isAuthRequired()
     },
     logOut () {
       logoutUser()

@@ -16,8 +16,18 @@
 //
 
 'use strict'
-const confFile = process.env.CONFIG_FILE_OVERRIDE || 'config.js';
-const { globalConf } = require(`../config/${confFile}`)
+process.env["NODE_CONFIG_DIR"] = __dirname + "/../config/";
+
+// Using the node-config library to handle configuration files
+// The base file name is default.json and it contains all the configuration
+// parameters. Other files can be added to the directory (ex: default-development.json, local.json)
+// to override on a parameter by parameter basis (useful for development environments.
+// 
+// For more options, see https://github.com/node-config/node-config/wiki/Configuration-Files
+//
+const globalConf = require('config')
+console.log('NODE_CONFIG_DIR: ' + globalConf.util.getEnv('NODE_CONFIG_DIR'));
+console.log('NODE_ENV: ' + globalConf.util.getEnv('NODE_ENV'));
 
 /*
  * a logger
@@ -36,13 +46,47 @@ const L = createLogger({
 // If token path is specified, read the cluster token from file and update
 // token parameters
 if (globalConf.server_config.token_path && 
-        (globalConf.auth_mode === 'none' || globalConf.auth_mode === 'k8s')) {
+        (globalConf.auth_mode === 'none' || globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'user')) {
     L.info("Setting tokens from path: " + globalConf.server_config.token_path)
     const token = fs.readFileSync(globalConf.server_config.token_path, "utf8")
-    globalConf.admin_token = token.trim()
-    globalConf.client_token = token.trim()
+    globalConf.server_config.admin_token = token.trim()
 }
 
+// Set derived config
+globalConf.home_cluster = globalConf.cluster_name
+globalConf.cluster_list = [globalConf.cluster_name]
+
+
+// Add required properties to globalConf
+globalConf.api_base_url = '/api/v1'
+globalConf.user_role = 'administrator'
+globalConf.feature_flags = {
+    "function": true,
+    "sink": true,
+    "source": true,
+    "tenantStats": false
+}
+globalConf.private_org = 'true'
+globalConf.use_token_list = 'false'
+globalConf.running_env ='k8s'
+
+
+// Add deprecated properties to globalConf
+globalConf.ajax_url = ''
+globalConf.wss_url = ''
+globalConf.disable_billing = ''
+globalConf.login = 'admin'
+globalConf.email = 'admin@example.com'
+globalConf.client_role = ''
+globalConf.plan = ''
+globalConf.need_to_create_plan = ''
+globalConf.plan_to_create = ''
+globalConf.admin_role = ''
+globalConf.default_plan = ''
+globalConf.security = ''
+globalConf.chargebee_site = ''
+globalConf.billing_provider = ''
+globalConf.multi_user_org = ''
 
 module.exports = {
     L,

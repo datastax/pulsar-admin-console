@@ -36,11 +36,34 @@ let k8s = ''
 const cluster = cfg.globalConf.home_cluster;
 
 if (cfg.globalConf.auth_mode === "k8s") {
+  cfg.L.info("Kubernetes authentication enabled")
   k8s = require('./k8s.js')
-} 
+} else if (cfg.globalConf.auth_mode === "user") {
+  cfg.L.info("Username/password authentication enabled")
+}
 
 const app = express(),
       cookieSession = require('cookie-session');
+
+
+const isUserAuthenticated = async (username, password) => {
+
+  let result = false
+  if (cfg.globalConf.auth_mode === 'user') {
+
+    if (cfg.globalConf.server_config.user_auth.username &&
+      cfg.globalConf.server_config.user_auth.password &&
+        username === cfg.globalConf.server_config.user_auth.username && 
+        password === cfg.globalConf.server_config.user_auth.password ) {
+
+      result = true
+    }
+    
+  } else if (cfg.globalConf.auth_mode === 'k8s') {
+    result = await k8s.authenticate(username, password);
+  }
+  return result
+}
 
 // place holder for the user data
 const users = [];
@@ -183,10 +206,35 @@ app.use(cookieSession({
 app.use(express.static(path.join(__dirname, '../dashboard/dist')));
 
 app.get('/api/users', (req, res) => {
-  cfg.L.info('api/users called!!!!!!!')
+  cfg.L.info('api/users called')
   res.json(users);
 });
 
+app.post('/api/v1/auth/pulsar-token', async (req, res) => {
+  cfg.L.info('api/v1/auth/pulsar-token called')
+  
+  const username = req.body.username;
+  const password = req.body.password;
+
+  try {
+    if (username && password) {
+    
+      if (await isUserAuthenticated(username, password)) {
+        console.log("It seems we are authenticated")
+        const retVal = {
+          admin_token: cfg.globalConf.server_config.admin_token,
+        }
+        res.json(retVal);
+        return;
+      }
+    }
+    res.status(401).send("incorrect credentials");
+  } catch (e) {
+    cfg.L.error(e);
+    res.status(401).send("login exception");
+  }
+
+});
 app.post('/api/user', (req, res) => {
   const user = req.body.user;
   user.id = randomId(10);
@@ -200,9 +248,8 @@ app.post('/api/v1/auth/token', async (req, res) => {
   const password = req.body.password;
   try {
     if (username && password) {
-      let result = await k8s.authenticate(username, password);
-      if (result) {
-        const secret = process.env.TOKEN_SECRET || cfg.globalConf.token_secret || "default-secret"
+      if (await isUserAuthenticated(username, password)) {
+        const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
         // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
         res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
         return;
@@ -219,7 +266,7 @@ app.post('/auth', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   if (username && password) {
-    let result = await k8s.authenticate(username, password);
+    let result = await isUserAuthenticated();
     cfg.L.info('user ' + username + ' auth result ' + result);
 
     if (result) {
