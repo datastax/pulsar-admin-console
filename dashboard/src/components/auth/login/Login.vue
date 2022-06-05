@@ -89,9 +89,12 @@
                 console.log("Logging in user")
                 try {
                     await loginUser(this.email, this.password)
-                    console.log("User logged in?")
-                    console.log(isLoggedIn())
-                    this.$router.push('/admin/dashboard')
+                    this.onSuccess('Authenticated')
+
+                    setTimeout(() => {
+                      // Wait a bit to let the data update
+                      this.$router.push('/admin/dashboard')
+                    }, 1000)
                     
                 }
                 catch (error) {

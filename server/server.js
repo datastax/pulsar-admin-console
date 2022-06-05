@@ -48,6 +48,8 @@ const app = express(),
 
 const isUserAuthenticated = async (username, password) => {
 
+  cfg.L.info("Authenticating user: " + username)
+
   let result = false
   if (cfg.globalConf.auth_mode === 'user') {
 
@@ -213,25 +215,44 @@ app.get('/api/users', (req, res) => {
 app.post('/api/v1/auth/pulsar-token', async (req, res) => {
   cfg.L.info('api/v1/auth/pulsar-token called')
   
-  const username = req.body.username;
-  const password = req.body.password;
+  const username = req.body.username
+  const password = req.body.password
+  const access_token = req.body.access_token
 
-  try {
-    if (username && password) {
-    
-      if (await isUserAuthenticated(username, password)) {
-        console.log("It seems we are authenticated")
-        const retVal = {
-          admin_token: cfg.globalConf.server_config.admin_token,
-        }
-        res.json(retVal);
-        return;
+  if (access_token) {
+    // check the access token
+    const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
+
+    try {
+      jwt.verify(access_token, secret)
+      const retVal = {
+        admin_token: cfg.globalConf.server_config.admin_token,
       }
+      res.json(retVal);
+      return;
+    } catch (e) {
+      cfg.L.error(e);
+      res.status(401).send("Access token invalid");
     }
-    res.status(401).send("incorrect credentials");
-  } catch (e) {
-    cfg.L.error(e);
-    res.status(401).send("login exception");
+
+  } else {
+    try {
+      if (username && password) {
+      
+        if (await isUserAuthenticated(username, password)) {
+          const retVal = {
+            admin_token: cfg.globalConf.server_config.admin_token,
+          }
+          res.json(retVal);
+          return;
+        }
+      }
+      res.status(401).send("incorrect credentials");
+    } catch (e) {
+      cfg.L.error(e);
+      res.status(401).send("login exception");
+    }
+    
   }
 
 });
@@ -251,7 +272,7 @@ app.post('/api/v1/auth/token', async (req, res) => {
       if (await isUserAuthenticated(username, password)) {
         const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
         // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
-        res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
+        res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '12h'})});
         return;
       }
     }

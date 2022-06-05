@@ -25,7 +25,7 @@ const AUTH_TOKEN_KEY = 'authToken'
 export function loginUser(username, password) {
     return new Promise((resolve, reject) => {
         // If using k8s authentication, retrieve the tokens
-        if (globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'none' || globalConf.auth_mode === 'user') {
+        if (globalConf.auth_mode === 'k8s' ||globalConf.auth_mode === 'user') {
              // This url is then routed by nginx to the correct location
             const urlToken = '/api/v1/auth/pulsar-token';
             axios.post(urlToken, buildLoginBody(username, password)).then(response => {
@@ -51,6 +51,24 @@ export function loginUser(username, password) {
             console.error('Caught an error during login:', err)
             reject(err);
         });
+    })
+}
+export function getPulsarToken (accessToken) {
+    return new Promise((resolve, reject) => {
+        // If using k8s authentication, retrieve the tokens
+        if (globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'user') {
+             // This url is then routed by nginx to the correct location
+            const urlToken = '/api/v1/auth/pulsar-token';
+            axios.post(urlToken, {access_token: accessToken}).then(response => {
+                resolve();
+                // Add to vuex, as it is retrieved from there to make many calls
+                store.commit('setAdminToken', response.data.admin_token)
+                
+            }).catch (err => {
+                console.error('Caught an error retrieving Pulsar token during login:', err)
+                reject(err);
+            });
+        }
     })
 }
 

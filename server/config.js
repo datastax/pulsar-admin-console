@@ -46,7 +46,7 @@ const L = createLogger({
 // If token path is specified, read the cluster token from file and update
 // token parameters
 if (globalConf.server_config.token_path && 
-        (globalConf.auth_mode === 'none' || globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'user')) {
+        (globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'user')) {
     L.info("Setting tokens from path: " + globalConf.server_config.token_path)
     const token = fs.readFileSync(globalConf.server_config.token_path, "utf8")
     globalConf.server_config.admin_token = token.trim()
