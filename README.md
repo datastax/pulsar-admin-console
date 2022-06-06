@@ -4,6 +4,35 @@ Pulsar Admin Console is a web based UI that administrates topics, namespaces, so
 
 The admin console is a VueJS application that runs in a browser. It also includes a web server that serves up the files for the admin console as well as providing configuration and authentication services.
 
+## Installation
+
+To install the Pulsar Admin Console:
+
+1. Ensure [node](https://nodejs.org/en/download/) version 14.18 or higher is installed.
+
+2. Download the latest release tarball from the [release page](https://github.com/datastax/pulsar-admin-console/releases).
+
+3. Extract the tarball. 
+```
+tar xfvz pulsar-admin-console-<version>.tar.gz
+```
+4. Update the configuration in the `./pulsar-admin-console-<version>/config` directory. You can update the `default.json` or add an override file named `local.json`. See "Configuration" section below.
+
+## Starting
+
+
+1. Change to the `server` subdirectory of the install directory.
+```cd ./pulsar-admin-console-<version>/server
+```
+2. Start the process.
+```
+npm start
+```
+3. Open the port (default 6454) in a browser.
+```
+google-chrome-stable http://localhost:6454
+``` 
+
 ## Configuration
 The configuration file for the Pulsar admin console is named `default.json` and is in the `./config` directory. Additional
 configuration files (for example, `local.json`) can be placed in this directory to override parameters, as described [here](https://github.com/node-config/node-config/wiki/Configuration-Files).
