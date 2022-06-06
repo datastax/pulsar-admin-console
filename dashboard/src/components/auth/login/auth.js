@@ -24,7 +24,7 @@ const AUTH_TOKEN_KEY = 'authToken'
 
 export function loginUser(username, password) {
     return new Promise((resolve, reject) => {
-        // This url is then routed by nginx to the correct location
+        // This url is then routed by the server to the correct location
         let url = '/api/v1/auth/token';
         return axios.post(url, buildLoginBody(username, password)).then(response => {
             // This complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
