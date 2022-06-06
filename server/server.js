@@ -28,7 +28,7 @@ const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-cfg.L.info('Global config ', cfg.globalConf)
+cfg.L.debug('Global config ', cfg.globalConf)
 require('dotenv').config()
 
 
