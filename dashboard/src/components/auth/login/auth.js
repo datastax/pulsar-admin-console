@@ -26,7 +26,7 @@ export function loginUser(username, password) {
     return new Promise((resolve, reject) => {
         // If using k8s authentication, retrieve the tokens
         if (globalConf.auth_mode === 'k8s' ||globalConf.auth_mode === 'user') {
-             // This url is then routed by nginx to the correct location
+             // This url is then routed by the server to the correct location
             const urlToken = '/api/v1/auth/pulsar-token';
             axios.post(urlToken, buildLoginBody(username, password)).then(response => {
                 resolve();
@@ -57,7 +57,7 @@ export function getPulsarToken (accessToken) {
     return new Promise((resolve, reject) => {
         // If using k8s authentication, retrieve the tokens
         if (globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'user') {
-             // This url is then routed by nginx to the correct location
+             // This url is then routed by the server to the correct location
             const urlToken = '/api/v1/auth/pulsar-token';
             axios.post(urlToken, {access_token: accessToken}).then(response => {
                 resolve();
