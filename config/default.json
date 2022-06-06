@@ -21,7 +21,7 @@
         "kubernetes": {
             "k8s_namespace": "pulsar",
             "kubernetes_service_host": "",
-            "kubernetes_service_port": ""
+            "service_port": ""
         },
         "user_auth": {
             "username": "",

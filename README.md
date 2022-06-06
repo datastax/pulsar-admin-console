@@ -47,6 +47,44 @@ the Pulsar CLI command `pulsar-admin brokers list <clustername>`. The cluster na
 In a geo-replication configuration, you will want to use the cluster name for the local cluster. You must set the cluster name in the 
 `cluster_name` setting of the configuration file.
 
+### Configuration reference
+
+| Setting     | Default | Description |
+| ----------- | ----------- |---------- |
+| auth_mode | none | Authentication mode. One of `none`, `user`, `k8s`, or `openidconnect`. See "Auth Modes for details| 
+| cluster_name | standalone | Name of Pulsar cluster connecting to.  The cluster name can be retrieved with the CLI command `pulsar-admin clusters list`. |
+| tenant | public | The default Pulsar tenant to view when starting the console. |
+| oauth_client_id || This is the client ID that the console will use when authenticating with authentication provider |
+| server_config.port | 6454 | The listen port for the console server |
+| server_config.pulsar_url | http://localhost:8080 | URL for connecting to the Pulsar cluster. Should point to either a broker or Pulsar proxy. The console server must be able to reach this URL. 
+| server_config.websocket_url | https://websocket.example.com:8500 | URL for WebSocket proxy. Used by Test Clients to connect to Pulsar. The console server must be able to reach this URL. 
+| server_config.log_level | info | Log level for the console server
+| server_config.token_path |  | When using `user` or `k8s` auth mode, a Pulsar token is used to connect to the Pulsar cluster. This specifies the path to a file that contains the token to use. For full access, a superuser token is recommended. Alternatively, use `admin_token`. |
+| server_config.admin_token | | When using `user` or `k8s` auth mode, a Pulsar token is used to connect to the Pulsar cluster. This specifies the token as a string. For full access, a superuser token is recommended. The `token_path` setting will override this value if present.|
+| server_config.token_secret| | Secret used when signing access token for logging into the console. If not specified, a default secret is used |
+| server_config.ssl.verify_certs | false | Verify TLS certificate is trusted |
+| server_config.ssl.hostname_validation | | Verify hostname matches the TLS certificate |
+| server_config.ssl.ca_path | | Path to the CA certificate. To enable HTTPS, `ca_path`, `cert_path`, and `key_path` must all be set |
+| server_config.ssl.cert_path | | Path to the server certificate. To enable HTTPS, `ca_path`, `cert_path`, and `key_path` must all be set |
+| server_config.ssl.key_path | | Path to the TLS key. To enable HTTPS, `ca_path`, `cert_path`, and `key_path` must all be set |
+| server_config.kubernetes.k8s_namespace | pulsar | When using `k8s` auth_mode, Kubernetes namespace that contains the username/password secrets |
+| server_config.kubernetes.service_host| | When using `k8s` auth_mode, specify a custom Kubernetes host name. |
+| server_config.kubernetes.service_port | | When using `k8s` auth_mode, specify a custom Kubernetes port. |
+| server_config.user_auth.username | | When using `user` auth_mode, the login user name. |
+| server_config.user_auth.password | | When using `user` auth_mode, the login password. |
+| polling_interval | 10000 | How often the console polls Pulsar for updated values. In milliseconds. |
+| ca_certificate | | String of CA certificate to display in the console under Credentials. |
+| api_version | 2.8.3 | Version of the Pulsar client API to recommend under Samples. |
+| notice_text | | Custom notice to appear at top of console. |
+| functions_disabled | false | If functions are not enabled in the cluster, disable the function sections (Functions, Sinks, Sources)
+| render_monitoring_tab | false | Enable tab that includes links to Grafana dashboards. |
+| grafana_url | | If `render_monitoring_tab` is enabled, URL for Grafana. |
+| clients_disabled | false | Disable test clients. Test clients depend on WebSocket proxy, so if this is not running in Pulsar cluster you may want to disable them. |
+| host_overrides.pulsar | http://localhost:6650" | URL to display in console to connect to Pulsar. |
+| host_overrides.ws | //localhost:8080" | URL to display in console to connect to WebSocket proxy. |
+| host_overrides.http | http://localhost:8964" | URL to display in console to connect to Pulsar Beam HTTP proxy. |
+
+
 ## Auth Modes
 There are four available configurations for `auth_mode`: `none`, `user`, `k8s`, and `openidconnect`.
 

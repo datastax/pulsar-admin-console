@@ -37,8 +37,8 @@ if (fs.existsSync(kubeConfigFile)) {
     version: '1.13'
   }
 } else if (
-  (process.env.KUBERNETES_SERVICE_HOST != '' || cfg.globalConf.server_config.kubernetes.kubernetes_service_host != '') &&
-  (process.env.KUBERNETES_SERVICE_PORT != '' || cfg.globalConf.server_config.kubernetes.kubernetes_service_port != '')
+  (process.env.KUBERNETES_SERVICE_HOST != '' || cfg.globalConf.server_config.kubernetes.service_host != '') &&
+  (process.env.KUBERNETES_SERVICE_PORT != '' || cfg.globalConf.server_config.kubernetes.service_port != '')
 ) {
   k8sClientConfig = new Request(Request.config.getInCluster()); 
   cfg.L.info('set up kubernetes in-cluster access');
