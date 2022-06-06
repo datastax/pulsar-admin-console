@@ -25,7 +25,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getAuthToken, isAuthRequired, isLoggedIn } from './components/auth/login/auth.js'
+import { getAuthToken, isAuthRequired, isLoggedIn, getPulsarToken } from './components/auth/login/auth.js'
 export default {
   name: 'app',
   data () {
@@ -72,9 +72,11 @@ export default {
 
       // If unexpired token is stored in local storage, use that one.
       if (isLoggedIn()) {
-        this.$store.commit('setClientToken', getAuthToken())
-      } else {
-        this.$store.commit('setClientToken', globalConf.client_token)
+        // For openID connect, use the token as the clientToken
+        const accessToken = getAuthToken()
+        this.$store.commit('setClientToken', accessToken)
+        // For user and k8s auth, retrieve Pulsar token and set as admin token
+        getPulsarToken (accessToken)
       }
       this.$store.commit('setPlan', globalConf.plan)
       this.$store.commit('setAdminToken', globalConf.admin_token)

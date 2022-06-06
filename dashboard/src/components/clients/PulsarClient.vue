@@ -205,6 +205,7 @@ import { mapGetters } from 'vuex'
 import { OrbitSpinner, TrinityRingsSpinner } from 'epic-spinners'
 import _ from 'lodash'
 import mixins from '@/services/mixins'
+import { isAuthRequired } from '@/components/auth/login/auth.js'
 
 export default {
   name: 'pulsar-client',
@@ -414,7 +415,7 @@ export default {
     },
     getToken () {
       let token = ''
-        if (this.authMode === 'k8s') {
+        if (isAuthRequired()) {
           token = this.adminToken;
         } else {
           token = this.clientToken;
