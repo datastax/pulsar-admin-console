@@ -22,7 +22,8 @@ tar xfvz pulsar-admin-console-<version>.tar.gz
 
 
 1. Change to the `server` subdirectory of the install directory.
-```cd ./pulsar-admin-console-<version>/server
+```
+cd ./pulsar-admin-console-<version>/server
 ```
 2. Start the process.
 ```
@@ -163,6 +164,14 @@ npm install
 cd ..
 cd server
 npm install
+```
+
+#### Run Pulsar Standalone
+
+Update the version to your desired version of Pulsar
+
+```
+docker run -it -p 6650:6650  -p 8080:8080 --mount source=pulsardata,target=/pulsar/data --mount source=pulsarconf,target=/pulsar/conf apachepulsar/pulsar:2.8. bin/pulsar standalone
 ```
 
 #### Run Admin Console in development

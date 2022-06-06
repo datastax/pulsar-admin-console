@@ -163,6 +163,7 @@ const onProxyRes = (proxyRes, req, res) => {
   }
 };
 
+// Proxies
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   target: cfg.globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
