@@ -53,6 +53,7 @@
     import { loginUser } from './auth'
     import Alert from '../../utils/Alert'
     import mixins from '@/services/mixins'
+    import { isLoggedIn } from './auth.js'
 
 
     export default {
@@ -85,9 +86,16 @@
         },
         methods: {
             async login() {
+                console.log("Logging in user")
                 try {
                     await loginUser(this.email, this.password)
-                    this.$router.push('/')
+                    this.onSuccess('Authenticated')
+
+                    setTimeout(() => {
+                      // Wait a bit to let the data update
+                      this.$router.push('/admin/dashboard')
+                    }, 1000)
+                    
                 }
                 catch (error) {
                       let [reason, statusCode] = this.decodeErrorObject(error)

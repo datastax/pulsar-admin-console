@@ -26,34 +26,56 @@ const path = require('path');
 const randomId = require('random-id');
 const cfg = require('./config.js');
 const jwt = require('jsonwebtoken');
-const { globalConf } = require('../dashboard/public/config.js')
 const axios = require('axios');
 const bodyParser = require('body-parser');
-cfg.config('../dashboard/dist/index.html');
-cfg.L.info('server config ', cfg.dashboardConfig)
+cfg.L.debug('Global config ', cfg.globalConf)
 require('dotenv').config()
 
 
 let k8s = ''
-const cluster = globalConf.home_cluster;
+const cluster = cfg.globalConf.home_cluster;
 
-if (cfg.dashboardConfig.auth_mode === "k8s") {
+if (cfg.globalConf.auth_mode === "k8s") {
+  cfg.L.info("Kubernetes authentication enabled")
   k8s = require('./k8s.js')
-} 
+} else if (cfg.globalConf.auth_mode === "user") {
+  cfg.L.info("Username/password authentication enabled")
+}
 
 const app = express(),
       cookieSession = require('cookie-session');
 
-process.env['NODE_ENV']='production'
-// place holder for the data
+
+const isUserAuthenticated = async (username, password) => {
+
+  cfg.L.info("Authenticating user: " + username)
+
+  let result = false
+  if (cfg.globalConf.auth_mode === 'user') {
+
+    if (cfg.globalConf.server_config.user_auth.username &&
+      cfg.globalConf.server_config.user_auth.password &&
+        username === cfg.globalConf.server_config.user_auth.username && 
+        password === cfg.globalConf.server_config.user_auth.password ) {
+
+      result = true
+    }
+    
+  } else if (cfg.globalConf.auth_mode === 'k8s') {
+    result = await k8s.authenticate(username, password);
+  }
+  return result
+}
+
+// place holder for the user data
 const users = [];
 
 app.use(bodyParser.json());
 
 app.use('/ws/', createProxyMiddleware({
-  target: globalConf.server_config.websocket_url,
+  target: cfg.globalConf.server_config.websocket_url,
   ws: true,
-  secure: globalConf.ssl.verify_certs,
+  secure: cfg.globalConf.server_config.ssl.verify_certs,
 }));
 
 const connectorPathRewrite = (path, req) => {
@@ -82,6 +104,16 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
   })
 })
 
+// Serve the configuration parameters for the dashboard
+// We need to remove the server options which can be sensitive
+app.use('/config.js', (req, res, next) => {
+  let dashboardConf = { ...cfg.globalConf }
+  // Remove server config
+  delete dashboardConf.server_config
+  const response = "var globalConf = " + JSON.stringify(dashboardConf)
+  res.send(response)
+})
+
 // Right the body to the req object. Fixes the issues body-parser causes for the proxies
 const onProxyReq = (proxyReq, req, res) => {
   if (!req.body || !Object.keys(req.body).length) {
@@ -99,7 +131,7 @@ const onProxyReq = (proxyReq, req, res) => {
 }
 
 let httpsAgent;
-if (!globalConf.ssl.hostname_validation) {
+if (!cfg.globalConf.server_config.ssl.hostname_validation) {
   httpsAgent = new https.Agent({ checkServerIdentity: () => undefined })
 }
 
@@ -132,38 +164,38 @@ const onProxyRes = (proxyRes, req, res) => {
 };
 
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
-  target: globalConf.server_config.pulsar_url,
+  target: cfg.globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: globalConf.ssl.verify_certs,
+  secure: cfg.globalConf.server_config.ssl.verify_certs,
   selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
-  target: globalConf.server_config.pulsar_url,
+  target: cfg.globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: globalConf.ssl.verify_certs,
+  secure: cfg.globalConf.server_config.ssl.verify_certs,
   selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
-  target: globalConf.server_config.pulsar_url,
+  target: cfg.globalConf.server_config.pulsar_url,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: globalConf.ssl.verify_certs,
+  secure: cfg.globalConf.server_config.ssl.verify_certs,
   selfHandleResponse: true
 }));
 
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
-  target: globalConf.server_config.pulsar_url,
+  target: cfg.globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
   onProxyReq,
   onProxyRes,
-  secure: globalConf.ssl.verify_certs,
+  secure: cfg.globalConf.server_config.ssl.verify_certs,
   selfHandleResponse: true
 }))
 
@@ -176,10 +208,54 @@ app.use(cookieSession({
 app.use(express.static(path.join(__dirname, '../dashboard/dist')));
 
 app.get('/api/users', (req, res) => {
-  cfg.L.info('api/users called!!!!!!!')
+  cfg.L.info('api/users called')
   res.json(users);
 });
 
+app.post('/api/v1/auth/pulsar-token', async (req, res) => {
+  cfg.L.info('api/v1/auth/pulsar-token called')
+  
+  const username = req.body.username
+  const password = req.body.password
+  const access_token = req.body.access_token
+
+  if (access_token) {
+    // check the access token
+    const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
+
+    try {
+      jwt.verify(access_token, secret)
+      const retVal = {
+        admin_token: cfg.globalConf.server_config.admin_token,
+      }
+      res.json(retVal);
+      return;
+    } catch (e) {
+      cfg.L.error(e);
+      res.status(401).send("Access token invalid");
+    }
+
+  } else {
+    try {
+      if (username && password) {
+      
+        if (await isUserAuthenticated(username, password)) {
+          const retVal = {
+            admin_token: cfg.globalConf.server_config.admin_token,
+          }
+          res.json(retVal);
+          return;
+        }
+      }
+      res.status(401).send("incorrect credentials");
+    } catch (e) {
+      cfg.L.error(e);
+      res.status(401).send("login exception");
+    }
+    
+  }
+
+});
 app.post('/api/user', (req, res) => {
   const user = req.body.user;
   user.id = randomId(10);
@@ -193,11 +269,10 @@ app.post('/api/v1/auth/token', async (req, res) => {
   const password = req.body.password;
   try {
     if (username && password) {
-      let result = await k8s.authenticate(username, password);
-      if (result) {
-        const secret = process.env.TOKEN_SECRET || globalConf.token_secret || "default-secret"
+      if (await isUserAuthenticated(username, password)) {
+        const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
         // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
-        res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '1d'})});
+        res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '12h'})});
         return;
       }
     }
@@ -212,7 +287,7 @@ app.post('/auth', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   if (username && password) {
-    let result = await k8s.authenticate(username, password);
+    let result = await isUserAuthenticated();
     cfg.L.info('user ' + username + ' auth result ' + result);
 
     if (result) {
@@ -239,9 +314,9 @@ app.get('/login', (req,res) => {
   res.sendFile(path.join(__dirname + '/login.html'));
 });
 
-const caPath = process.env.CA_PATH || globalConf.ssl.ca_path || '';
-const certPath = process.env.CERT_PATH || globalConf.ssl.cert_path || '';
-const keyPath = process.env.KEY_PATH || globalConf.ssl.key_path || '';
+const caPath = process.env.CA_PATH || cfg.globalConf.server_config.ssl.ca_path || '';
+const certPath = process.env.CERT_PATH || cfg.globalConf.server_config.ssl.cert_path || '';
+const keyPath = process.env.KEY_PATH || cfg.globalConf.server_config.ssl.key_path || '';
 if (caPath != '' && certPath != '' && keyPath != '') {
   const options = {
     ca: [fs.readFileSync(caPath)],
@@ -253,10 +328,11 @@ if (caPath != '' && certPath != '' && keyPath != '') {
   watch.exitOnFileChange(certPath);
   watch.exitOnFileChange(keyPath);
 
+  cfg.L.info(`HTTPS server listening on the port:${cfg.globalConf.server_config.port}`);
   const server = https.createServer(options, app);
-  server.listen(cfg.serverConfig.PORT);
+  server.listen(cfg.globalConf.server_config.port);
 } else {
-  app.listen(cfg.serverConfig.PORT, () => {
-    cfg.L.info(`Server listening on the port:${cfg.serverConfig.PORT}`);
+  app.listen(cfg.globalConf.server_config.port, () => {
+    cfg.L.info(`HTTP server listening on the port:${cfg.globalConf.server_config.port}`);
   });
 }
