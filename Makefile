@@ -18,7 +18,7 @@ all: container
 # Docker tag with v prefix to differentiate the official release build, triggered by git tagging
 #
 TAG ?= v0.0.4
-PREFIX ?= datastax/pulsar-admin-console 
+PREFIX ?= datastax/pulsar-admin-console
 
 container:
 	docker build -t $(PREFIX):$(TAG) .
@@ -37,5 +37,5 @@ tarball:
 	docker cp pac-tarball:/home/appuser/ pulsar-admin-console-$(TAG)/
 	docker rm -f pac-tarball
 	tar -czf pulsar-admin-console-$(TAG).tar.gz pulsar-admin-console-$(TAG)/
-	rm -r pulsar-admin-console-$(TAG)/
+	rm -rf pulsar-admin-console-$(TAG)/
 	openssl dgst -sha512 pulsar-admin-console-$(TAG).tar.gz
