@@ -618,7 +618,7 @@ export default {
         const newStrat = this.namespacesConfig.data[this.$route.params.id].schema_compatibility_strategy
 
         if (!newStrat || newStrat === 'UNDEFINED') {
-          return oldStrat.toUpperCase()
+          return oldStrat ? oldStrat.toUpperCase() : 'UNDEFINED'
         }
         return newStrat
       }

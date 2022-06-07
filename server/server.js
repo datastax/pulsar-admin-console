@@ -70,7 +70,7 @@ const isUserAuthenticated = async (username, password) => {
 // place holder for the user data
 const users = [];
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ strict: false}));
 
 app.use('/ws/', createProxyMiddleware({
   target: cfg.globalConf.server_config.websocket_url,
