@@ -491,7 +491,7 @@ export default {
   createPartitionedTopic (cluster, topicPath, numPartitions) {
     const response = ApiBase().put(`${cluster}/persistent/${topicPath}/partitions`, numPartitions, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain'
       }
     })
     return response
@@ -499,7 +499,7 @@ export default {
   createMissingPartitions (cluster, topicPath) {
     const response = ApiBase().post(`${cluster}/persistent/${topicPath}/createMissedPartitions`, '', {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain'
       }
     })
     return response
@@ -594,42 +594,42 @@ export default {
     return response
   },
   updateNamespaceOffloadThreshold (cluster, namespacePath, threshold) {
-    const response = ApiBase().put(`${cluster}/namespaces/${namespacePath}/offloadThreshold`, threshold, { headers: {
+    const response = ApiBase().put(`${cluster}/namespaces/${namespacePath}/offloadThreshold`, JSON.stringify(threshold), { headers: {
       'Content-Type': 'application/json'
     }} )
     return response
   },
   updateMaxProducers (cluster, namespacePath, producers) {
     
-    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxProducersPerTopic`, producers, { headers: {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxProducersPerTopic`, JSON.stringify(producers), { headers: {
       'Content-Type': 'application/json'
     }} )
     return response
   },
   updateTtl (cluster, namespacePath, ttl) {
     
-    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/messageTTL`, ttl, { headers: {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/messageTTL`, JSON.stringify(ttl), { headers: {
       'Content-Type': 'application/json'
     }} )
     return response
   },
   updateDedupe (cluster, namespacePath, dedupe) {
     
-    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/deduplication`, dedupe, { headers: {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/deduplication`, JSON.stringify(dedupe), { headers: {
       'Content-Type': 'application/json'
     }} )
     return response
   },
   updateMaxConsTopic (cluster, namespacePath, consumers) {
     
-    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxConsumersPerTopic`, consumers, { headers: {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxConsumersPerTopic`, JSON.stringify(consumers), { headers: {
       'Content-Type': 'application/json'
     }} )
     return response
   },
   updateMaxConsSub (cluster, namespacePath, consumers) {
     
-    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxConsumersPerSubscription`, consumers, { headers: {
+    const response = ApiBase().post(`${cluster}/namespaces/${namespacePath}/maxConsumersPerSubscription`, JSON.stringify(consumers), { headers: {
       'Content-Type': 'application/json'
     }} )
     return response

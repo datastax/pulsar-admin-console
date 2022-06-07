@@ -116,7 +116,8 @@ app.use('/config.js', (req, res, next) => {
 
 // Right the body to the req object. Fixes the issues body-parser causes for the proxies
 const onProxyReq = (proxyReq, req, res) => {
-  if (!req.body || !Object.keys(req.body).length) {
+  const emptyObj = '{}'
+  if (req.body == undefined || JSON.stringify(req.body) == emptyObj) {
     return;
   }
 
