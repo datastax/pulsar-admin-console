@@ -1279,10 +1279,11 @@ const actions = {
           const newStrat = state.namespacesConfig.data[nsIdx].schema_compatibility_strategy
 
           if (!newStrat || newStrat === 'UNDEFINED') {
-            compatMode = oldStrat.toUpperCase()
+            compatMode = oldStrat ? oldStrat.toUpperCase() : 'UNDEFINED'
           } else {
             compatMode = newStrat
           }
+          console.log(compatMode)
           if (state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage) {
             // Name of property changed in 2.8. Making sure the admin console can work before and after 2.8
             if (state.namespacesConfig.data[nsIdx].backlog_quota_map.destination_storage.limit) {
