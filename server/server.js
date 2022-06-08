@@ -122,8 +122,10 @@ const onProxyReq = (proxyReq, req, res) => {
   }
 
   const writeBody = (bodyData) => {
+    console.log('req body: ', bodyData)
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
     proxyReq.write(bodyData);
+    console.log(proxyReq)
   };
 
   if (proxyReq.getHeader('Content-Type') === 'application/json') {
@@ -139,6 +141,7 @@ if (!cfg.globalConf.server_config.ssl.hostname_validation) {
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.headers?.location) {
+    console.log('is being redirected')
     const headers = req.headers;
     const body = req.body;
 
