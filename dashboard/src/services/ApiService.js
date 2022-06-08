@@ -489,17 +489,17 @@ export default {
     return response
   },
   createPartitionedTopic (cluster, topicPath, numPartitions) {
-    const response = ApiBase().put(`${cluster}/persistent/${topicPath}/partitions`, numPartitions, {
+    const response = ApiBase().put(`${cluster}/persistent/${topicPath}/partitions`, JSON.stringify(numPartitions), {
       headers: {
-        'Content-Type': 'text/plain'
+        'Content-Type': 'application/json'
       }
     })
     return response
   },
   createMissingPartitions (cluster, topicPath) {
-    const response = ApiBase().post(`${cluster}/persistent/${topicPath}/createMissedPartitions`, '', {
+    const response = ApiBase().post(`${cluster}/persistent/${topicPath}/createMissedPartitions`, JSON.stringify(''), {
       headers: {
-        'Content-Type': 'text/plain'
+        'Content-Type': 'application/json'
       }
     })
     return response
