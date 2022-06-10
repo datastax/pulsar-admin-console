@@ -121,15 +121,14 @@ const onProxyReq = (proxyReq, req, res) => {
     return;
   }
 
+  console.log('req body: ', req.body)
   const writeBody = (bodyData) => {
-    console.log('req body: ', bodyData)
     proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-    proxyReq.write(bodyData);
-    console.log(proxyReq)
+    proxyReq.write(Buffer.from(bodyData, 'utf8'));
   };
 
   if (proxyReq.getHeader('Content-Type') === 'application/json') {
-    writeBody(JSON.stringify(req.body));
+    writeBody(req.body);
   }
 }
 
