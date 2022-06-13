@@ -1279,7 +1279,7 @@ const actions = {
           const newStrat = state.namespacesConfig.data[nsIdx].schema_compatibility_strategy
 
           if (!newStrat || newStrat === 'UNDEFINED') {
-            compatMode = oldStrat.toUpperCase()
+            compatMode = oldStrat ? oldStrat.toUpperCase() : 'UNDEFINED'
           } else {
             compatMode = newStrat
           }
