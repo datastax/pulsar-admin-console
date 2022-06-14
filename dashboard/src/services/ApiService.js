@@ -766,4 +766,13 @@ export default {
     const response = ApiBase().post(`${cluster}/${type}/${topicPath}/all_subscription/expireMessages/${expireTime}`)
     return response
   },
+  updateSubscriptionProperites (cluster, type, topicPath, subName, properties) {
+    var encodedSub = encodeURIComponent(subName)
+    const response = ApiBase().put(`${cluster}/${type}/${topicPath}/subscription/${encodedSub}/properties`, properties, {
+      headers: {
+        'Content-Type': 'application/json'
+      } 
+    });
+    return response
+  }
 }
