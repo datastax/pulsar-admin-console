@@ -513,8 +513,7 @@
                                     <label for="filteringSwitch">JMS Filtering</label>
                                     <fieldset>
                                         <vuestic-switch id="filteringSwitch" v-model="jmsFiltering">
-                                        <span
-                                            slot="trueTitle">True</span>
+                                        <span slot="trueTitle">True</span>
                                         <span slot="falseTitle">False</span>
                                         </vuestic-switch>
                                     </fieldset>
@@ -1005,9 +1004,6 @@ export default {
       return datum
     },
     async updateSubscriptionProperties () {
-      console.log(this.jmsFiltering)
-      console.log(this.jmsSelector)
-
       const subName = this.subToModify
       let infoObject = this.topicStats.data[this.$route.params.id].info
       let cluster = infoObject.cluster
