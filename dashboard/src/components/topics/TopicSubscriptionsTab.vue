@@ -506,21 +506,29 @@
                                 <vuestic-modal ref="subPropertiesModal"
                                             :okText="'modal.confirm' | translate"
                                             v-on:ok="updateSubscriptionProperties()"
-                                            v-bind:large="true"
                                             :cancelText="'modal.cancel' | translate">
                                   <div slot="title">Subscription Properties</div>
-                                  <div class="jms-property-spacing">
-                                    <label for="filteringSwitch">JMS Filtering</label>
-                                    <fieldset>
-                                        <vuestic-switch id="filteringSwitch" v-model="jmsFiltering">
-                                        <span slot="trueTitle">True</span>
-                                        <span slot="falseTitle">False</span>
-                                        </vuestic-switch>
-                                    </fieldset>
-                                  </div>
-                                  <div>
-                                    <label for="jmsSelectors">JMS Selector</label>
-                                    <textarea id="jmsSelectors" v-model="jmsSelector" placeholder="Enter your JMS Selector" :rows="8" style="width: 100%;"></textarea>
+                                    <div class="jms-property-spacing">
+                                      <label for="filteringSwitch">JMS Filtering</label>
+                                      <fieldset>
+                                          <vuestic-switch id="filteringSwitch" v-model="jmsFiltering">
+                                          <span slot="trueTitle">On</span>
+                                          <span slot="falseTitle">Off</span>
+                                          </vuestic-switch>
+                                      </fieldset>
+                                    </div>
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                          <label for="jmsSelector">JMS Selector</label>
+                                          <input id="jmsSelector"
+                                          name="subscriptionName"
+                                          ref="subscriptionName"
+                                          v-model="jmsSelector"
+                                          v-validate="namedEntityValidationRegex"
+                                          required
+                                          />
+                                          <i class="bar"></i>
+                                      </div>
                                   </div>
                                 </vuestic-modal>
                     </vuestic-widget>
@@ -736,7 +744,6 @@ export default {
     openSubProperties (subName) {
       this.subToModify = subName
       this.$refs.subPropertiesModal.open()
-      console.log(this.topicStats.data[this.$route.params.id].stats.subscriptions[subName].subscriptionProperties)
       this.jmsFiltering = this.topicStats.data[this.$route.params.id].stats.subscriptions[subName].subscriptionProperties?.['jms.filtering'] === 'true'
       this.jmsSelector = this.topicStats.data[this.$route.params.id].stats.subscriptions[subName].subscriptionProperties?.['jms.selector'] ?? ''
     },
@@ -1337,6 +1344,6 @@ input[type=text] {
     padding-left: 20px;
 }
 .jms-property-spacing {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 </style>
