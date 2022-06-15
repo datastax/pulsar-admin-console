@@ -204,6 +204,7 @@
                                 <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openRewindSub(topicStat.subscriptionName)">Rewind</button>
                                 <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openExpireSub(topicStat.subscriptionName)">Expire</button>
                                 <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openPeekSub(topicStat.subscriptionName)">Peek</button>
+                                <button v-if="topicStats.data[$route.params.id].info.type === 'persistent'" class="btn btn-primary btn-micro btn-bottom-margin" @click="openSubProperties(topicStat.subscriptionName)">Properties</button>
                             </td>
                             <td>{{ topicStat.subscriptionName }}
                                 <i class="fa fa-clipboard pointer icon-table" v-clipboard:copy="topicStat.subscriptionName"
@@ -502,7 +503,31 @@
                                   </i>
                                 </div>
                                 </vuestic-modal>
-
+                                <vuestic-modal ref="subPropertiesModal"
+                                            :okText="'modal.confirm' | translate"
+                                            v-on:ok="updateSubscriptionProperties()"
+                                            :cancelText="'modal.cancel' | translate">
+                                  <div slot="title">Subscription Properties</div>
+                                    <div class="jms-property-spacing">
+                                      <label for="filteringSwitch">JMS Filtering</label>
+                                      <fieldset>
+                                          <vuestic-switch id="filteringSwitch" v-model="jmsFiltering">
+                                          <span slot="trueTitle">On</span>
+                                          <span slot="falseTitle">Off</span>
+                                          </vuestic-switch>
+                                      </fieldset>
+                                    </div>
+                                    <div class="form-group">
+                                      <div class="input-group">
+                                          <label for="jmsSelector">JMS Selector</label>
+                                          <input id="jmsSelector"
+                                          v-model="jmsSelector"
+                                          placeholder="Enter your JMS Selector"
+                                          />
+                                          <i class="bar"></i>
+                                      </div>
+                                  </div>
+                                </vuestic-modal>
                     </vuestic-widget>
             </div>
         </div>
@@ -608,7 +633,9 @@ export default {
       pageSize: 10,
       pageSizeMenu: [10, 20, 50, 100],
       currentPage: 1,
-      totalRow: 0
+      totalRow: 0,
+      jmsFiltering: false,
+      jmsSelector: '',
     }
   },
   methods: {
@@ -710,6 +737,12 @@ export default {
       var time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds()
       this.expireDateTime = date + ' ' + time
       this.$refs.expireSubModal.open()
+    },
+    openSubProperties (subName) {
+      this.subToModify = subName
+      this.$refs.subPropertiesModal.open()
+      this.jmsFiltering = this.topicStats.data[this.$route.params.id].stats.subscriptions[subName].subscriptionProperties?.['jms.filtering'] === 'true'
+      this.jmsSelector = this.topicStats.data[this.$route.params.id].stats.subscriptions[subName].subscriptionProperties?.['jms.selector'] ?? ''
     },
     showSub (subscription, topicStat) {
       let showSub = true
@@ -974,6 +1007,26 @@ export default {
       var datum = Date.parse(strDate)
       return datum
     },
+    async updateSubscriptionProperties () {
+      const subName = this.subToModify
+      let infoObject = this.topicStats.data[this.$route.params.id].info
+      let cluster = infoObject.cluster
+      let topicPath = infoObject.path
+      let type = infoObject.type
+      let properties = {
+        'jms.filtering': JSON.stringify(this.jmsFiltering),
+        'jms.selector': this.jmsSelector,
+      }
+
+      try {
+        const response = await ApiService.updateSubscriptionProperites(cluster, type, topicPath, subName, properties)
+      } catch (error) {
+        let [reason, statusCode] = this.decodeErrorObject(error)
+        this.errorText = `Updating properties for ${subName}. Reason: ${reason} (${statusCode})`
+        this.$refs.alert.showAlert()
+        this.subToClear = ''
+      }
+    }
   }
 }
 </script>
@@ -1286,5 +1339,8 @@ input[type=text] {
 .headerSortDown,
 .headerSortUp{
     padding-left: 20px;
+}
+.jms-property-spacing {
+  margin-bottom: 24px;
 }
 </style>

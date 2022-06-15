@@ -397,7 +397,6 @@ const mutations = {
   },
   updateBrokerLoadData (state, load) {
     state.brokerLoadData = load
-    console.log(state.brokerLoadData)
   },
   updateNumAllowedClusters (state, clusters) {
     state.numAllowedClusters = clusters
