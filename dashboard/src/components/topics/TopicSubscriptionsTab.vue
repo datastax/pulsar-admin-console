@@ -521,11 +521,8 @@
                                       <div class="input-group">
                                           <label for="jmsSelector">JMS Selector</label>
                                           <input id="jmsSelector"
-                                          name="subscriptionName"
-                                          ref="subscriptionName"
                                           v-model="jmsSelector"
-                                          v-validate="namedEntityValidationRegex"
-                                          required
+                                          placeholder="Enter your JMS Selector"
                                           />
                                           <i class="bar"></i>
                                       </div>
