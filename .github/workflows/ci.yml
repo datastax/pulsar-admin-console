@@ -23,7 +23,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@master
         with:
-          node-version: '14'
+          node-version: '16'
           check-latest: true
       - name: Build vue components
         run: |

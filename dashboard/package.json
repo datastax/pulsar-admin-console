@@ -14,7 +14,6 @@
     "stage": "vue-cli-service build --mode staging"
   },
   "dependencies": {
-    "awesome-bootstrap-checkbox": "1.0.0-alpha.5",
     "axios": "^0.25.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "4.0.0",
@@ -24,10 +23,8 @@
     "element-resize-detector": "^1.2.4",
     "epic-spinners": "^1.1.0",
     "es6-promise": "^4.2.8",
-    "extend": "3.0.2",
     "flag-icon-css": "^3.5.0",
     "font-awesome": "^4.7.0",
-    "gemini-scrollbar": "^1.5.1",
     "highlight.js": "^11.4.0",
     "ionicons": "^3.0.0",
     "jszip": "^3.7.1",
@@ -56,8 +53,7 @@
     "vue-toasted": "^1.1.28",
     "vuex": "^3.6.2",
     "vuex-i18n": "^1.13.1",
-    "vuex-persist": "^2.3.0",
-    "vuex-router-sync": "5.0.0"
+    "vuex-persist": "^2.3.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.15",
@@ -68,7 +64,7 @@
     "babel-eslint": "^10.1.0",
     "chalk": "2.4.1",
     "connect-history-api-fallback": "1.5.0",
-    "copy-webpack-plugin": "^10.2.0",
+    "copy-webpack-plugin": "^6.4.1",
     "eslint": "^6.7.2",
     "eslint-friendly-formatter": "4.0.1",
     "eslint-plugin-import": "^2.20.2",
@@ -78,14 +74,11 @@
     "eslint-plugin-vue": "^6.2.2",
     "eventsource-polyfill": "0.9.6",
     "express": "^4.17.2",
-    "extract-text-webpack-plugin": "3.0.2",
-    "file-loader": "2.0.0",
     "google-maps": "^3.3.0",
     "leaflet-map": "^0.2.1",
     "lint-staged": "^7.2.0",
     "medium-editor": "^5.23.3",
     "opn": "5.4.0",
-    "optimize-css-assets-webpack-plugin": "5.0.1",
     "ora": "3.0.0",
     "portfinder": "1.0.17",
     "rimraf": "2.6.2",
@@ -96,14 +89,15 @@
     "vue-flatpickr-component": "^8.1.7",
     "vue-friendly-iframe": "^0.17.0",
     "vue-template-compiler": "^2.6.14",
-    "vue-yandex-maps": "^0.7.9"
+    "vue-yandex-maps": "^0.7.9",
+    "webpack": "^4.46.0"
   },
   "resolutions": {
     "highlight.js": "^11.4.0"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": "^16.15.1",
+    "npm": "^8.11.0"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
