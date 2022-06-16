@@ -8,7 +8,7 @@ The admin console is a VueJS application that runs in a browser. It also include
 
 To install the Pulsar Admin Console:
 
-1. Ensure [node](https://nodejs.org/en/download/) version 14.18 or higher is installed.
+1. Ensure [node](https://nodejs.org/en/download/) version 16.15 or higher is installed.
 
 2. Download the latest release tarball from the [release page](https://github.com/datastax/pulsar-admin-console/releases).
 
