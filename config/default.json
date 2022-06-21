@@ -26,6 +26,14 @@
         "user_auth": {
             "username": "",
             "password": ""
+        },
+        "keycloak": {
+            "enabled": false,
+            "fullname": "",
+            "realms": "",
+            "enableTls": false,
+            "httpPort": "",
+            "httpsPort": ""
         }
     },
     "polling_interval": "10000",
