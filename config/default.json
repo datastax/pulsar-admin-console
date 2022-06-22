@@ -2,7 +2,7 @@
     "auth_mode": "none",
     "cluster_name": "standalone",
     "tenant": "public",
-    "oauth_client_id": "",
+    "oauth_client_id": "console",
     "server_config": {
         "port": "6454",
         "pulsar_url": "http://localhost:8080",
@@ -26,6 +26,14 @@
         "user_auth": {
             "username": "",
             "password": ""
+        },
+        "oauth2": {
+            "enabled": false,
+            "hostname": "",
+            "forwardingPath": "/token",
+            "enableTls": false,
+            "httpPort": "",
+            "httpsPort": ""
         }
     },
     "polling_interval": "10000",
