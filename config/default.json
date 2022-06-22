@@ -2,7 +2,7 @@
     "auth_mode": "none",
     "cluster_name": "standalone",
     "tenant": "public",
-    "oauth_client_id": "",
+    "oauth_client_id": "console",
     "server_config": {
         "port": "6454",
         "pulsar_url": "http://localhost:8080",
@@ -27,10 +27,10 @@
             "username": "",
             "password": ""
         },
-        "keycloak": {
+        "oauth2": {
             "enabled": false,
-            "fullname": "",
-            "realms": "",
+            "hostname": "",
+            "forwardingPath": "/token",
             "enableTls": false,
             "httpPort": "",
             "httpsPort": ""

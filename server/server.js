@@ -192,20 +192,20 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   selfHandleResponse: true
 }));
 
-const  keycloakTarget = cfg.globalConf.server_config.keycloak.enableTls ?
-      `https://${cfg.globalConf.server_config.keycloak.fullname}:${cfg.globalConf.server_config.keycloak.httpsPort}` :
-      `http://${cfg.globalConf.server_config.keycloak.fullname}:${cfg.globalConf.server_config.keycloak.httpPort}`
+const  keycloakTarget = cfg.globalConf.server_config.oauth2.enableTls ?
+      `https://${cfg.globalConf.server_config.oauth2.hostname}:${cfg.globalConf.server_config.oauth2.httpsPort}` :
+      `http://${cfg.globalConf.server_config.oauth2.hostname}:${cfg.globalConf.server_config.oauth2.httpPort}`
 
 app.use(createProxyMiddleware({
   target: keycloakTarget,
   pathFilter: (path, req) => {
-    if (cfg.globalConf.server_config.keycloak.enabled && path.includes('/api/v1/auth/token')) {
+    if (cfg.globalConf.server_config.oauth2.enabled && path.includes('/api/v1/auth/token')) {
       return true;
     }
     return false;
   },
   pathRewrite: (path, req) => {
-    return path.replace('/api/v1/auth/token', `/auth/realms/${cfg.globalConf.server_config.keycloak.realms}/protocol/openid-connect/token`)
+    return path.replace('/api/v1/auth/token', cfg.globalConf.server_config.oauth2.forwardingPath)
   },
   secure: cfg.globalConf.server_config.ssl.verify_certs,
 }))
