@@ -192,23 +192,14 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   selfHandleResponse: true
 }));
 
-const  keycloakTarget = cfg.globalConf.server_config.oauth2.enableTls ?
-      `https://${cfg.globalConf.server_config.oauth2.hostname}:${cfg.globalConf.server_config.oauth2.httpsPort}` :
-      `http://${cfg.globalConf.server_config.oauth2.hostname}:${cfg.globalConf.server_config.oauth2.httpPort}`
-
-app.use(createProxyMiddleware({
-  target: keycloakTarget,
-  pathFilter: (path, req) => {
-    if (cfg.globalConf.server_config.oauth2.enabled && path.includes('/api/v1/auth/token')) {
-      return true;
-    }
-    return false;
-  },
-  pathRewrite: (path, req) => {
-    return path.replace('/api/v1/auth/token', cfg.globalConf.server_config.oauth2.forwardingPath)
-  },
-  secure: cfg.globalConf.server_config.ssl.verify_certs,
-}))
+if (cfg.globalConf.auth_mode === 'openidconnect' && cfg.globalConf.server_config.oauth2.grant_type === 'password') {
+  app.use('/api/v1/auth/token', createProxyMiddleware({
+    target: cfg.globalConf.server_config.oauth2.identity_provider_url,
+    pathFilter: '/api/v1/auth/token',
+    pathRewrite: {'^/api/v1/auth/token': cfg.globalConf.server_config.oauth2.token_endpoint},
+    changeOrigin: true, // By changingOrigin, we're able to make internal k8s networking work for the token
+  }))
+}
 
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   target: cfg.globalConf.server_config.pulsar_url,
@@ -284,24 +275,27 @@ app.post('/api/user', (req, res) => {
   res.json("user addedd");
 });
 
-app.post('/api/v1/auth/token', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  try {
-    if (username && password) {
-      if (await isUserAuthenticated(username, password)) {
-        const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
-        // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
-        res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '12h'})});
-        return;
+// OpenID Connect has a different model defined above.
+if (cfg.globalConf.auth_mode !== 'openidconnect') {
+  app.post('/api/v1/auth/token', async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    try {
+      if (username && password) {
+        if (await isUserAuthenticated(username, password)) {
+          const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
+          // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
+          res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '12h'})});
+          return;
+        }
       }
+      res.status(401).send("incorrect credentials");
+    } catch (e) {
+      cfg.L.error(e);
+      res.status(401).send("login exception");
     }
-    res.status(401).send("incorrect credentials");
-  } catch (e) {
-    cfg.L.error(e);
-    res.status(401).send("login exception");
-  }
-});
+  });
+}
 
 app.post('/auth', async (req, res) => {
   const username = req.body.username;
