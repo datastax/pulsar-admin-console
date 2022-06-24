@@ -75,6 +75,7 @@ export function getPulsarToken (accessToken) {
 function buildLoginBody(username, password) {
     if (globalConf.auth_mode === 'openidconnect') {
         return new URLSearchParams({
+            scope: 'openid',
             username: username,
             password: password,
             client_id: globalConf.oauth_client_id,

@@ -73,12 +73,9 @@ In a geo-replication configuration, you will want to use the cluster name for th
 | server_config.kubernetes.service_port | | When using `k8s` auth_mode, specify a custom Kubernetes port. |
 | server_config.user_auth.username | | When using `user` auth_mode, the login user name. |
 | server_config.user_auth.password | | When using `user` auth_mode, the login password. |
-| server_config.oauth2.enabled | | When using `openidconnect` set to `true` to forward token requests. |
-| server_config.oauth2.hostname | | When using `openidconnect` set to your hostname ex: `localhost` |
-| server_config.oauth2.forwardingPath | | When using `openidconnect` set to the path you need to forward to to get the token |
-| server_config.oauth2.enableTls | | When using `openidconnect` set to `true` if you wish to use `HTTPS` |
-| server_config.oauth2.http | | When using `openidconnect` and only using `HTTP` set to your port |
-| server_config.oauth2.https | | When using `openidconnect` and using `HTTPS` set to your port |
+| server_config.oauth2.identity_provider_url | `""` | When using `auth_mode: openidconnect` set to your hostname and port. ex: `https://keycloak:8443`|
+| server_config.oauth2.token_endpoint | `""` | When using `auth_mode: openidconnect` set to the path you need to forward to to get the token. ex: `/token` |
+| server_config.oauth2.grant_type | `password` | When using `auth_mode: openidconnect` set to the grant type. Only `password` is support at this time. |
 | polling_interval | 10000 | How often the console polls Pulsar for updated values. In milliseconds. |
 | ca_certificate | | String of CA certificate to display in the console under Credentials. |
 | api_version | 2.8.3 | Version of the Pulsar client API to recommend under Samples. |
@@ -117,8 +114,8 @@ Once the user is authenticated using one of the Kubernetes secrets, the token fo
 
 ### Auth Mode: OpenID Connect
 In this auth mode, the dashboard will use your login credentials to attempt to retrieve a JWT from an authentication
-provider. In the [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart), this is implemented by
-integrating the Pulsar Admin Console with Keycloak. Upon successful retrieval of the JWT, the Pulsar Admin Console will
+provider by following the `password` grant type. In the [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart), this is implemented by
+integrating the Pulsar Admin Console with an identity provider, like Keycloak. Upon successful retrieval of the JWT, the Pulsar Admin Console will
 use the retrieved JWT as the bearer token when making calls to Pulsar.
 
 In addition to configuring the `auth_mode`, you also need to configure the `oauth_client_id`. This is the client id that
