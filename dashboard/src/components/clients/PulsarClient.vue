@@ -455,7 +455,7 @@ export default {
       if (this.consumerInterface === false) {
         consumeType = 'reader'
       }
-      let queryParms = '&subscriptionType=' + this.subscriptionType
+      let queryParms = 'subscriptionType=' + this.subscriptionType
       let subscriptionInfo = '/' + this.currentSubscription
       if (consumeType === 'reader') {
         let startPos = 'latest'
@@ -472,7 +472,7 @@ export default {
       const wsEndpoint = this.getClusterUrl(this.currentCluster.id, 'wss', this.wssUrlOverride) +
                     '/ws/v2/' + consumeType + '/' + this.topicType +'/' + this.tenant + '/' +
                     this.currentNamespace.id + '/' + this.currentConsumeTopic + subscriptionInfo +
-                    '?' + queryParms + 'token='
+                    '?' + queryParms + '&token='
       console.log('connecting consumer', wsEndpoint)
 
       // Add token after logging endpoint
