@@ -48,6 +48,13 @@ the Pulsar CLI command `pulsar-admin brokers list <clustername>`. The cluster na
 In a geo-replication configuration, you will want to use the cluster name for the local cluster. You must set the cluster name in the 
 `cluster_name` setting of the configuration file.
 
+### TLS for upstream targets using self-signed certificates
+
+If you are using self-signed certificates, it is essential to configure the trusted root CA certificate(s) so that the
+Pulsar Admin Console server can securely proxy requests to upstream servers. This can be done by setting this
+environment variable, `NODE_EXTRA_CA_CERTS`, to the path to the trust ca.crt file. Please see [this](https://nodejs.org/api/cli.html#node_extra_ca_certsfile)
+official Node.js documentation for additional details.
+
 ### Configuration reference
 
 | Setting     | Default | Description |
