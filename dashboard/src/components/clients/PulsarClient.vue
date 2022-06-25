@@ -413,26 +413,17 @@ export default {
     clearMessages () {
       this.messages = []
     },
-    getToken () {
-      let token = ''
-        if (isAuthRequired()) {
-          token = this.adminToken;
-        } else {
-          token = this.clientToken;
-        } 
-
-        return token
-    },
     connectProducer () {
       this.connectError = false
 
       const wsEndpoint = this.getClusterUrl(this.currentCluster.id, 'wss', this.wssUrlOverride) +
                     '/ws/v2/producer/' + this.topicType + '/' + this.tenant + '/' + this.currentNamespace.id + '/' + this.currentProduceTopic +
-                    '/?token=' + this.getToken()
+                    '/?token='
 
       console.log('connecting producer', wsEndpoint)
 
-      this.producerSocket = new WebSocket(wsEndpoint)
+      // Add token after logging endpoint
+      this.producerSocket = new WebSocket(wsEndpoint + this.clientToken)
       this.producerSocket.onopen = () => {
         this.producerConnected = true
         this.$emit('connected')
@@ -481,10 +472,11 @@ export default {
       const wsEndpoint = this.getClusterUrl(this.currentCluster.id, 'wss', this.wssUrlOverride) +
                     '/ws/v2/' + consumeType + '/' + this.topicType +'/' + this.tenant + '/' +
                     this.currentNamespace.id + '/' + this.currentConsumeTopic + subscriptionInfo +
-                    '?token=' + this.getToken() + queryParms 
+                    '?' + queryParms + 'token='
       console.log('connecting consumer', wsEndpoint)
 
-      this.consumerSocket = new WebSocket(wsEndpoint)
+      // Add token after logging endpoint
+      this.consumerSocket = new WebSocket(wsEndpoint + this.clientToken)
 
       this.consumerSocket.onerror = (e) => {
         console.log('WebSocket Error on consumer: ', e)
