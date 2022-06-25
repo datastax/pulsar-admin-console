@@ -76,6 +76,7 @@ app.use('/ws/', createProxyMiddleware({
   target: cfg.globalConf.server_config.websocket_url,
   ws: true,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
+  changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
 const connectorPathRewrite = (path, req) => {
@@ -141,6 +142,9 @@ const onProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
     const body = req.body;
+
+    // Rewrite host header to support hostname verification.
+    headers.host = new URL(proxyRes.headers.location).host
 
     axios({
       url: proxyRes.headers.location,
