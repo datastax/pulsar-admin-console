@@ -171,7 +171,8 @@ app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true
+  selfHandleResponse: true,
+  changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
@@ -180,7 +181,8 @@ app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true
+  selfHandleResponse: true,
+  changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
@@ -189,7 +191,8 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true
+  selfHandleResponse: true,
+  changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
 if (cfg.globalConf.auth_mode === 'openidconnect' && cfg.globalConf.server_config.oauth2.grant_type === 'password') {
@@ -197,7 +200,9 @@ if (cfg.globalConf.auth_mode === 'openidconnect' && cfg.globalConf.server_config
     target: cfg.globalConf.server_config.oauth2.identity_provider_url,
     pathFilter: '/api/v1/auth/token',
     pathRewrite: {'^/api/v1/auth/token': cfg.globalConf.server_config.oauth2.token_endpoint},
-    changeOrigin: true, // By changingOrigin, we're able to make internal k8s networking work for the token
+    changeOrigin: true, // Necessary for hostname verification to pass because of the `Host` header. Also, note
+                        // that this has the side effect of making the JWT have the issuer from the proxy's perspective.
+                        // That is helpful when running with a Kubernetes based issuer.
   }))
 }
 
@@ -207,7 +212,8 @@ app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true
+  selfHandleResponse: true,
+  changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }))
 
 app.use(bodyParser.urlencoded({ extended: true }));
