@@ -37,5 +37,5 @@ tarball:
 	docker cp pac-tarball:/home/appuser/ pulsar-admin-console-$(TAG)/
 	docker rm -f pac-tarball
 	tar -czf pulsar-admin-console-$(TAG).tar.gz pulsar-admin-console-$(TAG)/
-	rm -r pulsar-admin-console-$(TAG)/
+	rm -rf pulsar-admin-console-$(TAG)/
 	openssl dgst -sha512 pulsar-admin-console-$(TAG).tar.gz
