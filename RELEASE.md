@@ -15,7 +15,7 @@ Docker release image is built by the automated Docker Hub build process. The bui
 Here is an example how to tag and push to `origin` that will automatically trigger a Docker Hub build.
 
 ### Tag Requirements
-1. The tag has to conform the regex `^[0-9.]+`. It's recommended to follow major.minor.patch pattern in decimal format.
+1. The tag has to conform the regex `^[0-9.]+`. It's recommended to follow major.minor.patch pattern in decimal format. When testing larger changes, it can be helpful to create a tag like `x.y.z-rc-i` where `i` starts at 1 and gets incremented if intermediate changes are required. Then, once the release candidate passes any internal validation testing, we can create a tag for `x.y.z`. This way, pre-releases do not force us to increment the patch version number needlessly.
 2. Release should be tagged on the `master` branch
 3. Release tag must be incremented.
 
