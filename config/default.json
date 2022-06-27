@@ -12,8 +12,8 @@
         "admin_token": "",
         "token_secret": "",
         "ssl": {
-            "verify_certs": false,
-            "hostname_validation": false,
+            "verify_certs": true,
+            "hostname_validation": true,
             "ca_path": "",
             "cert_path": "",
             "key_path": ""
