@@ -7,6 +7,7 @@
         "port": "6454",
         "pulsar_url": "http://localhost:8080",
         "websocket_url": "https://websocket.example.com:8500",
+        "function_worker_url": "",
         "log_level": "info",
         "token_path": "",
         "admin_token": "",

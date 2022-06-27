@@ -168,9 +168,12 @@ const onProxyRes = (proxyRes, req, res) => {
   }
 };
 
+// If function work URL is defined, use for function path, otherwise use Pulsar URL
+const functionUrl = cfg.globalConf.server_config.function_worker_url ? cfg.globalConf.server_config.function_worker_url : cfg.globalConf.server_config.pulsar_url
+
 // Proxies
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
-  target: cfg.globalConf.server_config.pulsar_url,
+  target: functionUrl,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
@@ -180,7 +183,7 @@ app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
-  target: cfg.globalConf.server_config.pulsar_url,
+  target: functionUrl,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
@@ -190,7 +193,7 @@ app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
-  target: cfg.globalConf.server_config.pulsar_url,
+  target: functionUrl,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
   onProxyRes,
