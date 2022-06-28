@@ -66,12 +66,13 @@ official Node.js documentation for additional details.
 | server_config.port | 6454 | The listen port for the console server |
 | server_config.pulsar_url | http://localhost:8080 | URL for connecting to the Pulsar cluster. Should point to either a broker or Pulsar proxy. The console server must be able to reach this URL. 
 | server_config.websocket_url | https://websocket.example.com:8500 | URL for WebSocket proxy. Used by Test Clients to connect to Pulsar. The console server must be able to reach this URL. 
+| server_config.function_worker_url | `""` | URL for function worker. The default value of `""` means that the server will proxy all function/sink/source calls to the `pulsar_url`. This only needs to be set when the `pulsar_url` cannot handle function/sink/source requests. The console server must be able to reach this URL.
 | server_config.log_level | info | Log level for the console server
 | server_config.token_path |  | When using `user` or `k8s` auth mode, a Pulsar token is used to connect to the Pulsar cluster. This specifies the path to a file that contains the token to use. For full access, a superuser token is recommended. Alternatively, use `admin_token`. |
 | server_config.admin_token | | When using `user` or `k8s` auth mode, a Pulsar token is used to connect to the Pulsar cluster. This specifies the token as a string. For full access, a superuser token is recommended. The `token_path` setting will override this value if present.|
 | server_config.token_secret| | Secret used when signing access token for logging into the console. If not specified, a default secret is used |
-| server_config.ssl.verify_certs | false | Verify TLS certificate is trusted |
-| server_config.ssl.hostname_validation | | Verify hostname matches the TLS certificate |
+| server_config.ssl.verify_certs | `true` | Verify TLS certificate is trusted |
+| server_config.ssl.hostname_validation | `true` | Verify hostname matches the TLS certificate |
 | server_config.ssl.ca_path | | Path to the CA certificate. To enable HTTPS, `ca_path`, `cert_path`, and `key_path` must all be set |
 | server_config.ssl.cert_path | | Path to the server certificate. To enable HTTPS, `ca_path`, `cert_path`, and `key_path` must all be set |
 | server_config.ssl.key_path | | Path to the TLS key. To enable HTTPS, `ca_path`, `cert_path`, and `key_path` must all be set |

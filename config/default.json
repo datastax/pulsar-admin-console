@@ -7,13 +7,14 @@
         "port": "6454",
         "pulsar_url": "http://localhost:8080",
         "websocket_url": "https://websocket.example.com:8500",
+        "function_worker_url": "",
         "log_level": "info",
         "token_path": "",
         "admin_token": "",
         "token_secret": "",
         "ssl": {
-            "verify_certs": false,
-            "hostname_validation": false,
+            "verify_certs": true,
+            "hostname_validation": true,
             "ca_path": "",
             "cert_path": "",
             "key_path": ""
