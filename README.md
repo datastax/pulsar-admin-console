@@ -1,6 +1,6 @@
-# Pulsar Admin Console
+# DataStax Admin Console for Apache Pulsar
 
-Pulsar Admin Console is a web based UI that administrates topics, namespaces, sources, sinks and various aspects of [Apache Pulsar](https://pulsar.apache.org/) features.
+DataStax Admin Console for Apache Pulsar, referred to as *Pulsar Admin Console* in short here after, is a web based UI that administrates topics, namespaces, sources, sinks and various aspects of [Apache Pulsar](https://pulsar.apache.org/) features.
 
 The admin console is a VueJS application that runs in a browser. It also includes a web server that serves up the files for the admin console as well as providing configuration and authentication services.
 
