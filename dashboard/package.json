@@ -93,7 +93,8 @@
     "webpack": "^4.46.0"
   },
   "resolutions": {
-    "highlight.js": "^11.4.0"
+    "highlight.js": "^11.4.0",
+    "moment": "^2.29.4"
   },
   "engines": {
     "node": "^16.15.1",
