@@ -86,24 +86,6 @@ const rootPathRewrite = (path, req) => {
   return path.replace(`/api/v1/${cluster}/`, '/admin/v2/')
 }
 
-/**
-* Remove certain proxy headers that cause routing failure (HTTP 502) in the pulsar
-* proxy.
-* @param {http.ClientRequest} proxyReq - The request to be proxied to the backend service.
-*/
-const removeProxyHeaders = (proxyReq) => {
-  proxyReq.removeHeader('cookie')
-  proxyReq.removeHeader('x-forwarded-for')
-  proxyReq.removeHeader('x-forwarded-host')
-  proxyReq.removeHeader('x-forwarded-port')
-  proxyReq.removeHeader('x-forwarded-proto')
-  proxyReq.removeHeader('x-forwarded-scheme')
-  proxyReq.removeHeader('x-real-ip')
-  proxyReq.removeHeader('x-request-id')
-  proxyReq.removeHeader('x-scheme')
-  proxyReq.removeHeader('x-vouch-user')
-}
-
 // broker/load-report handler
 app.use('/api/v1/brokerPath/', (req, res, next) => {
   const broker = req.url.replace('/', '');
@@ -136,8 +118,8 @@ app.use('/config.js', (req, res, next) => {
 const onProxyReq = (proxyReq, req, res) => {
   // Use the configured pulsar token to access pulsar services.
   proxyReq.setHeader('Authorization', 'Bearer ' + cfg.globalConf.server_config.admin_token)
-
-  removeProxyHeaders(proxyReq)
+  // Remove the cookie header because this can sometimes cause issues with the pulsar proxy
+  proxyReq.removeHeader('cookie')
 
   const emptyObj = '{}'
   if (req.body == undefined || JSON.stringify(req.body) == emptyObj) {
