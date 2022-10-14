@@ -116,6 +116,9 @@ app.use('/config.js', (req, res, next) => {
 
 // Right the body to the req object. Fixes the issues body-parser causes for the proxies
 const onProxyReq = (proxyReq, req, res) => {
+  // Remove the cookie header because this can sometimes cause issues with the pulsar proxy
+  proxyReq.removeHeader('cookie')
+
   const emptyObj = '{}'
   if (req.body == undefined || JSON.stringify(req.body) == emptyObj) {
     return;
@@ -138,6 +141,11 @@ if (!cfg.globalConf.server_config.ssl.hostname_validation) {
 
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
+
+  if (proxyRes?.statusCode >= 400) {
+    cfg.L.warn('proxy request failed with status ' + proxyRes.statusCode + ', url: \'' + proxyRes.req.host + proxyRes.req.path + '\'')
+  }
+
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
     const body = req.body;
