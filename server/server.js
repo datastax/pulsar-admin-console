@@ -116,8 +116,6 @@ app.use('/config.js', (req, res, next) => {
 
 // Right the body to the req object. Fixes the issues body-parser causes for the proxies
 const onProxyReq = (proxyReq, req, res) => {
-  // Use the configured pulsar token to access pulsar services.
-  proxyReq.setHeader('Authorization', 'Bearer ' + cfg.globalConf.server_config.admin_token)
   // Remove the cookie header because this can sometimes cause issues with the pulsar proxy
   proxyReq.removeHeader('cookie')
 
