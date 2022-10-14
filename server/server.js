@@ -86,6 +86,24 @@ const rootPathRewrite = (path, req) => {
   return path.replace(`/api/v1/${cluster}/`, '/admin/v2/')
 }
 
+/**
+* Remove certain proxy headers that cause routing failure (HTTP 502) in the pulsar
+* proxy.
+* @param {http.ClientRequest} proxyReq - The request to be proxied to the backend service.
+*/
+const removeProxyHeaders = (proxyReq) => {
+  proxyReq.removeHeader('cookie')
+  proxyReq.removeHeader('x-forwarded-for')
+  proxyReq.removeHeader('x-forwarded-host')
+  proxyReq.removeHeader('x-forwarded-port')
+  proxyReq.removeHeader('x-forwarded-proto')
+  proxyReq.removeHeader('x-forwarded-scheme')
+  proxyReq.removeHeader('x-real-ip')
+  proxyReq.removeHeader('x-request-id')
+  proxyReq.removeHeader('x-scheme')
+  proxyReq.removeHeader('x-vouch-user')
+}
+
 // broker/load-report handler
 app.use('/api/v1/brokerPath/', (req, res, next) => {
   const broker = req.url.replace('/', '');
@@ -116,6 +134,11 @@ app.use('/config.js', (req, res, next) => {
 
 // Right the body to the req object. Fixes the issues body-parser causes for the proxies
 const onProxyReq = (proxyReq, req, res) => {
+  // Use the configured pulsar token to access pulsar services.
+  proxyReq.setHeader('Authorization', 'Bearer ' + cfg.globalConf.server_config.admin_token)
+
+  removeProxyHeaders(proxyReq)
+
   const emptyObj = '{}'
   if (req.body == undefined || JSON.stringify(req.body) == emptyObj) {
     return;
@@ -138,6 +161,11 @@ if (!cfg.globalConf.server_config.ssl.hostname_validation) {
 
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
+
+  if (proxyRes?.statusCode >= 400) {
+    cfg.L.warn('proxy request failed with status ' + proxyRes.statusCode + ', url: \'' + proxyRes.req.host + proxyRes.req.path + '\'')
+  }
+
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
     const body = req.body;
