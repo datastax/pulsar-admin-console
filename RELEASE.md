@@ -22,13 +22,13 @@ Here is an example how to tag and push to `origin` that will automatically trigg
 ### Tag and Push to remote
 Tag and push to the remote `origin` will trigger a Docker Hub build.
 
-Tag the HEAD commit
+Create a signed tag against HEAD
 ```
-$ git tag 1.0.0
+$ git -s tag 1.0.0
 ```
 Or tag a specific commit.
 ```
-$ git tag 1.0.0 <commit sha>
+$ git -s tag 1.0.0 <commit sha>
 ```
 
 Push to the remote. In this case, `origin` is the remote.
