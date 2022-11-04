@@ -14,7 +14,7 @@ RUN chmod -R g=u /build/dist
 #
 # build node app in the next stage
 # 
-FROM node:16.15.1-alpine
+FROM node:16.18-alpine
 
 LABEL maintainer="ming luo"
 
