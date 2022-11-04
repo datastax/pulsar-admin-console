@@ -31,7 +31,6 @@ const bodyParser = require('body-parser');
 cfg.L.debug('Global config ', cfg.globalConf)
 require('dotenv').config()
 
-
 let k8s = ''
 const cluster = cfg.globalConf.home_cluster;
 
@@ -44,7 +43,6 @@ if (cfg.globalConf.auth_mode === "k8s") {
 
 const app = express(),
       cookieSession = require('cookie-session');
-
 
 const isUserAuthenticated = async (username, password) => {
 
@@ -73,6 +71,7 @@ const users = [];
 app.use(bodyParser.json({ strict: false}));
 
 app.use('/ws/', createProxyMiddleware({
+  logLevel: cfg.globalConf.server_config.log_level,
   target: cfg.globalConf.server_config.websocket_url,
   ws: true,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
@@ -117,6 +116,9 @@ app.use('/config.js', (req, res, next) => {
 
 // Right the body to the req object. Fixes the issues body-parser causes for the proxies
 const onProxyReq = (proxyReq, req, res) => {
+  // Remove the cookie header because this can sometimes cause issues with the pulsar proxy
+  proxyReq.removeHeader('cookie')
+
   const emptyObj = '{}'
   if (req.body == undefined || JSON.stringify(req.body) == emptyObj) {
     return;
@@ -139,6 +141,11 @@ if (!cfg.globalConf.server_config.ssl.hostname_validation) {
 
 // Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
+
+  if (proxyRes?.statusCode >= 400) {
+    cfg.L.warn('proxy request failed with status ' + proxyRes.statusCode + ', url: \'' + proxyRes.req.host + proxyRes.req.path + '\'')
+  }
+
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
     const body = req.body;
@@ -173,6 +180,7 @@ const functionUrl = cfg.globalConf.server_config.function_worker_url ? cfg.globa
 
 // Proxies
 app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
+  logLevel: cfg.globalConf.server_config.log_level,
   target: functionUrl,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
@@ -183,6 +191,7 @@ app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
 }));
 
 app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
+  logLevel: cfg.globalConf.server_config.log_level,
   target: functionUrl,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
@@ -193,6 +202,7 @@ app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
 }));
 
 app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
+  logLevel: cfg.globalConf.server_config.log_level,
   target: functionUrl,
   pathRewrite: connectorPathRewrite,
   onProxyReq,
@@ -204,6 +214,7 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
 
 if (cfg.globalConf.auth_mode === 'openidconnect' && cfg.globalConf.server_config.oauth2.grant_type === 'password') {
   app.use('/api/v1/auth/token', createProxyMiddleware({
+    logLevel: cfg.globalConf.server_config.log_level,
     target: cfg.globalConf.server_config.oauth2.identity_provider_url,
     pathFilter: '/api/v1/auth/token',
     pathRewrite: {'^/api/v1/auth/token': cfg.globalConf.server_config.oauth2.token_endpoint},
@@ -214,6 +225,7 @@ if (cfg.globalConf.auth_mode === 'openidconnect' && cfg.globalConf.server_config
 }
 
 app.use(`/api/v1/${cluster}`, createProxyMiddleware({
+  logLevel: cfg.globalConf.server_config.log_level,
   target: cfg.globalConf.server_config.pulsar_url,
   pathRewrite: rootPathRewrite,
   onProxyReq,
