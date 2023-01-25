@@ -1,0 +1,145 @@
+#
+#
+# Copyright DataStax, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Default values for pulsar-admin-console.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+enabled: true
+replicaCount: 1
+
+image:
+  repository: datastax/pulsar-admin-console
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  annotations: {}
+  type: ClusterIP
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  #  - ui.host.com
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - ui.host.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+additionalVolumes: []
+additionalVolumeMounts: []
+
+env: []
+
+createUserSecret:
+  enabled: false
+  user: admin
+  password: admin
+
+config:
+  auth_mode: none
+  cluster_name: default
+  tenant: public
+  oauth_client_id: ""
+  polling_interval: ""
+  ca_certificate: ""
+  api_version: "2.11.0"
+  notice_text: ""
+  functions_disabled: "false"
+  render_monitoring_tab: "false"
+  grafana_url: ""
+  clients_disabled: "false"
+  host_overrides:
+    pulsar: http://localhost:6650
+    ws: ws://localhost:8080
+    http: http://localhost:8964
+  server_config:
+    # http://pulsar-broker:8080
+    pulsar_url: ""
+    # ws://pulsar-proxy-ws:8000
+    websocket_url: ""
+    # http://pulsar-function:6750
+    function_worker_url: ""
+    log_level: info
+    token_path: ""
+    admin_token: ""
+    token_secret: ""
+    ssl:
+      enabled: false
+      verify_certs: true
+      hostname_validation: true
+      ca_path: ""
+      cert_path: ""
+      key_path: ""
+    kubernetes:
+      kubernetes_service_host: ""
+      service_port: ""
+    user_auth:
+      username: ""
+      password: ""
+    oauth2:
+      identity_provider_url: ""
+      token_endpoint: ""
+      grant_type: "password"

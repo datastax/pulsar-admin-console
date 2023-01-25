@@ -1,0 +1,81 @@
+#
+# Copyright DataStax, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+{{- if .Values.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "pulsar-admin-console.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+      {{- include "pulsar-admin-console.labels" . | nindent 4 }}
+data:
+  local.json: |
+    {
+      "tenant": "{{ .Values.config.tenant }}",
+      "cluster_name": "{{ .Values.config.cluster_name }}",
+      "auth_mode": "{{ .Values.config.auth_mode }}",
+      "server_config": {
+          {{- if .Values.config.server_config.ssl.enabled }}
+        "port": "8443",
+          {{- else }}
+        "port": "8080",
+          {{- end }}
+        "token_path": "{{ .Values.config.server_config.token_path }}",
+        "token_secret": "{{ .Values.config.server_config.token_secret }}",
+        "pulsar_url": "{{ .Values.config.server_config.pulsar_url }}",
+        "websocket_url": "{{ .Values.config.server_config.websocket_url }}",
+        "function_worker_url": "{{ .Values.config.server_config.function_worker_url }}",
+        "log_level": "{{ .Values.config.server_config.log_level }}",
+        "kubernetes": {
+          "k8s_namespace": "{{ .Release.Namespace }}",
+          "kubernetes_service_host": "{{ .Values.config.server_config.kubernetes.kubernetes_service_host }}",
+          "service_port": "{{ .Values.config.server_config.kubernetes.service_port }}"
+        },
+        "ssl": {
+          "verify_certs": "{{ .Values.config.server_config.ssl.verify_certs }}",
+          "hostname_validation": "{{ .Values.config.server_config.ssl.hostname_validation }}",
+          "ca_path": "{{ .Values.config.server_config.ssl.ca_path }}",
+          "cert_path": "{{ .Values.config.server_config.ssl.cert_path }}",
+          "key_path": "{{ .Values.config.server_config.ssl.key_path }}"
+        },
+        "oauth2": {
+          "identity_provider_url": "{{ .Values.config.server_config.oauth2.identity_provider_url }}",
+          "token_endpoint": "{{ .Values.config.server_config.oauth2.token_endpoint }}",
+          "grant_type": "{{ .Values.config.server_config.oauth2.token_endpoint }}"
+        },
+        "user_auth": {
+          "username": "{{ .Values.config.server_config.user_auth.username }}",
+          "password": "{{ .Values.config.server_config.user_auth.password }}"
+        }
+      },
+      "polling_interval": "{{ .Values.config.polling_interval }}",
+      "ca_certificate": "{{ .Values.config.ca_certificate }}",
+      "notice_text": "{{ .Values.config.notice_text }}",
+      "functions_disabled": "{{ .Values.config.functions_disabled }}",
+      "render_monitoring_tab": "{{ .Values.config.render_monitoring_tab }}",
+      "clients_disabled": "{{ .Values.config.clients_disabled }}",
+      "api_version": "{{ .Values.config.api_version }}",
+      "grafana_url": "{{ .Values.config.grafana_url }}",
+      "oauth_client_id": "{{ .Values.config.oauth_client_id }}",
+      "host_overrides": {
+        "pulsar": "{{ .Values.config.host_overrides.pulsar }}",
+        "ws": "{{ .Values.config.host_overrides.ws }}",
+        "http": "{{ .Values.config.host_overrides.http }}"
+      }
+    }
+{{- end }}

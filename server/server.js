@@ -54,13 +54,13 @@ const isUserAuthenticated = async (username, password) => {
   if (cfg.globalConf.auth_mode === 'user') {
 
     if (cfg.globalConf.server_config.user_auth.username &&
-      cfg.globalConf.server_config.user_auth.password &&
-        username === cfg.globalConf.server_config.user_auth.username && 
+        cfg.globalConf.server_config.user_auth.password &&
+        username === cfg.globalConf.server_config.user_auth.username &&
         password === cfg.globalConf.server_config.user_auth.password ) {
 
       result = true
     }
-    
+
   } else if (cfg.globalConf.auth_mode === 'k8s') {
     result = await k8s.authenticate(username, password);
   }
@@ -252,7 +252,7 @@ app.get('/api/users', (req, res) => {
 
 app.post('/api/v1/auth/pulsar-token', async (req, res) => {
   cfg.L.info('api/v1/auth/pulsar-token called')
-  
+
   const username = req.body.username
   const password = req.body.password
   const access_token = req.body.access_token
@@ -276,7 +276,7 @@ app.post('/api/v1/auth/pulsar-token', async (req, res) => {
   } else {
     try {
       if (username && password) {
-      
+
         if (await isUserAuthenticated(username, password)) {
           const retVal = {
             admin_token: cfg.globalConf.server_config.admin_token,
@@ -290,7 +290,7 @@ app.post('/api/v1/auth/pulsar-token', async (req, res) => {
       cfg.L.error(e);
       res.status(401).send("login exception");
     }
-    
+
   }
 
 });
