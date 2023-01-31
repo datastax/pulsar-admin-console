@@ -38,6 +38,3 @@ const privateKeyToPem = async (privateKeyFilePath) => {
 module.exports = {
   privateKeyToPem
 };
-
-
-console.log(privateKeyToPem("/tmp/keys/knew.key"))
