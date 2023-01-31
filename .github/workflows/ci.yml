@@ -11,12 +11,12 @@ on:
       - created 
 
 jobs:
-  analysis:
-    name: static analysis
+  fe-checks:
+    name: Frontend checks
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
           path: go/src/github.com/datastax/pulsar-admin-console
@@ -31,6 +31,26 @@ jobs:
           npm ci
           npm install -g @vue/cli 
           npm run build
+
+  be-checks:
+    name: Backend checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          path: go/src/github.com/datastax/pulsar-admin-console
+      - name: Set up node
+        uses: actions/setup-node@master
+        with:
+          node-version: '16'
+          check-latest: true
+      - name: Build vue components
+        run: |
+          cd server
+          npm ci
+          npm test
 
   docker:
     name: docker

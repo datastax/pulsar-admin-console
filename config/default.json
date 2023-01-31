@@ -12,6 +12,12 @@
         "token_path": "",
         "admin_token": "",
         "token_secret": "",
+        "token_options": {
+            "private_key_path": "",
+            "claim": "sub",
+            "expires_in": "12h",
+            "algorithm": "HS256"
+        },
         "ssl": {
             "verify_certs": true,
             "hostname_validation": true,

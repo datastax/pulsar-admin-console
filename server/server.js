@@ -21,6 +21,7 @@ const express = require('express');
 const https = require('https');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const watch = require('./file-watch.js');
+const { privateKeyToPem } = require('./crypto')
 const fs = require('fs');
 const path = require('path');
 const randomId = require('random-id');
@@ -41,8 +42,9 @@ if (cfg.globalConf.auth_mode === "k8s") {
   cfg.L.info("Username/password authentication enabled")
 }
 
-const app = express(),
-      cookieSession = require('cookie-session');
+const app = express();
+let server
+const cookieSession = require('cookie-session');
 
 const isUserAuthenticated = async (username, password) => {
 
@@ -308,9 +310,27 @@ if (cfg.globalConf.auth_mode !== 'openidconnect') {
     try {
       if (username && password) {
         if (await isUserAuthenticated(username, password)) {
-          const secret = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
+          let secretOrPrivateKey
+
+          const tokenOptions = cfg.globalConf.server_config.token_options || {}
+          const privateKeyPath = tokenOptions.private_key_path
+          if (privateKeyPath) {
+            secretOrPrivateKey = await privateKeyToPem(privateKeyPath)
+            cfg.L.info('using local private key ' + privateKeyPath + ' for access_token for user ' + username);
+          } else {
+            secretOrPrivateKey = process.env.TOKEN_SECRET || cfg.globalConf.server_config.token_secret || "default-secret"
+            cfg.L.info('using secret for access_token for user ' + username);
+          }
+
+          const algorithm = tokenOptions.algorithm || 'HS256'
+          const expiresIn = tokenOptions.expires_in || '12h'
+          const claim = tokenOptions.expires_in || 'sub'
+          const claimObj = {}
+          claimObj[claim] = username
+          const jwtToken = jwt.sign(claimObj, secretOrPrivateKey, {expiresIn: expiresIn, algorithm});
+
           // This loosely complies with https://openid.net/specs/openid-connect-core-1_0.html section 3.2.2.5. Successful Authentication Response
-          res.send({access_token: jwt.sign({user: username}, secret, {expiresIn: '12h'})});
+          res.send({access_token: jwtToken});
           return;
         }
       }
@@ -352,26 +372,52 @@ app.get('/login', (req,res) => {
   // res.sendFile(path.join(__dirname, '../dashboard/dist/index.html'));
   res.sendFile(path.join(__dirname + '/login.html'));
 });
+const start = async () => {
+  const caPath = process.env.CA_PATH || cfg.globalConf.server_config.ssl.ca_path || '';
+  const certPath = process.env.CERT_PATH || cfg.globalConf.server_config.ssl.cert_path || '';
+  const keyPath = process.env.KEY_PATH || cfg.globalConf.server_config.ssl.key_path || '';
+  if (caPath != '' && certPath != '' && keyPath != '') {
+    const options = {
+      ca: [fs.readFileSync(caPath)],
+      cert: fs.readFileSync(certPath),
+      key: fs.readFileSync(keyPath),
+    };
 
-const caPath = process.env.CA_PATH || cfg.globalConf.server_config.ssl.ca_path || '';
-const certPath = process.env.CERT_PATH || cfg.globalConf.server_config.ssl.cert_path || '';
-const keyPath = process.env.KEY_PATH || cfg.globalConf.server_config.ssl.key_path || '';
-if (caPath != '' && certPath != '' && keyPath != '') {
-  const options = {
-    ca: [fs.readFileSync(caPath)],
-    cert: fs.readFileSync(certPath),
-    key: fs.readFileSync(keyPath),
-  };
-  
-  watch.exitOnFileChange(caPath);
-  watch.exitOnFileChange(certPath);
-  watch.exitOnFileChange(keyPath);
+    watch.exitOnFileChange(caPath);
+    watch.exitOnFileChange(certPath);
+    watch.exitOnFileChange(keyPath);
 
-  cfg.L.info(`HTTPS server listening on the port:${cfg.globalConf.server_config.port}`);
-  const server = https.createServer(options, app);
-  server.listen(cfg.globalConf.server_config.port);
-} else {
-  app.listen(cfg.globalConf.server_config.port, () => {
-    cfg.L.info(`HTTP server listening on the port:${cfg.globalConf.server_config.port}`);
-  });
+
+    server = https.createServer(options, app)
+        .listen(cfg.globalConf.server_config.port, () => {
+          cfg.L.info(`HTTPS server listening on the port: ${server.address().port}`);
+        })
+  } else {
+    server = app.listen(cfg.globalConf.server_config.port, () => {
+      cfg.L.info(`HTTP server listening on the port: ${server.address().port}`);
+    });
+  }
+}
+const shutdown = async () => {
+  if (server) {
+    server.close()
+  }
+}
+const getServer = () => {
+  return server
+}
+const getConfig = () => {
+  return cfg
+}
+
+
+module.exports = {
+  start,
+  shutdown,
+  getServer,
+  getConfig
+};
+
+if (require.main === module) {
+  start()
 }
