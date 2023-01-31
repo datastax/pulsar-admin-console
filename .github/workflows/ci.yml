@@ -46,7 +46,7 @@ jobs:
         with:
           node-version: '16'
           check-latest: true
-      - name: Build vue components
+      - name: Run unit tests
         run: |
           cd server
           npm ci
