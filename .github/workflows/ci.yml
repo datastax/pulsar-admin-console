@@ -52,8 +52,8 @@ jobs:
           npm ci
           npm test
 
-  docker:
-    name: docker
+  integration-tests:
+    name: integration-tests
     runs-on: ubuntu-latest 
     steps:
       - name: Check out code
@@ -64,5 +64,8 @@ jobs:
 
       - name: Build Admin Console Docker Image
         run: |
-          pwd
-          sudo docker build -t pulsar-admin-console .
+          sudo docker build -t datastax/pulsar-admin-console:latest-dev .
+      
+      - name: Run integration tests
+        run: |
+          ./charts/tests/run-tests.sh

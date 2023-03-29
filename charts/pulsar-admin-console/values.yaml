@@ -143,3 +143,5 @@ config:
       identity_provider_url: ""
       token_endpoint: ""
       grant_type: "password"
+
+enableTests: false

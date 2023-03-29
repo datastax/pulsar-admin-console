@@ -15,10 +15,8 @@
 # limitations under the License.
 #
 
-server:
-  pulsar:
-    tenant: public
-    cluster: pulsar-cluster
-    webServiceUrl: "http://pulsar-broker:8080"
-    webSocketUrl: "ws://pulsar-proxy:8000"
-    functionWorkerUrl: "http://pulsar-function:8080"
+config:
+  server_config:
+    pulsar_url: "http://pulsar-broker:8080"
+    websocket_url: "ws://pulsar-proxy:8000"
+    function_worker_url: "http://pulsar-function:8080"
