@@ -25,6 +25,11 @@ source $this_dir/k3s.sh
 k3s_stop
 k3s_start
 
+print_pods_logs() {
+    local namespace=$1
+    within_k3s kubectl get pods -n $namespace | tail -n 2 | awk '{print $1}' | while read pod; do echo "$pod logs:" && within_k3s kubectl logs $pod -n $namespace; done
+}
+
 for f in charts/pulsar-admin-console/templates/tests/*; do
     basename_test=$(basename $f)
     if [[ "$basename_test" != "test-"* ]]; then
@@ -46,10 +51,16 @@ for f in charts/pulsar-admin-console/templates/tests/*; do
     echo "starting test $release_name"
     within_k3s kubectl delete namespace $release_name 2> /dev/null || echo ""
     within_k3s helm install -n $release_name --create-namespace $release_name charts/pulsar-admin-console -f $values_file
-    within_k3s kubectl wait deployment -n $release_name $release_name-pulsar-admin-console --for condition=Available=True --timeout=90s
+    within_k3s kubectl wait deployment -n $release_name $release_name-pulsar-admin-console --for condition=Available=True --timeout=120s || (
+        echo "test $release_name failed, admin console deployment not ready" && 
+        print_pods_logs $release_name &&
+        within_k3s kubectl delete namespace $release_name &&
+        k3s_stop &&
+        exit 1
+    )
     within_k3s helm test -n $release_name $release_name --filter "name=$release_name" || (
         echo "test $release_name failed" && 
-        within_k3s kubectl get pods -n $release_name | tail -n 2 | awk '{print $1}' | while read pod; do echo "$pod logs:" && within_k3s kubectl logs $pod -n $release_name; done &&
+        print_pods_logs $release_name &&
         within_k3s kubectl delete namespace $release_name &&
         k3s_stop &&
         exit 1
