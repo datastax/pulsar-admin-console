@@ -52,7 +52,8 @@ for f in charts/pulsar-admin-console/templates/tests/*; do
     echo "starting test $release_name"
     within_k3s kubectl delete namespace $release_name 2> /dev/null || echo ""
     within_k3s helm install -n $release_name --create-namespace $release_name charts/pulsar-admin-console -f $values_file
-    within_k3s kubectl wait deployment -n $release_name $release_name-pulsar-admin-console --for condition=Available=True --timeout=120s || (
+    timeout="5m" # the first time it downloads the pulsar image so it might take time 
+    within_k3s kubectl wait deployment -n $release_name $release_name-pulsar-admin-console --for condition=Available=True --timeout=600s || (
         echo "test $release_name failed, admin console deployment not ready" && 
         print_pods_logs $release_name &&
         within_k3s kubectl delete namespace $release_name &&

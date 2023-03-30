@@ -16,6 +16,9 @@
 #
 enableTests: true
 
+image:
+  tag: "latest-dev"
+
 createUserSecret:
   enabled: true
   user: k8suser
