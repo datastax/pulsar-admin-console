@@ -45,7 +45,7 @@ k3s_load_image() {
     fi
     docker cp $workdir/$sha.tar.gz $docker_container:/tmp/$sha.tar.gz
     echo "Creating $docker_image in k3s"
-    docker exec -it $docker_container ctr image import /tmp/$sha.tar.gz
+    docker exec $docker_container ctr image import /tmp/$sha.tar.gz
 }
 
 within_k3s() {
