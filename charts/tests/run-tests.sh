@@ -24,6 +24,7 @@ filter_tests=${1:-""}
 source $this_dir/k3s.sh
 k3s_stop
 k3s_start
+k3s_load_image "datastax/pulsar-admin-console:latest-dev"
 
 print_pods_logs() {
     local namespace=$1

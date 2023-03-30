@@ -62,11 +62,10 @@ jobs:
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
-          path: go/src/github.com/datastax/pulsar-admin-console
 
       - name: Build Admin Console Docker Image
         run: |
-          sudo docker build -t datastax/pulsar-admin-console:latest-dev .
+          docker build -t datastax/pulsar-admin-console:latest-dev .
       
       - name: Run integration tests
         run: |

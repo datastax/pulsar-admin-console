@@ -18,6 +18,7 @@ enableTests: true
 
 image:
   tag: "latest-dev"
+
 config:
   
   auth_mode: "user"
