@@ -28,7 +28,12 @@ k3s_load_image "datastax/pulsar-admin-console:latest-dev"
 
 print_pods_logs() {
     local namespace=$1
-    within_k3s kubectl get pods -n $namespace | tail -n 2 | awk '{print $1}' | while read pod; do echo "$pod logs:" && within_k3s kubectl logs $pod -n $namespace; done
+    within_k3s kubectl get pods -n $namespace | tail -n 2 | awk '{print $1}' | while read pod; do 
+        echo "DESCRIBE POD: $pod" 
+        within_k3s kubectl describe pod/$pod -n $namespace
+        echo "LOGS FOR POD: $pod"
+        within_k3s kubectl logs $pod -n $namespace
+    done
 }
 
 for f in charts/pulsar-admin-console/templates/tests/*; do
