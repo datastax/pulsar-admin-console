@@ -324,7 +324,7 @@ if (cfg.globalConf.auth_mode !== 'openidconnect') {
 
           const algorithm = tokenOptions.algorithm || 'HS256'
           const expiresIn = tokenOptions.expires_in || '12h'
-          const claim = tokenOptions.expires_in || 'sub'
+          const claim = tokenOptions.claim || 'sub'
           const claimObj = {}
           claimObj[claim] = username
           const jwtToken = jwt.sign(claimObj, secretOrPrivateKey, {expiresIn: expiresIn, algorithm});
