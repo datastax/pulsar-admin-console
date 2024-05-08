@@ -102,7 +102,11 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
     res.status(resp.status).send(JSON.stringify(resp.data))
   }).catch((error) => {
     console.error(error);
-    res.status(error.response.status).send(error.response.data)
+    if(error.response){
+      res.status(error.response.status).send(error.response.data)
+    }else{
+      res.status(500).send(error.response?.data)
+    }
   })
 })
 
@@ -147,6 +151,11 @@ const onProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.statusCode >= 400) {
     cfg.L.warn('proxy request failed with status ' + proxyRes.statusCode + ', url: \'' + proxyRes.req.host + proxyRes.req.path + '\'')
   }
+
+  // set the response headers so that the frontend can decode the content
+  Object.keys(proxyRes.headers).forEach((key) => {
+    res.setHeader(key, proxyRes.headers[key]);
+  });
 
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
