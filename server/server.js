@@ -70,7 +70,7 @@ const isUserAuthenticated = async (username, password) => {
 // place holder for the user data
 const users = [];
 
-app.use(bodyParser.json({ strict: false}));
+app.use(bodyParser.json({strict: false}));
 
 app.use('/ws/', createProxyMiddleware({
   logLevel: cfg.globalConf.server_config.log_level,
@@ -102,7 +102,7 @@ app.use('/api/v1/brokerPath/', (req, res, next) => {
     res.status(resp.status).send(JSON.stringify(resp.data))
   }).catch((error) => {
     console.error(error);
-    res.status(error.response.status).send(error.response.data)
+    res.status(500).send(`Failed GET ${broker}`)
   })
 })
 
@@ -188,7 +188,6 @@ app.use(`/api/v1/${cluster}/functions`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true,
   changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
@@ -199,7 +198,6 @@ app.use(`/api/v1/${cluster}/sinks`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true,
   changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
@@ -210,7 +208,6 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true,
   changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }));
 
@@ -233,7 +230,6 @@ app.use(`/api/v1/${cluster}`, createProxyMiddleware({
   onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
-  selfHandleResponse: true,
   changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
 }))
 
