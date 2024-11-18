@@ -14,7 +14,7 @@
     "stage": "vue-cli-service build --mode staging"
   },
   "dependencies": {
-    "axios": "^0.25.0",
+    "axios": "^1.7.7",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "4.0.0",
     "chart.js": "^2.9.4",
