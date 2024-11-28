@@ -170,7 +170,7 @@ const onProxyRes = (proxyRes, req, res) => {
     }).catch((error) => {
       console.error(error)
       res.status(error?.response?.status || 500)
-        .send(error?.response?.data | 'Internal Server Error')
+        .send(error?.response?.data || 'Internal Server Error')
     })
   } else {
     res.statusCode = proxyRes.statusCode;
