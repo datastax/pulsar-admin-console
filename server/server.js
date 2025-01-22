@@ -343,7 +343,7 @@ app.post('/auth', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   if (username && password) {
-    let result = await isUserAuthenticated();
+    let result = await isUserAuthenticated(username, password);
     cfg.L.info('user ' + username + ' auth result ' + result);
 
     if (result) {
