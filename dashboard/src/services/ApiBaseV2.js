@@ -41,7 +41,7 @@ export default() => {
   return axios.create({
     baseURL: store.getters.apiBaseUrl.replace('v1', 'v2'),
     withCredentials: false,
-    timeout: 45000,
+    timeout: 0,
     headers,
   })
 }

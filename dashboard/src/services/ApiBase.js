@@ -39,7 +39,7 @@ export default() => {
   return axios.create({
     baseURL: store.getters.apiBaseUrl,
     withCredentials: false,
-    timeout: 45000,
+    timeout: 0,
     headers,
   })
 }
