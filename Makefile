@@ -18,18 +18,19 @@ all: container
 # Docker tag with v prefix to differentiate the official release build, triggered by git tagging
 #
 TAG ?= v0.0.4
-PREFIX ?= datastax/pulsar-admin-console
+PREFIX ?= docker.io/datastax/pulsar-admin-console
 
 container:
-	docker build -t $(PREFIX):$(TAG) .
-	docker tag $(PREFIX):$(TAG) ${PREFIX}:latest 
+	podman manifest create --amend $(PREFIX):$(TAG)
+	podman build --jobs=4 --platform linux/arm64,linux/amd64 --manifest $(PREFIX):$(TAG) -f Dockerfile .
+	podman tag $(PREFIX):$(TAG) ${PREFIX}:latest
 
 push: container
-	docker push $(PREFIX):$(TAG)
-	docker push $(PREFIX):latest
+	podman manifest push $(PREFIX):$(TAG)
+	podman manifest push $(PREFIX):$(TAG) $(PREFIX):latest
 
 clean:
-	docker rmi $(PREFIX):$(TAG)
+	podman rmi $(PREFIX):$(TAG)
 
 tarball:
 	rm -rf pulsar-admin-console-$(TAG)/
