@@ -67,7 +67,6 @@ jobs:
           path: go/src/github.com/datastax/pulsar-admin-console
 
       - name: Build Admin Console Docker Image
-        uses: gacts/install-podman@v1
         run: |
           pwd
           podman manifest create adminconsole
