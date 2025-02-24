@@ -62,6 +62,9 @@ jobs:
           fetch-depth: 1
           path: go/src/github.com/datastax/pulsar-admin-console
 
+      - name: Install Podman
+        uses: gacts/install-podman@v1
+
       - name: Build Admin Console Docker Image
         uses: gacts/install-podman@v1
         run: |
