@@ -56,6 +56,11 @@ jobs:
     name: docker
     runs-on: ubuntu-latest 
     steps:
+      - name: install podman
+        run: |
+          sudo apt-get -y install podman
+          sudo podman run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
       - name: Check out code
         uses: actions/checkout@v1
         with:
@@ -65,4 +70,5 @@ jobs:
       - name: Build Admin Console Docker Image
         run: |
           pwd
-          sudo docker build -t pulsar-admin-console .
+          podman manifest create adminconsole
+          podman build --platform linux/amd64,linux/arm64 . --manifest adminconsole
