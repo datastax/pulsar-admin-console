@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
+docker buildx create --use
 docker build --platform linux/arm64,linux/amd64 --push -f $DOCKERFILE_PATH -t $IMAGE_NAME .
 
