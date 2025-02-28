@@ -1,2 +1,4 @@
+#!/usr/bin/env bash
+
 docker build --platform linux/arm64,linux/amd64 --push -f $DOCKERFILE_PATH -t $IMAGE_NAME .
 
