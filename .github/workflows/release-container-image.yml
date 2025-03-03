@@ -48,4 +48,4 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: docker.io/datastax/pulsar-admin-console:${TAG}
+          tags: docker.io/datastax/pulsar-admin-console:${{ TAG }}
