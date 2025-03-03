@@ -39,6 +39,7 @@ jobs:
           if [[ $MANUAL_WORKFLOW_TAG != "" ]]; then
             TAG=${{ inputs.docker_tag }}
           fi
+          echo "TAG=${TAG}" >> "$GITHUB_ENV"
           echo "Using tag $TAG"
 
       - name: Build and push
