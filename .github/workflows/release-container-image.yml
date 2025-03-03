@@ -1,4 +1,4 @@
-name: release-container-image-test
+name: release-container-image
 
 on:
   push:
