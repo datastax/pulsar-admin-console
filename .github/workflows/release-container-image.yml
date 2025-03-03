@@ -36,7 +36,8 @@ jobs:
           if [[ $TAG == "master" ]]; then
             TAG=latest
           fi
-          if [[ ${{ inputs.docker_tag }} != "" ]]; then
+          MANUAL_WORKFLOW_TAG=${{ inputs.docker_tag }}
+          if [[ $MANUAL_WORKFLOW_TAG != "" ]]; then
             TAG=${{ inputs.docker_tag }}
           fi
           echo $TAG
