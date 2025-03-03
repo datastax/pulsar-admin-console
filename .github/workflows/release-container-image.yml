@@ -40,11 +40,11 @@ jobs:
           if [[ $MANUAL_WORKFLOW_TAG != "" ]]; then
             TAG=${{ inputs.docker_tag }}
           fi
-          echo $TAG
+          echo "Using tag $TAG"
 
-      # - name: Build and push
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     platforms: linux/amd64,linux/arm64
-      #     push: true
-      #     tags: docker.io/datastax/pulsar-admin-console:${{  github.ref_name }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: docker.io/datastax/pulsar-admin-console:$TAG
