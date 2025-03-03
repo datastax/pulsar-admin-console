@@ -1,10 +1,17 @@
-name: release-container-image
+name: release-container-image-test
 
 on:
   push:
+    branches:
+      - master
     tags:
       - '[0-9]+.[0-9]+.[0-9]+*'
   workflow_dispatch: # Manual Trigger
+    inputs:
+      docker_tag:
+        description: 'Docker tag to use'
+        required: true
+        default: 'dev'
 
 jobs:
   docker:
@@ -21,10 +28,21 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      
+      - name: Get the tag
+        run: |
+          TAG=${{ github.ref_name }}
+          if [[ $TAG == "master" ]]; then
+            TAG=latest
+          fi
+          if [[ ${{ inputs.docker_tag }} != "" ]]; then
+            TAG=${{ inputs.docker_tag }}
+          fi
+          echo $TAG
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: docker.io/datastax/pulsar-admin-console:${{  github.ref_name }}
+      # - name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     platforms: linux/amd64,linux/arm64
+      #     push: true
+      #     tags: docker.io/datastax/pulsar-admin-console:${{  github.ref_name }}
