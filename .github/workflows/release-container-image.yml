@@ -33,7 +33,7 @@ jobs:
       - name: Get the tag
         run: |
           TAG=${{ github.ref_name }}
-          if [[ $TAG == "master" ]]; then
+          if [[ $TAG == "master" or $TAG == "ss" ]]; then
             TAG=latest
           fi
           MANUAL_WORKFLOW_TAG=${{ inputs.docker_tag }}
