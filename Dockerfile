@@ -1,4 +1,4 @@
-FROM node:16 as UI-BUILD
+FROM node:16 AS ui-build
 
 WORKDIR /build
 
@@ -35,7 +35,7 @@ WORKDIR /home/appuser/server
 
 # OpenShift compatibility
 RUN chmod g+w /home/appuser
-ENV HOME /home/appuser
+ENV HOME=/home/appuser
 
 EXPOSE 8080 8081 6454 6455
 
