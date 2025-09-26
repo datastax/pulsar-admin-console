@@ -13,6 +13,10 @@ on:
         required: true
         default: 'dev'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -22,6 +26,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -47,4 +60,6 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: docker.io/datastax/pulsar-admin-console:${{ env.TAG }}
+          tags: |
+            ${{ secrets.ECR_REGISTRY }}/datastax/pulsar-admin-console:${{ env.TAG }}
+            docker.io/datastax/pulsar-admin-console:${{ env.TAG }}
