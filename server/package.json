@@ -19,7 +19,7 @@
   "author": "ming luo",
   "license": "Apache-2.0",
   "dependencies": {
-    "axios": "^1.7.7",
+    "axios": "^1.13.2",
     "body-parser": "^1.20.3",
     "config": "^3.3.7",
     "cookie-session": "^1.4.0",
