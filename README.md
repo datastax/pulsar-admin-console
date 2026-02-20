@@ -147,7 +147,7 @@ Use these versions of node and npm:
 $ npm -v
 10.8.0
 $ node -v
-v20.18.0
+v20.20.0
 ```
 
 In order to easily manage your node and npm versions across developer machines, we use [nvm](https://github.com/nvm-sh/nvm). We set the node version in the [.nvmrc](./.nvmrc) file. In order to set up your environment, open a shell, change to the project directory, and run the following:
