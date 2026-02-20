@@ -1,4 +1,4 @@
-FROM node:16 AS ui-build
+FROM node:20.18.0 AS ui-build
 
 WORKDIR /build
 
@@ -14,7 +14,7 @@ RUN chmod -R g=u /build/dist
 #
 # build node app in the next stage
 # 
-FROM node:16.18-alpine
+FROM node:20.18.0-alpine
 
 LABEL maintainer="ming luo"
 

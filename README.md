@@ -8,7 +8,7 @@ The admin console is a VueJS application that runs in a browser. It also include
 
 To install the Pulsar Admin Console:
 
-1. Ensure [node](https://nodejs.org/en/download/) version 16.15 or higher is installed.
+1. Ensure [node](https://nodejs.org/en/download/) version 20.18 or higher is installed.
 
 2. Download the latest release tarball from the [release page](https://github.com/datastax/pulsar-admin-console/releases).
 
@@ -145,9 +145,9 @@ The [DataStax Pulsar Helm Chart](https://github.com/datastax/pulsar-helm-chart) 
 Use these versions of node and npm:
 ```
 $ npm -v
-6.14.15
+10.8.0
 $ node -v
-v14.18.3
+v20.18.0
 ```
 
 In order to easily manage your node and npm versions across developer machines, we use [nvm](https://github.com/nvm-sh/nvm). We set the node version in the [.nvmrc](./.nvmrc) file. In order to set up your environment, open a shell, change to the project directory, and run the following:
@@ -163,10 +163,10 @@ When upgrading versions of node, we should make sure to use LTS versions. You ca
 nvm list
 ```
 
-Then, pick which `lts/` version to use. Currently, we use `fermium`, so you can run the following:
+Then, pick which `lts/` version to use. Currently, we use `iron`, so you can run the following:
 
 ```shell
-nvm install lts/fermium
+nvm install lts/iron
 ```
 
 When upgrading node versions, make sure to update the [Dockerfile](./Dockerfile), the [.nvmrc](./.nvmrc) file, and the CI scripts (i.e. [.github/](./github/)).
