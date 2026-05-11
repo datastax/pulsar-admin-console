@@ -4,8 +4,8 @@ WORKDIR /build
 
 COPY ./dashboard/ .
 
-# Prefer ci instead of install here
-RUN npm ci
+# Prefer ci instead of install here. Explicitly include devDependencies for the UI build.
+RUN npm ci --include=dev
 # Only need @vue/cli to run the "build-standalone" script. We don't need it in the final image.
 RUN npm install -g @vue/cli
 RUN npm run build-standalone
