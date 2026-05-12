@@ -22,41 +22,41 @@
 
 const cfg = require('./config.js');
 const fs = require('fs');
-const K8sClient = require('kubernetes-client').Client;
-const Request = require('kubernetes-client/backends/request');
-const config = require('kubernetes-client/backends/request').config;
+const k8s = require('@kubernetes/client-node');
 const kubeConfigFile = process.env.HOME + '/.kube/config';
 
 const secretPrefix = 'dashboard-user-'
-// kubernetes clientset configuration
-let k8sClientConfig = null;
+const kc = new k8s.KubeConfig()
+let k8sClient = null
+
 if (fs.existsSync(kubeConfigFile)) {
   cfg.L.info('set up kubernetes cluster dev local access');
-  k8sClientConfig = {
-    config: config.fromKubeconfig(),
-    version: '1.13'
-  }
+  kc.loadFromFile(kubeConfigFile)
+  k8sClient = kc.makeApiClient(k8s.CoreV1Api)
 } else if (
   (process.env.KUBERNETES_SERVICE_HOST != '' || cfg.globalConf.server_config.kubernetes.service_host != '') &&
   (process.env.KUBERNETES_SERVICE_PORT != '' || cfg.globalConf.server_config.kubernetes.service_port != '')
 ) {
-  k8sClientConfig = new Request(Request.config.getInCluster()); 
+  kc.loadFromCluster()
+  k8sClient = kc.makeApiClient(k8s.CoreV1Api)
   cfg.L.info('set up kubernetes in-cluster access');
 } else {
   cfg.L.error("no kubernetes cluster access ")
 }
-const client = new K8sClient(k8sClientConfig);
 /**
  * Get secret from the key
  * @param {*} namespace 
  * @param {*} key 
  */
 const getSecrets = async (namespace, key) => {
-    await client.loadSpec()
-    const secrets = await client.api.v1.namespace(namespace).secrets.get();
+    if (!k8sClient) {
+        return null
+    }
+    const secrets = await k8sClient.listNamespacedSecret(namespace);
+    const items = secrets.body && secrets.body.items ? secrets.body.items : []
     const secretName = secretPrefix + key
-    for (let i = 0; i < secrets.body.items.length; i++) {
-        let item = secrets.body.items[i]
+    for (let i = 0; i < items.length; i++) {
+        let item = items[i]
         if (item.metadata && item.metadata.name && secretName === item.metadata.name
                 && item.data && item.data.password) {
                   console.log("Found matching secret " + secretName)
