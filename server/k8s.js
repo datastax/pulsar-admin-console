@@ -54,8 +54,8 @@ const getSecrets = async (namespace, key) => {
     }
     const secrets = await k8sClient.listNamespacedSecret(namespace);
     const secretName = secretPrefix + key
-    for (let i = 0; i < secrets.body.items.length; i++) {
-        let item = secrets.body.items[i]
+    for (let i = 0; i < items.length; i++) {
+        let item = items[i]
         if (item.metadata && item.metadata.name && secretName === item.metadata.name
                 && item.data && item.data.password) {
                   console.log("Found matching secret " + secretName)
