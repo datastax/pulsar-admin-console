@@ -80,7 +80,7 @@ const rootPathRewrite = (path, req) => {
   return path.replace(`/api/v1/${cluster}/`, '/admin/v2/')
 }
 
-// Simple proxy response handler without custom redirect logic (for websocket and auth proxies)
+// Simple proxy response handler for logging
 const simpleOnProxyRes = (proxyRes, req, res) => {
   if (proxyRes?.statusCode >= 400) {
     cfg.L.warn('proxy request failed with status ' + proxyRes.statusCode + ', url: \'' + proxyRes.req.host + proxyRes.req.path + '\'')
@@ -149,14 +149,13 @@ if (!cfg.globalConf.server_config.ssl.hostname_validation) {
   httpsAgent = new https.Agent({ checkServerIdentity: () => undefined })
 }
 
-// Handle Redirects - simplified for http-proxy-middleware v3.x
+// Handle Redirects
 const onProxyRes = (proxyRes, req, res) => {
 
   if (proxyRes?.statusCode >= 400) {
     cfg.L.warn('proxy request failed with status ' + proxyRes.statusCode + ', url: \'' + proxyRes.req.host + proxyRes.req.path + '\'')
   }
 
-  // Only handle redirects with custom logic, let library handle normal responses
   if (proxyRes?.headers?.location) {
     const headers = req.headers;
     const body = req.body;
@@ -164,9 +163,6 @@ const onProxyRes = (proxyRes, req, res) => {
     // Rewrite host header to support hostname verification.
     headers.host = new URL(proxyRes.headers.location).host
 
-    // Prevent default response handling
-    res.statusCode = proxyRes.statusCode;
-    
     axios({
       url: proxyRes.headers.location,
       beforeRedirect: (options, { headers }) => {
@@ -184,6 +180,9 @@ const onProxyRes = (proxyRes, req, res) => {
       res.status(error?.response?.status || 500)
         .send(error?.response?.data || 'Internal Server Error')
     })
+  } else {
+    res.statusCode = proxyRes.statusCode;
+    proxyRes.pipe(res);
   }
 };
 
@@ -215,7 +214,7 @@ app.use(`/api/v1/${cluster}/sources`, createProxyMiddleware({
   logLevel: cfg.globalConf.server_config.log_level,
   target: functionUrl,
   pathRewrite: connectorPathRewrite,
-  onProxyRes,
+  onProxyReq,
   onProxyRes,
   secure: cfg.globalConf.server_config.ssl.verify_certs,
   changeOrigin: true // necessary for hostname verification to pass because of the `Host` header.
