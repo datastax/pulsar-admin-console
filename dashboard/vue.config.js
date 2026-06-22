@@ -20,6 +20,9 @@ const fs = require('fs')
 
 module.exports = {
   lintOnSave: false,
+  transpileDependencies: [
+    'axios'
+  ],
   // baseUrl was deprecated https://cli.vuejs.org/config/#baseurl
   publicPath: process.env.BASE_URL,
   // filenameHashing: false,
