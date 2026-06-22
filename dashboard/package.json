@@ -33,11 +33,7 @@
     "lodash": "^4.17.21",
     "normalize.css": "8.0.0",
     "numeral": "^2.0.6",
-<<<<<<< Updated upstream
-    "sass": "^1.32.13",
-=======
     "sass": "1.32.13",
->>>>>>> Stashed changes
     "v-jsoneditor": "^1.4.5",
     "v-page": "^2.0.10",
     "v-tooltip": "^2.1.3",
