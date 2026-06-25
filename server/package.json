@@ -19,15 +19,15 @@
   "author": "ming luo",
   "license": "Apache-2.0",
   "dependencies": {
+    "@kubernetes/client-node": "^1.4.0",
     "axios": "^1.15.2",
     "body-parser": "^1.20.4",
     "config": "^3.3.7",
     "cookie-session": "^2.1.1",
     "dotenv": "^16.0.1",
     "express": "^4.17.2",
-    "http-proxy-middleware": "^2.0.7",
+    "http-proxy-middleware": "^2.0.10",
     "jsonwebtoken": "^9.0.0",
-    "@kubernetes/client-node": "^1.4.0",
     "random-id": "^1.0.4",
     "winston": "^3.4.0"
   },
