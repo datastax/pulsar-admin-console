@@ -290,7 +290,7 @@ $modal-header-height: $widget-header-height;
 $modal-header-border: $widget-header-border;
 $modal-content-border-width: 0;
 $modal-content-border-radius: 0;
-$modal-inner-padding: 25px;
+$modal-inner-padding: 1.5625rem; // 25px at 16px root; rem keeps Bootstrap 4.6 modal math unit-consistent
 $modal-footer-btns-padding-bottom: 20px;
 $modal-footer-btns-margin-x: 10px;
 $modal-md: 650px;
