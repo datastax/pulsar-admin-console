@@ -4,8 +4,7 @@
   "description": "backend of dashboard",
   "main": "server.js",
   "engines": {
-    "node": "^20.20.0",
-    "npm": "^10.8.0"
+    "node": ">=20 <25"
   },
   "scripts": {
     "serve": "node server.js",
