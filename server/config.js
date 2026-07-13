@@ -29,6 +29,9 @@ const globalConf = require('config')
 console.log('NODE_CONFIG_DIR: ' + globalConf.util.getEnv('NODE_CONFIG_DIR'));
 console.log('NODE_ENV: ' + globalConf.util.getEnv('NODE_ENV'));
 
+const tokenPath = globalConf.server_config.token_path;
+let watcher = null;
+
 /*
  * a logger
  */
@@ -47,9 +50,8 @@ const L = createLogger({
 // token parameters
 if (globalConf.server_config.token_path && 
         (globalConf.auth_mode === 'k8s' || globalConf.auth_mode === 'user')) {
-    L.info("Setting tokens from path: " + globalConf.server_config.token_path)
-    const token = fs.readFileSync(globalConf.server_config.token_path, "utf8")
-    globalConf.server_config.admin_token = token.trim()
+        updateAdminToken();
+        watchTokenFile();
 }
 
 // Set derived config
@@ -92,3 +94,27 @@ module.exports = {
     L,
     globalConf,
 };
+
+// Function to execute code when the token file changes
+function updateAdminToken() {
+    try {
+      const token = fs.readFileSync(tokenPath, "utf8");
+      globalConf.server_config.admin_token = token.trim();
+      L.info('Token file changed. Admin token updated.');
+    } catch (error) {
+      L.error('Error updating admin token:', error);
+    }
+  }
+  
+  // Watch the token file or symbolic link
+  function watchTokenFile() {
+    watcher = fs.watch(tokenPath, (event, filename) => {
+      if (event === 'change') {
+        updateAdminToken();
+      } else if (event === 'rename') {
+        watcher.close();
+        watchTokenFile();
+      }
+    });
+  }
+  
