@@ -115,7 +115,7 @@
     "underscore": "^1.13.8"
   },
   "engines": {
-    "node": ">=20 <25"
+    "node": ">=20 <27"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
