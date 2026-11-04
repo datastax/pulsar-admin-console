@@ -21,11 +21,12 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to Docker Hub
+      - name: Login to Quay.io
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
 
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v5
@@ -62,4 +63,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.ECR_REGISTRY }}/datastax/pulsar-admin-console:${{ env.TAG }}
-            docker.io/datastax/pulsar-admin-console:${{ env.TAG }}
+            quay.io/datastax/pulsar-admin-console:${{ env.TAG }}
